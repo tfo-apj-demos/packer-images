@@ -1,0 +1,18 @@
+---
+- name: Add HashiCorp repo key
+  get_url:
+    url: https://apt.releases.hashicorp.com/gpg
+    dest: /usr/share/keyrings/hashicorp-archive-keyring.asc
+    mode: 0644
+
+- name: Add HashiCorp repository
+  apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.asc] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+    state: present
+    mode: 0666
+
+- name: Disable daily update
+  systemd:
+    name: apt-daily-upgrade
+    state: stopped
+    enabled: no
