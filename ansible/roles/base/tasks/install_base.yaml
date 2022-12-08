@@ -1,4 +1,12 @@
 ---
+- name: Install Unzip
+  apt:
+    name:
+      - unzip
+      - jq
+    state: latest
+    update_cache: yes
+
 - name: Add HashiCorp repo key
   get_url:
     url: https://apt.releases.hashicorp.com/gpg
