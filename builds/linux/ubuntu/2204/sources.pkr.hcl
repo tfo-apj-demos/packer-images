@@ -1,6 +1,6 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
-  name   = "${var.prefix}-ubuntu-2204-${local.timestamp}"
+  name   = "${var.role}-ubuntu-2204-${local.timestamp}"
 	base = var.role == "base"
 }
 
@@ -8,7 +8,7 @@ source "amazon-ebs" "this" {
   region = lookup(var.region, "aws", "us-west-2")
 
   dynamic "source_ami_filter" {
-		for_each = local.base ? [0] : null
+		for_each = local.base ? [0] : []
 		content {
 			filters = {
 				virtualization-type = "hvm"
@@ -29,7 +29,6 @@ source "amazon-ebs" "this" {
     owner         = var.owner
     project       = var.project_id
     Base_AMI_Name = "{{ .SourceAMIName }}"
-		#roles         = var.roles
   }
 }
 

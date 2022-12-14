@@ -1,3 +1,14 @@
+locals {
+	ansible_extra_arguments = var.debug_ansible ? [
+			"--extra-vars", "ansible_become_password=${var.os_password}",
+			"--extra-vars", "role=${var.role}",
+			"-vvv"
+    ] : [
+			"--extra-vars", "ansible_become_password=${var.os_password}",
+			"--extra-vars", "role=${var.role}",
+		]
+}
+
 packer {
   required_plugins {
     vsphere = {
@@ -21,11 +32,8 @@ build {
     playbook_file = "${path.cwd}/ansible/playbook.yaml"
     user          = var.os_username
 
-    extra_arguments = [
-			"--extra-vars", "ansible_become_password=${var.os_password}",
-			"--extra-vars", "role=${var.role}",
-			"${var.debug_ansible}" ? "-vvv" : "",
-    ]
+    extra_arguments = local.ansible_extra_arguments
+
     ansible_env_vars = [
       "ANSIBLE_REMOTE_TMP=/tmp",
     ]

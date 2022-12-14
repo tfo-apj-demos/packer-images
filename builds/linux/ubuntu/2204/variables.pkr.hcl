@@ -45,9 +45,9 @@ variable "folder" {
 
 // Virtual machine configuration
 
-variable "prefix" {
-	type = string
-}
+# variable "prefix" {
+# 	type = string
+# }
 
 variable "guest_os_type" {
   type    = string
