@@ -1,0 +1,42 @@
+---
+# - name: Install Unzip
+#   apt:
+#     name: unzip
+#     state: latest
+#     update_cache: yes
+
+- name: Install Boundary
+  become: true
+  apt:
+    name: boundary
+    state: latest
+
+- name: Create Boundary Auth Storage Path
+  file:
+    state: directory
+    path: /opt/boundary
+    owner: boundary
+    group: boundary
+  become: true
+
+- name: Disable Boundary Service
+  systemd:
+    name: boundary.service
+    enabled: no
+  become: true
+
+- name: Download Boundary (HCP specific)
+  get_url:
+    url: "https://releases.hashicorp.com/boundary-worker/{{ boundary_version }}+hcp/boundary-worker_{{ boundary_version }}+hcp_linux_amd64.zip"
+    dest: /tmp
+    mode: 666
+  become: true
+
+- name: Unzip Boundary
+  unarchive:
+    src: /tmp/boundary-worker_{{ boundary_version }}+hcp_linux_amd64.zip
+    dest: /usr/bin/boundary
+    group: root
+    owner: root
+    remote_src: yes
+  become: true

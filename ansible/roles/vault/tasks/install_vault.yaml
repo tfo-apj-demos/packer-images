@@ -1,0 +1,7 @@
+---
+- name: Install Vault
+  become: true
+  apt:
+    name: vault-enterprise
+    state: present
+    update_cache: yes

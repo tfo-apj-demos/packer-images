@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  remote_user: "{{ ansible_user }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: ansible
+    stage: build
+    role: client
+  tasks:
+    - include_vars: ../defaults/main.yaml
+    - include: ../tasks/main.yaml

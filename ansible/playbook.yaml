@@ -1,0 +1,11 @@
+---
+# playbook.yaml
+- become: true
+  become_method: sudo
+  gather_facts: true
+  hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    role:
+  roles:
+    - "{{ role }}"
