@@ -1,9 +1,11 @@
 ---
-- name: Install Unzip
+- name: Install unzip and jq
   apt:
     name:
       - unzip
-      - jq
+      - osquery
+      - open-vm-tools
+      #- jq
     state: latest
     update_cache: yes
 
@@ -24,3 +26,17 @@
     name: apt-daily-upgrade
     state: stopped
     enabled: no
+
+- name: Add SSH signing public certificate
+  get_url:
+    url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
+    headers: 
+      X-Vault-Namespace: admin
+    dest: /etc/ssh/trusted-user-ca-keys.pem
+    mode: 0644
+
+- name: Update ssh config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
