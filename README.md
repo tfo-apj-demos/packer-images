@@ -3,6 +3,25 @@ This repo contains a set of reusable Packer builds for multiple target platforms
 It includes integration for HCP Packer, to give you the building blocks to demonstrate core workflow challenges around image management including revocation and ancestry.
 
 # Usage
-In an attempt to simplify the structure of this as much as possible, the build definitions expect to be provided with an Ansible role (which you can find in the "roles" directory.) Providing the `role=base` will trigger a vanilla build, and configure the image for use with HashiCorp repositories, allowing for subsequent child builds of our products. One special case associated with this is that a base build will trigger a "build from scratch" image on VMware, using an ISO read from a datastore. Child images on VMware will clone from the base build, for a much faster build time.
+In an attempt to simplify the structure of this as much as possible, a Makefile is used to abstract the need to understand the Packer CLI arguments.
 
-You can trigger a build with the following command from the root directory `packer build builds/linux/ubuntu/2204 -var-file=<path to your var file>` or alternatively create a `variables.auto.pkrvars.hcl` file in the directory of the build you intend to reuse and run `packer build builds/linux/ubuntu/2204`.
+You can trigger a build with the following example command from the root directory `make base-ubuntu-2204`.
+
+# Known issues
+Attempting to use the Ansible provisioner with Ubuntu 22.04 throws the following error:
+```
+vsphere-iso.this: fatal: [default]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: Unable to negotiate with 127.0.0.1 port 53717: no matching host key type found. Their offer: ecdsa-sha2-nistp384", "unreachable": true}
+```
+
+Make sure that your SSH config ($HOME/.ssh/config) has the necessary HostKeyAlgorithm defined. For example:
+```
+Host *
+   HostKeyAlgorithms ecdsa-sha2-nistp384
+```
+
+Ansible run fails at gathering facts stage.
+```
+TASK [Gathering Facts] *********************************************************
+    vsphere-iso.this: fatal: [default]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via scp: scp: Connection closed\r\n", "unreachable": true}
+```
+This has been addressed by adding `"--scp-extra-args", "'-O'"` to our ansible_extra_arguments block in local variables.
