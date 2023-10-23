@@ -1,14 +1,4 @@
 ---
-- name: Install unzip and jq
-  apt:
-    name:
-      - unzip
-      - osquery
-      - open-vm-tools
-      #- jq
-    state: latest
-    update_cache: yes
-
 - name: Add HashiCorp repo key
   get_url:
     url: https://apt.releases.hashicorp.com/gpg
@@ -20,6 +10,27 @@
     repo: deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.asc] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
     state: present
     mode: 0666
+
+- name: Add osquery repo key
+  get_url:
+    url: https://pkg.osquery.io/deb/pubkey.gpg
+    dest: /usr/share/keyrings/osquery.asc
+    mode: 0644
+
+- name: Add osquery repository
+  apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/osquery.asc] https://pkg.osquery.io/deb deb main
+    state: present
+    mode: 0666
+
+- name: Install packages
+  apt:
+    name:
+      - unzip
+      - osquery
+      - open-vm-tools
+    state: latest
+    update_cache: yes
 
 - name: Disable daily update
   systemd:
