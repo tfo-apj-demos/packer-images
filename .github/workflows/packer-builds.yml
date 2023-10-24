@@ -1,25 +1,21 @@
-name: packer-builds
+name: Build VMware Image
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
-
     runs-on: [ self-hosted, gcve ]
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: make
+    - name: Set up environment variables
+      run: |
+        echo "VCENTER_USERNAME=${{ secrets.VCENTER_USERNAME }}" >> $GITHUB_ENV
+        echo "VCENTER_PASSWORD=${{ secrets.VCENTER_PASSWORD }}" >> $GITHUB_ENV
+        echo "VCENTER_SERVER=${{ secrets.VCENTER_SERVER }}" >> $GITHUB_ENV
 
-    - name: Run check
-      run: make check
-
-    - name: Run distcheck
-      run: make distcheck
+    - name: Run Makefile
+      run: make ubuntu_2204_base
