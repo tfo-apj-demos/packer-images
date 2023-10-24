@@ -1,3 +1,20 @@
+variable "vcenter_username" {
+  description = "vCenter Username"
+  type        = string
+  sensitive   = true
+}
+
+variable "vcenter_password" {
+  description = "vCenter Password"
+  type        = string
+  sensitive   = true
+}
+
+variable "vcenter_server" {
+  description = "vCenter Server"
+  type        = string
+}
+
 variable "role" {
   type = string
   default = "base"
