@@ -1,18 +1,16 @@
+variable "vcenter_server" {
+  type = string
+  default = env("VCENTER_SERVER")
+}
+
 variable "vcenter_username" {
-  description = "vCenter Username"
-  type        = string
-  sensitive   = true
+  type = string
+  default = env("VCENTER_USERNAME")
 }
 
 variable "vcenter_password" {
-  description = "vCenter Password"
-  type        = string
-  sensitive   = true
-}
-
-variable "vcenter_server" {
-  description = "vCenter Server"
-  type        = string
+  type = string
+  default = env("VCENTER_PASSWORD")
 }
 
 variable "role" {
