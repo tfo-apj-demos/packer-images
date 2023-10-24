@@ -23,6 +23,7 @@ jobs:
       env:
         HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
         HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+        HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
         VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
         VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
         VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
