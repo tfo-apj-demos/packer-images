@@ -1,9 +1,12 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
   name   = "${var.role}-ubuntu-2204-${local.timestamp}"
-  vcenter_username = vault("secrets/data/vcenter", "vcenter_username")
-  vcenter_password = vault("secrets/data/vcenter", "vcenter_password")
-  vcenter_server = vault("secrets/data/vcenter", "vcenter_server")
+  #vcenter_username = vault("secrets/data/vcenter", "vcenter_username")
+  #vcenter_password = vault("secrets/data/vcenter", "vcenter_password")
+  #vcenter_server = vault("secrets/data/vcenter", "vcenter_server")
+  vcenter_username = env("VCENTER_USERNAME")
+  vcenter_password = env("VCENTER_PASSWORD")
+  vcenter_server   = env("VCENTER_SERVER")
 }
 
 source "vsphere-iso" "this" {
