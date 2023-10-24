@@ -23,12 +23,25 @@
     state: present
     mode: 0666
 
+- name: Add docker repo key
+  get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /usr/share/keyrings/docker.asc
+    mode: 0644
+
+- name: Add docker repository
+  apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/docker.asc] https://pkg.osquery.io/deb jammy stable
+    state: present
+    mode: 0666
+
 - name: Install packages
   apt:
     name:
       - unzip
       - osquery
       - open-vm-tools
+      - cloud-init
     state: latest
     update_cache: yes
 
@@ -51,3 +64,30 @@
     path: /etc/ssh/sshd_config
     state: present
     line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
+
+- name: Clean up for template conversion
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/cloud/cloud.cfg.d/99-installer.cfg
+    - /etc/cloud/cloud.cfg.d/subiquity-disable-cloudinit-networking.cfg
+    - /etc/netplan/00-installer-config.yaml
+    - /etc/netplan/50-cloud-init.yaml
+
+- name: Set timeout for cloud-init
+  copy: 
+    dest: /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
+    content: |
+      datasource:
+        VMware:
+          vmware_cust_file_max_wait: 10
+
+- name: Disable traditional VMware customisation
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    state: present
+    line: 'disable_vmware_customization: true'
+
+- name: Prepare cloud-init for first use
+  command: /usr/bin/cloud-init clean --logs
