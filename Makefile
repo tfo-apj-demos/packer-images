@@ -1,6 +1,6 @@
 ubuntu_2204_base:
-	packer init -var 'vcenter_username=$(VCENTER_USERNAME)' -var 'vcenter_password=$(VCENTER_PASSWORD)' -var 'vcenter_server=$(VCENTER_SERVER)' -var-file base-ubuntu-2204/base.pkrvars.hcl base-ubuntu-2204
-	packer build -var 'vcenter_username=$(VCENTER_USERNAME)' -var 'vcenter_password=$(VCENTER_PASSWORD)' -var 'vcenter_server=$(VCENTER_SERVER)' -var-file base-ubuntu-2204/base.pkrvars.hcl base-ubuntu-2204
+	packer init -var-file base-ubuntu-2204/base.pkrvars.hcl base-ubuntu-2204
+	packer build -var-file base-ubuntu-2204/base.pkrvars.hcl base-ubuntu-2204
 
 
 ubuntu_2204_k8s:

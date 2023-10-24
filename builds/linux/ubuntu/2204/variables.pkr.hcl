@@ -1,14 +1,17 @@
 // vSphere connection details
 variable "vcenter_server" {
   type = string
+  default = env("VSPHERE_SERVER")
 }
 
 variable "vcenter_username" {
   type = string
+  default = env("VSPHERE_USER")
 }
 
 variable "vcenter_password" {
   type = string
+  default = env("VSPHERE_PASSWORD")
 }
 
 variable "vcenter_insecure_connection" {

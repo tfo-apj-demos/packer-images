@@ -1,5 +1,12 @@
 name: Build VMware Image
 
+# TODO: Schedule base build.
+
+# on:
+#   schedule:
+#     # * is a special character in YAML so you have to quote this string
+#     - cron:  '30 5,17 * * *'
+
 on:
   workflow_dispatch:
 
@@ -11,14 +18,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up environment variables
-      run: |
-        echo "VCENTER_USERNAME=${{ secrets.VCENTER_USERNAME }}" >> $GITHUB_ENV
-        echo "VCENTER_PASSWORD=${{ secrets.VCENTER_PASSWORD }}" >> $GITHUB_ENV
-        echo "VCENTER_SERVER=${{ secrets.VCENTER_SERVER }}" >> $GITHUB_ENV
-        echo "HCP_CLIENT_ID=${{ secrets.HCP_CLIENT_ID }}" >> $GITHUB_ENV
-        echo "HCP_CLIENT_SECRET=${{ secrets.HCP_CLIENT_SECRET }}" >> $GITHUB_ENV
-        echo "HCP_PROJECT_ID=${{ secrets.HCP_PROJECT_ID }}" >> $GITHUB_ENV
-
     - name: Run Makefile
       run: make ubuntu_2204_base
+      env:
+        HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+        HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+        VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
+        VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
+        VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
