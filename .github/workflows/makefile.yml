@@ -10,13 +10,10 @@ on:
 jobs:
   build:
 
-    runs-on: self-hosted
+    runs-on: [ self-hosted, gcve ]
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: configure
-      run: ./configure
 
     - name: Install dependencies
       run: make
