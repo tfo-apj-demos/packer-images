@@ -16,6 +16,8 @@ jobs:
         echo "VCENTER_USERNAME=${{ secrets.VCENTER_USERNAME }}" >> $GITHUB_ENV
         echo "VCENTER_PASSWORD=${{ secrets.VCENTER_PASSWORD }}" >> $GITHUB_ENV
         echo "VCENTER_SERVER=${{ secrets.VCENTER_SERVER }}" >> $GITHUB_ENV
+        echo "HCP_CLIENT_ID=${{ secrets.HCP_CLIENT_ID }}" >> $GITHUB_ENV
+        echo "HCP_CLIENT_SECRET=${{ secrets.HCP_CLIENT_SECRET }}" >> $GITHUB_ENV
 
     - name: Run Makefile
       run: make ubuntu_2204_base
