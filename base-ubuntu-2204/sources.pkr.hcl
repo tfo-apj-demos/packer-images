@@ -4,16 +4,16 @@ locals {
   #vcenter_username = vault("secrets/data/vcenter", "vcenter_username")
   #vcenter_password = vault("secrets/data/vcenter", "vcenter_password")
   #vcenter_server = vault("secrets/data/vcenter", "vcenter_server")
-  vcenter_username = env("VCENTER_USERNAME")
-  vcenter_password = env("VCENTER_PASSWORD")
-  vcenter_server   = env("VCENTER_SERVER")
 }
 
 source "vsphere-iso" "this" {
   // Connection details
-  username = local.vcenter_username
-  password = local.vcenter_password
-  vcenter_server = local.vcenter_server
+  #username = local.vcenter_username
+  #password = local.vcenter_password
+  #vcenter_server = local.vcenter_server
+  username = var.vcenter_username
+  password = var.vcenter_password
+  vcenter_server = var.vcenter_server
   insecure_connection = var.vcenter_insecure_connection
 
 
