@@ -74,7 +74,7 @@
     - /etc/cloud/cloud.cfg.d/subiquity-disable-cloudinit-networking.cfg
     - /etc/netplan/00-installer-config.yaml
     - /etc/netplan/50-cloud-init.yaml
-    - /etc/udev/rules.d/70*
+    - /etc/udev/rules.d/70-snap.snapd.rules
 
 - name: Set timeout for cloud-init
   copy: 
@@ -92,3 +92,9 @@
 
 - name: Prepare cloud-init for first use
   command: /usr/bin/cloud-init clean --logs
+
+- name: Troubleshooting
+  lineinfile:
+    path: /lib/systemd/system/open-vm-tools.service
+    state: present
+    line: After=dbus.service
