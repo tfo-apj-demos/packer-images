@@ -9,8 +9,8 @@ locals {
     "--extra-vars", "ansible_become_password=${var.os_password}",
     "--extra-vars", "role=${var.role}",
     "--scp-extra-args", "'-O'",
-      "--ssh-extra-args="", "'-o HostKeyAlgorithms=+ssh-rsa'",
-    "--ssh-extra-args", "'-o HostKeyAlgorithms=+ssh-rsa'"
+    "--ssh-extra-args=", "'-o HostKeyAlgorithms=+ssh-rsa'",
+  
   ]
 }
 
