@@ -1,9 +1,9 @@
 # General variables
-role = "base"
-os_password="Hashi123!"
-owner = "Grant Orchard"
+role        = "base"
+os_password = "Hashi123!"
+owner       = "Grant Orchard"
 
 # VMware variables
-cluster = "cluster"
+cluster   = "cluster"
 datastore = "vsanDatastore"
-network = "seg-general"
+network   = "seg-general"
