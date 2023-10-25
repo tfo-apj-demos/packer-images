@@ -31,7 +31,7 @@
 
 - name: Add docker repository
   apt_repository:
-    repo: deb [signed-by=/usr/share/keyrings/docker.asc] https://pkg.osquery.io/deb jammy stable
+    repo: deb [signed-by=/usr/share/keyrings/docker.asc] https://download.docker.com/linux/ubuntu jammy stable
     state: present
     mode: 0666
 
