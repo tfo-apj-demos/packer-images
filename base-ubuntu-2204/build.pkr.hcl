@@ -1,16 +1,18 @@
 locals {
-	ansible_extra_arguments = var.debug_ansible ? [
-			"--extra-vars", "ansible_become_password=${var.os_password}",
-			"--extra-vars", "role=${var.role}",
-			"-vvv",
-      "--scp-extra-args", "'-O'"
-
+  ansible_extra_arguments = var.debug_ansible ? [
+    "--extra-vars", "ansible_become_password=${var.os_password}",
+    "--extra-vars", "role=${var.role}",
+    "-vvv",
+    "--scp-extra-args", "'-O'",
+    "--ssh-extra-args", "'-o HostKeyAlgorithms=+ssh-rsa'"
     ] : [
-			"--extra-vars", "ansible_become_password=${var.os_password}",
-			"--extra-vars", "role=${var.role}",
-      "--scp-extra-args", "'-O'"
-		]
+    "--extra-vars", "ansible_become_password=${var.os_password}",
+    "--extra-vars", "role=${var.role}",
+    "--scp-extra-args", "'-O'",
+    "--ssh-extra-args", "'-o HostKeyAlgorithms=+ssh-rsa'"
+  ]
 }
+
 
 packer {
   required_plugins {
@@ -31,9 +33,8 @@ build {
   ]
 
   provisioner "ansible" {
-    playbook_file = "${path.cwd}/ansible/playbook.yaml"
-    user          = var.os_username
-
+    playbook_file   = "${path.cwd}/ansible/playbook.yaml"
+    user            = var.os_username
     extra_arguments = local.ansible_extra_arguments
 
     ansible_env_vars = [
@@ -42,16 +43,16 @@ build {
   }
 
   hcp_packer_registry {
-  	bucket_name = "${var.role}-ubuntu-2204"
+    bucket_name = "${var.role}-ubuntu-2204"
 
-  	bucket_labels = {
-  		"application"   = var.role
-  	}
+    bucket_labels = {
+      "application" = var.role
+    }
 
-  	build_labels = {
-  		"ubuntu-version" = "jammy 22.04"
-  		"build-time" = timestamp()
-			"owner" = var.owner
-  	}
+    build_labels = {
+      "ubuntu-version" = "jammy 22.04"
+      "build-time"     = timestamp()
+      "owner"          = var.owner
+    }
   }
 }
