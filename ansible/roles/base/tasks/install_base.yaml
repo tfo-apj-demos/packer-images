@@ -26,12 +26,12 @@
 - name: Add docker repo key
   get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
-    dest: /usr/share/keyrings/docker.asc
+    dest: /usr/share/keyrings/docker-archive-keyring.asc
     mode: 0644
 
 - name: Add docker repository
   apt_repository:
-    repo: deb [signed-by=/usr/share/keyrings/docker.asc] https://download.docker.com/linux/ubuntu jammy stable
+    repo: deb [signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://download.docker.com/linux/ubuntu jammy stable
     state: present
     mode: 0666
 
@@ -74,6 +74,7 @@
     - /etc/cloud/cloud.cfg.d/subiquity-disable-cloudinit-networking.cfg
     - /etc/netplan/00-installer-config.yaml
     - /etc/netplan/50-cloud-init.yaml
+    - /etc/udev/rules.d/70*
 
 - name: Set timeout for cloud-init
   copy: 

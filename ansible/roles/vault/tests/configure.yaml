@@ -8,7 +8,6 @@
     ansible_user: ansible
     stage: configure
     role: client
-    nomad_vault_token: s.eTbwTG9Ew2xcQHXGXyJeZ2JS.KNN8j
   tasks:
     - include_vars: ../defaults/main.yaml
     - include: ../tasks/main.yaml

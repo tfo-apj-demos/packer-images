@@ -1,16 +1,14 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
   name   = "${var.role}-ubuntu-2204-${local.timestamp}"
-	base = var.role == "base"
+  base = var.role == "base"
 }
 
 source "amazon-ebs" "this" {
   region = lookup(var.region, "aws", "us-west-2")
 
   dynamic "source_ami_filter" {
-		for_each = local.base ? [0] : []
-		content {
-			filters = {
+		filters = {
 				virtualization-type = "hvm"
 				name                = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"
 				root-device-type    = "ebs"
@@ -18,7 +16,6 @@ source "amazon-ebs" "this" {
 			owners      = ["099720109477"] # Canonical
 			most_recent = true
 		}
-  }
 
 	source_ami = local.base ? null : data.hcp-packer-image.aws.cloud_image_id
 
@@ -46,6 +43,7 @@ source "vsphere-iso" "this" {
   folder     = var.folder
 
   // Virtual machine configuration
+  convert_to_template = true
   vm_name       = local.name
   guest_os_type = var.guest_os_type
 
@@ -100,13 +98,14 @@ source "vsphere-iso" "this" {
 
 source "vsphere-clone" "this" {
 	vcenter_server      = var.vcenter_server
-	insecure_connection = var.vcenter_insecure_connection
 	username            = var.vcenter_username
 	password            = var.vcenter_password
+  insecure_connection = var.vcenter_insecure_connection
 
-	template  = data.hcp-packer-image.vsphere.cloud_image_id
+	template  = data.hcp-packer-image.vsphere.id
 	cluster   = var.cluster
 	datastore = var.datastore
+  folder     = var.folder
 
 	vm_name      = local.name
 	ssh_username = var.os_username

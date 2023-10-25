@@ -107,7 +107,3 @@ variable "debug_ansible" {
 	type = bool
 	default = false
 }
-
-variable "data_source" {
-	default = true
-}
