@@ -2,10 +2,13 @@ locals {
 	ansible_extra_arguments = var.debug_ansible ? [
 			"--extra-vars", "ansible_become_password=${var.os_password}",
 			"--extra-vars", "role=${var.role}",
-			"-vvv"
+			"-vvv",
+      "--scp-extra-args", "'-O'"
+
     ] : [
 			"--extra-vars", "ansible_become_password=${var.os_password}",
 			"--extra-vars", "role=${var.role}",
+      "--scp-extra-args", "'-O'"
 		]
 }
 
@@ -24,8 +27,7 @@ packer {
 
 build {
   sources = [
-    "amazon-ebs.this",
-    local.base ? "vsphere-iso.this" : "vsphere-clone.this"
+    "vsphere-clone.this"
   ]
 
   provisioner "ansible" {
