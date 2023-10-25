@@ -1,26 +1,26 @@
 variable "vcenter_server" {
-  type = string
+  type    = string
   default = env("VCENTER_SERVER")
 }
 
 variable "vcenter_username" {
-  type = string
+  type    = string
   default = env("VCENTER_USERNAME")
 }
 
 variable "vcenter_password" {
-  type = string
+  type    = string
   default = env("VCENTER_PASSWORD")
 }
 
 variable "role" {
-  type = string
+  type    = string
   default = "base"
 }
 
 variable "debug_ansible" {
-	type = bool
-	default = false
+  type    = bool
+  default = false
 }
 
 variable "region" {
@@ -71,7 +71,7 @@ variable "vcenter_insecure_connection" {
 }
 
 variable "folder" {
-  type = string
+  type    = string
   default = "templates"
 }
 
