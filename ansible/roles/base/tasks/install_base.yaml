@@ -40,8 +40,6 @@
     name:
       - unzip
       - osquery
-      - open-vm-tools
-      - cloud-init
     state: latest
     update_cache: yes
 
@@ -67,19 +65,14 @@
 
 - name: Clean up for template conversion
   file:
-    path: "{{ item }}"
+    path: /etc/cloud/cloud.cfg.d/99-installer.cfg
     state: absent
-  loop:
-    - /etc/cloud/cloud.cfg.d/99-installer.cfg
-    - /etc/cloud/cloud.cfg.d/subiquity-disable-cloudinit-networking.cfg
-    - /etc/netplan/00-installer-config.yaml
-    - /etc/netplan/50-cloud-init.yaml
-    - /etc/udev/rules.d/70-snap.snapd.rules
 
 - name: Set timeout for cloud-init
   copy: 
     dest: /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
     content: |
+      datasource_list: [ "VMware" ]
       datasource:
         VMware:
           vmware_cust_file_max_wait: 10
@@ -91,10 +84,4 @@
     line: 'disable_vmware_customization: true'
 
 - name: Prepare cloud-init for first use
-  command: /usr/bin/cloud-init clean --logs
-
-- name: Troubleshooting
-  lineinfile:
-    path: /lib/systemd/system/open-vm-tools.service
-    state: present
-    line: After=dbus.service
+  command: /usr/bin/cloud-init clean --seed --logs
