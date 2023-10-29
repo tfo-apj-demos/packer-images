@@ -3,10 +3,11 @@ name: Build VMware Images
 # TODO: Schedule base build.
 
 on:
+  workflow_dispatch:
   schedule:
 #     # * is a special character in YAML so you have to quote this string
 #     - cron:  '30 5,17 * * *'
-    - cron:  '0 21 * * SUN'
+    - cron:  '0 10 * * SUN' # UTC TIME
 
 env:
   HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
@@ -29,6 +30,7 @@ jobs:
 
   ubuntu_2204_vault:
     runs-on: [ self-hosted, gcve ]
+    needs: ubuntu_2204_base
 
     steps:
     - name: Checkout code
