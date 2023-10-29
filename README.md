@@ -1,3 +1,5 @@
+[![Build VMware Images](https://github.com/tfo-apj-demos/packer-images/actions/workflows/packer-builds.yml/badge.svg)](https://github.com/tfo-apj-demos/packer-images/actions/workflows/packer-builds.yml)
+
 # About this project
 This repo contains a set of reusable Packer builds for multiple target platforms.
 It includes integration for HCP Packer, to give you the building blocks to demonstrate core workflow challenges around image management including revocation and ancestry.
