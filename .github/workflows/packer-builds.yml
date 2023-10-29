@@ -1,4 +1,4 @@
-name: Build VMware Image
+name: Build VMware Base Image
 
 # TODO: Schedule base build.
 
