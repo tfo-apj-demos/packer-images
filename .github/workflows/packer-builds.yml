@@ -1,4 +1,4 @@
-name: Build VMware Base Image
+name: Build VMware Images
 
 # TODO: Schedule base build.
 
@@ -8,8 +8,16 @@ on:
 #     - cron:  '30 5,17 * * *'
     - cron:  '0 21 * * SUN'
 
+env:
+  HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+  HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+  HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
+  VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
+  VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
+  VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
+    
 jobs:
-  build:
+  ubuntu_2204_base:
     runs-on: [ self-hosted, gcve ]
 
     steps:
@@ -18,10 +26,14 @@ jobs:
 
     - name: Run Makefile
       run: make ubuntu_2204_base
-      env:
-        HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
-        HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
-        HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
-        VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
-        VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
-        VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
+
+  ubuntu_2204_vault:
+    runs-on: [ self-hosted, gcve ]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run Makefile
+      run: make ubuntu_2204_vault
+      
