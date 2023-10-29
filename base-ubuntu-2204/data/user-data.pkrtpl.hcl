@@ -12,6 +12,7 @@ autoinstall:
   #   install: false
   early-commands:
     - sudo systemctl stop ssh
+    - echo 'net.ipv6.conf.all.disable_ipv6 = 1' >> /etc/sysctl.conf
   identity:
     hostname: ${hostname}
     username: ${username}
@@ -28,6 +29,7 @@ autoinstall:
     version: 2
   packages:
     - open-vm-tools
+    - cloud-init
   # refresh-installer:
   #   update: no
   ssh:
