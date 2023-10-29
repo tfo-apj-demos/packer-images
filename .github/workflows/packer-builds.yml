@@ -2,13 +2,11 @@ name: Build VMware Image
 
 # TODO: Schedule base build.
 
-# on:
-#   schedule:
+on:
+  schedule:
 #     # * is a special character in YAML so you have to quote this string
 #     - cron:  '30 5,17 * * *'
-
-on:
-  workflow_dispatch:
+    - cron:  '0 21 * * SUN'
 
 jobs:
   build:
