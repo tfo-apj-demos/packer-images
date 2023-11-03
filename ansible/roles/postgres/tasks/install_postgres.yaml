@@ -3,21 +3,13 @@
 
 - name: "Install packages"
   apt:
-    name: [
-      "postgresql",
-      "postgresql-contrib"
-    ]
+    name:
+      - "postgresql"
+      - "postgresql-contrib"
+    update_cache: yes  # this will refresh your repository cache
 
-# - name: "Find out if PostgreSQL is initialized"
-#   stat:
-#     path: "/var/lib/pgsql/data/pg_hba.conf"
-#   register: postgres_data
-
-# - name: "Initialize PostgreSQL"
-#   shell: "postgresql-setup initdb"
-#   when: not postgres_data.stat.exists
-
-- name: "Disable services"
-  service: "name={{ item }} state=stopped enabled=no"
-  with_items:
-    - postgresql
+- name: "Ensure PostgreSQL service is started and enabled"
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
