@@ -38,4 +38,15 @@ jobs:
 
     - name: Run Makefile
       run: make ubuntu_2204_vault
+  
+  ubuntu_2204_postgres:
+    runs-on: [ self-hosted, gcve ]
+    needs: ubuntu_2204_base
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run Makefile
+      run: make ubuntu_2204_postgres
       
