@@ -10,6 +10,7 @@ locals {
 			"--extra-vars", "role=${var.role}",
       "--scp-extra-args", "'-O'"
 		]
+  sources = var.role == "base" ? [ "vsphere-iso.this" ] : [ "vsphere-clone.this" ]
 }
 
 packer {
@@ -26,9 +27,7 @@ packer {
 }
 
 build {
-  sources = [
-    "vsphere-clone.this"
-  ]
+  sources = local.sources
 
   provisioner "ansible" {
     playbook_file = "${path.cwd}/ansible/playbook.yaml"

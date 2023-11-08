@@ -31,10 +31,11 @@ source "amazon-ebs" "this" {
 
 source "vsphere-iso" "this" {
   // Connection details
-  vcenter_server      = var.vcenter_server
   username            = var.vcenter_username
   password            = var.vcenter_password
+  vcenter_server      = var.vcenter_server
   insecure_connection = var.vcenter_insecure_connection
+
 
   // Where to build
   datacenter = lookup(var.region, "vsphere", "Datacenter")
@@ -44,8 +45,8 @@ source "vsphere-iso" "this" {
 
   // Virtual machine configuration
   convert_to_template = true
-  vm_name       = local.name
-  guest_os_type = var.guest_os_type
+  vm_name             = local.name
+  guest_os_type       = var.guest_os_type
 
   CPUs = 2
   RAM  = 4096
