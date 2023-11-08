@@ -72,7 +72,7 @@
     mode: 0644
 
 - name: Register HCP Vault CA
-  command: 
+  command: update-ca-certificates
 
 - name: Clean up for template conversion
   file:
