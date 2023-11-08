@@ -1,0 +1,26 @@
+name: Build VMware App Images
+
+on:
+  workflow_dispatch:
+
+env:
+  HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+  HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+  HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
+  VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
+  VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
+  VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
+    
+jobs: 
+  imagebuild:
+    runs-on: [self-hosted, gcve]
+    strategy:
+      matrix:
+        image_type: [ubuntu_2204_vault, ubuntu_2204_postgres]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Makefile
+        run: make ${{ matrix.image_type }}
+      
