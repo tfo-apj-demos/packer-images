@@ -68,10 +68,11 @@
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
     headers: 
       X-Vault-Namespace: admin
-    dest: /usr/local/share/ca-certificate/hcp-vault-ca.crt
+    dest: /usr/local/share/ca-certificates/hcp-vault-ca.crt
     mode: 0644
 
-
+- name: Register HCP Vault CA
+  command: 
 
 - name: Clean up for template conversion
   file:
