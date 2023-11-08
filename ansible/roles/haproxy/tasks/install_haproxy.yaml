@@ -1,19 +1,10 @@
 ---
-- name: "Install Docker packages"
-  apt:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-      - docker-compose-plugin
-      - jq 
-      - wget
-      - curl 
-      - unzip
-    update_cache: yes  # this will refresh your repository cache
-    
-- name: "Docker Service"
-  systemd:
-    name: docker.service
-    enabled: yes
-    state: started
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install HAProxy
+  ansible.builtin.apt:
+    name: haproxy
+    state: present
