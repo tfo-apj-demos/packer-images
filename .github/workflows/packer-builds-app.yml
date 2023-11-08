@@ -12,7 +12,7 @@ env:
   VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
     
 jobs: 
-  imagebuild:
+  build:
     runs-on: [self-hosted, gcve]
     strategy:
       matrix:
