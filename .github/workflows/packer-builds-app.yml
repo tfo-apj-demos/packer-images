@@ -18,7 +18,7 @@ jobs:
     runs-on: [self-hosted, gcve]
     strategy:
       matrix:
-        image_type: [ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_docker]
+        image_type: [ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_docker, ubuntu_2204_haproxy]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
