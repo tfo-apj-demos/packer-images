@@ -2,6 +2,8 @@ name: Build VMware App Images
 
 on:
   workflow_dispatch:
+  schedule:
+   - cron:  '0 11 * * SUN' # UTC TIME
 
 env:
   HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
