@@ -6,6 +6,10 @@
       - docker-ce-cli
       - containerd.io
       - docker-compose-plugin
+      - jq 
+      - wget
+      - curl 
+      - unzip
     update_cache: yes  # this will refresh your repository cache
     
 - name: "Docker Service"
