@@ -63,13 +63,15 @@
     state: present
     line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 
-- name: Add PKI CA certificate
+- name: Download PKI CA certificate
   get_url:
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
     headers: 
       X-Vault-Namespace: admin
-    dest: /usr/local/share/
+    dest: /usr/local/share/ca-certificate/hcp-vault-ca.crt
     mode: 0644
+
+
 
 - name: Clean up for template conversion
   file:
