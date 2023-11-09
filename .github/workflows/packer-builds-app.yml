@@ -50,7 +50,6 @@ jobs:
     strategy:
       matrix:
         image_type: ${{fromJson(needs.selectimages.outputs.images)}}
-          #[ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_docker, ubuntu_2204_haproxy]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
