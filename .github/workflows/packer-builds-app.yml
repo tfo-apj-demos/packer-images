@@ -32,7 +32,7 @@ jobs:
       - name: get-images
         id: get-images
         run: |
-          echo "images=DEFAULT_IMAGES"
+          echo "images=$DEFAULT_IMAGES"
           echo "images=$DEFAULT_IMAGES" >> "$GITHUB_OUTPUT"
       - name: get-images-override
         id: get-images-override
