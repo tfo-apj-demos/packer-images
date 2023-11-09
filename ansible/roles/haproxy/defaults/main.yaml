@@ -4,10 +4,10 @@
 #---------------------------------------------------------------------
 docker: true
 haproxy: true
-keepalived: true
+keepalived: false
 sysctl_tuning: true
 haproxy_exporter: true
-keepalived_exporter: true
+keepalived_exporter: false
 data_plane_api: true
 ufw: true
 
