@@ -66,11 +66,6 @@ variable "os_keyboard_layout" {
   default = "us"
 }
 
-variable "vcenter_insecure_connection" {
-  type    = string
-  default = true
-}
-
 variable "folder" {
   type    = string
   default = "templates"
