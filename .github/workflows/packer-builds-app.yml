@@ -33,8 +33,8 @@ jobs:
         id: get-images
         run: |
           if [[ "${{inputs.singleBuild}}" != '' ]]; then
-            echo "images=[${{inputs.singleBuild}}])"
-            echo "images=[${{inputs.singleBuild}}]" >> "$GITHUB_OUTPUT"
+            echo "images=["${{inputs.singleBuild}}"]"
+            echo "images=["${{inputs.singleBuild}}"]" >> "$GITHUB_OUTPUT"
           else
             echo "images=$DEFAULT_IMAGES"
             echo "images=$DEFAULT_IMAGES" >> "$GITHUB_OUTPUT"
