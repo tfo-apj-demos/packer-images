@@ -16,7 +16,7 @@ on:
    - cron:  '0 11 * * SUN' # UTC TIME
 
 env:
-  DEFAULT_IMAGES: '[ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_docker, ubuntu_2204_haproxy]'
+  DEFAULT_IMAGES: ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_docker, ubuntu_2204_haproxy
   HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
   HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
   HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
@@ -32,11 +32,11 @@ jobs:
         id: get-images
         run: |
           if [[ "${{inputs.singleBuild}}" != '' ]]; then
-            echo "images=["${{inputs.singleBuild}}"]"
-            echo "images=["${{inputs.singleBuild}}"]" >> "$GITHUB_OUTPUT"
+            export IMAGES=$(jq -n '[\"${{inputs.singleBuild}}\"]')
+            echo "images=$IMAGES >> "$GITHUB_OUTPUT"
           else
-            echo "images=$DEFAULT_IMAGES"
-            echo "images=$DEFAULT_IMAGES" >> "$GITHUB_OUTPUT"
+            export IMAGES=$(echo $DEFAULT_IMAGES | jq -R 'split(", "))
+            echo "images=$IMAGES >> "$GITHUB_OUTPUT"
           fi
     outputs:
       images: ${{toJson(steps.get-images.outputs.images)}}
