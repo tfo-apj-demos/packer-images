@@ -1,9 +1,16 @@
 name: Build VMware Base Images
 
-# TODO: Schedule base build.
-
 on:
   workflow_dispatch:
+    inputs:
+      singleBuild:
+        type: choice
+        description: image override
+        required: false
+        options:
+          - all
+          - ubuntu_2204_base
+          - windows_2022_base
   schedule:
 #     # * is a special character in YAML so you have to quote this string
 #     - cron:  '30 5,17 * * *'
@@ -28,25 +35,12 @@ jobs:
     - name: Run Makefile
       run: make ubuntu_2204_base
 
-  ubuntu_2204_vault:
+  windows_2022_base:
     runs-on: [ self-hosted, gcve ]
-    needs: ubuntu_2204_base
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Run Makefile
-      run: make ubuntu_2204_vault
-  
-  ubuntu_2204_postgres:
-    runs-on: [ self-hosted, gcve ]
-    needs: ubuntu_2204_base
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Run Makefile
-      run: make ubuntu_2204_postgres
-      
+      run: make windows_2022_base
