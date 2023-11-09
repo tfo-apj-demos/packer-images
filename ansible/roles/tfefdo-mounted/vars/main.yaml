@@ -1,0 +1,28 @@
+---
+# Variables specific to the Terraform Enterprise installation - FDO Mounted Disk
+# These are less likely to be changed and are not meant to be overridden as defaults.
+
+# See https://developer.hashicorp.com/terraform/enterprise/flexible-deployments/install/docker/install
+#
+
+# Specific version of Terraform Enterprise to use
+terraform_version: 'v202311-1'
+
+# Production HashiCorp license
+hashicorp_license: 'your-production-license-key'
+
+# Fully qualified domain name for the Terraform Enterprise instance
+tfe_hostname: 'terraform.mycompany.com'
+
+# Strong encryption password for Terraform Enterprise data
+encryption_password: 'veryStrongPassword123!'
+
+# Subnets that are allowed for IACT (initial admin creation tool)
+iact_subnets: '10.0.1.0/24,192.168.35.0/24'
+
+# Path on the host system for persistent Docker volume
+mounted_disk_path_on_host: '/etc/tfe'
+
+# Please note that you should not store actual sensitive data in this file
+# For sensitive data like `hashicorp_license` and `encryption_password`,
+# you should use Ansible Vault to encrypt the actual values.

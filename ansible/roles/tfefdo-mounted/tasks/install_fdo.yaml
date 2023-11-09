@@ -1,0 +1,19 @@
+---
+- name: "Install Docker packages"
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+      - jq 
+      - wget
+      - curl 
+      - unzip
+    update_cache: yes  # this will refresh your repository cache
+    
+- name: "Docker Service"
+  systemd:
+    name: docker.service
+    enabled: yes
+    state: started
