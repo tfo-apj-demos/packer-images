@@ -53,6 +53,7 @@ vrrp_ip_interface: ens192
 vrrp_state: MASTER
 vrrp_priority: 101
 
+
 # vrrp health check haproxy config
 vrrp_script_chk_haproxy:
   script: "/usr/bin/killall -0 haproxy"
