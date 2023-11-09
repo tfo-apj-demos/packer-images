@@ -18,10 +18,6 @@
     enabled: yes
     state: started
 
-- name: Use the HashiCorp license
-  debug:
-    msg: "The HashiCorp license is {{ (role_config | from_json)['tfefdo']['hashicorp_license'] }}"
+#{{ (role_config | from_json)['tfefdo']['hashicorp_license'] }}"
 
-- name: Use the encryption password
-  debug:
-    msg: "The encryption password is {{ (role_config | from_json)['tfefdo']['encryption_password'] }}"
+#{{ (role_config | from_json)['tfefdo']['encryption_password'] }}"
