@@ -25,6 +25,7 @@ env:
   VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
   VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
   VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
+  ROLE_CONFIG: ${{ secrets.ROLE_CONFIG }}
     
 jobs:
   selectimages:
