@@ -2,6 +2,7 @@ locals {
 	ansible_extra_arguments = var.debug_ansible ? [
 			"--extra-vars", "ansible_become_password=${var.os_password}",
 			"--extra-vars", "role=${var.role}",
+      "--extra-vars", "role_config=${var.role_config}",
 			"-vvv",
       "--scp-extra-args", "'-O'"
 
