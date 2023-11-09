@@ -32,20 +32,22 @@ jobs:
       - name: get-images
         id: get-images
         run: |
-          echo "images=$DEFAULT_IMAGES"
-          echo "images=$DEFAULT_IMAGES" >> "$GITHUB_OUTPUT"
-      - name: get-images-override
-        id: get-images-override
-        if: ${{inputs.singleBuild}} != ''
-        run: |
-          echo "images=${{inputs.singleBuild}}"
-          echo "images=${{inputs.singleBuild}}" >> "$GITHUB_OUTPUT"
+          if [[ "${{inputs.singleBuild}}" != '' ]]; then
+            echo "images=${{inputs.singleBuild}}"
+            echo "images=${{inputs.singleBuild}}" >> "$GITHUB_OUTPUT"
+          else
+            echo "images=$DEFAULT_IMAGES"
+            echo "images=$DEFAULT_IMAGES" >> "$GITHUB_OUTPUT"
+          fi
+    outputs:
+      images: ${{ steps.get-images.outputs.images }}
+
   build:
     runs-on: [self-hosted, gcve]
     needs: [selectimages]
     strategy:
       matrix:
-        image_type: []
+        image_type: [needs.]
           #[ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_docker, ubuntu_2204_haproxy]
     steps:
       - name: Checkout code
