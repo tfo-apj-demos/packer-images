@@ -2,14 +2,14 @@ locals {
 	ansible_extra_arguments = var.debug_ansible ? [
 			"--extra-vars", "ansible_become_password=${var.os_password}",
 			"--extra-vars", "role=${var.role}",
-      "--extra-vars", "role_config=${var.role_config}",
+      "--extra-vars", "role_config='${var.role_config}'",
 			"-vvv",
       "--scp-extra-args", "'-O'"
 
     ] : [
 			"--extra-vars", "ansible_become_password=${var.os_password}",
 			"--extra-vars", "role=${var.role}",
-      "--extra-vars", "role_config=${var.role_config}",
+      "--extra-vars", "role_config='${var.role_config}'",
       "--scp-extra-args", "'-O'"
 		]
   sources = var.role == "base" ? [ "vsphere-iso.this" ] : [ "vsphere-clone.this" ]
