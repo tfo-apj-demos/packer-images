@@ -35,7 +35,7 @@ jobs:
             export IMAGES=$(jq -n '[\"${{inputs.singleBuild}}\"]')
             echo "images=$IMAGES" >> $GITHUB_OUTPUT
           else
-            export IMAGES=$(echo $DEFAULT_IMAGES | jq -R 'split(", "))
+            export IMAGES=$(echo $DEFAULT_IMAGES | jq -R 'split(", ")')
             echo "images=$IMAGES" >> $GITHUB_OUTPUT
           fi
     outputs:
