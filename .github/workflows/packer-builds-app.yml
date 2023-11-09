@@ -40,7 +40,7 @@ jobs:
             echo "images=$IMAGES" >> $GITHUB_OUTPUT
           fi
     outputs:
-      images: ${{toJson(steps.get-images.outputs.images)}}
+      images: ${{steps.get-images.outputs.images}}
 
   build:
     runs-on: [self-hosted, gcve]
