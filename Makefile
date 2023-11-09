@@ -22,9 +22,9 @@ ubuntu_2204_haproxy:
 	packer init -var-file variables/haproxy.pkrvars.hcl builds/linux/ubuntu/2204
 	packer build -var-file variables/haproxy.pkrvars.hcl builds/linux/ubuntu/2204
 
-ubuntu_2204_tfefdo-mounted:
-	packer init -var-file variables/tfefdo-mounted.pkrvars.hcl builds/linux/ubuntu/2204
-	packer build -var-file variables/tfefdo-mounted.pkrvars.hcl builds/linux/ubuntu/2204
+ubuntu_2204_tfefdo_mounted:
+	packer init -var-file variables/tfefdo_mounted.pkrvars.hcl builds/linux/ubuntu/2204
+	packer build -var-file variables/tfefdo_mounted.pkrvars.hcl builds/linux/ubuntu/2204
 
 windows_2022_base:
 	packer init -var-file variables/base_windows.pkrvars.hcl builds/windows/2022
