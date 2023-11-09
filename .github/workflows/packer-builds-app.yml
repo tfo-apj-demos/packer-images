@@ -39,7 +39,7 @@ jobs:
         if: ${{inputs.singleBuild}} != ''
         run: |
           echo "images=${{inputs.singleBuild}}"
-          echo "images=${{inputs.singleBuild}} >> "$GITHUB_OUTPUT"
+          echo "images=${{inputs.singleBuild}}" >> "$GITHUB_OUTPUT"
   build:
     runs-on: [self-hosted, gcve]
     needs: [selectimages]
