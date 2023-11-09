@@ -18,6 +18,11 @@ variable "role" {
   default = "base"
 }
 
+variable "role_config" {
+  type    = string
+  default = env("ROLE_CONFIG")
+}
+
 variable "debug_ansible" {
   type    = bool
   default = false
