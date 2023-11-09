@@ -46,7 +46,7 @@ source "vsphere-iso" "win2022dc" {
 
   floppy_files = [
     "${path.cwd}/builds/windows/bootfiles/2022/autounattend.xml",
-    //"../../scripts/common/install-vmtools64.cmd",
+    "${path.cwd}/builds/windows/scripts/install-vmtools64.cmd",
     "${path.cwd}/builds/windows/scripts/initial-setup.ps1"
   ]
 
