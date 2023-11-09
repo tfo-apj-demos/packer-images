@@ -17,6 +17,7 @@ on:
     - cron:  '0 10 * * SUN' # UTC TIME
 
 env:
+  DEFAULT_IMAGES: ubuntu_2204_base, windows_2022_base
   HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
   HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
   HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
@@ -25,22 +26,33 @@ env:
   VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
     
 jobs:
-  ubuntu_2204_base:
-    runs-on: [ self-hosted, gcve ]
-
+  selectimages:
+    runs-on: "ubuntu-latest"
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: get-images
+        id: get-images
+        run: |
+          if [[ "${{ inputs.singleBuild }}" != "all" ]]; then
+            export IMAGES=$(echo ${{ inputs.singleBuild }} | jq -R '["\(.)"]')
+            echo "images_out"=$IMAGES""
+            echo "images_out"=$IMAGES"" >> $GITHUB_OUTPUT
+          else
+            export IMAGES=$(echo $DEFAULT_IMAGES | jq -R 'split(", ")')
+            echo "images_out"=$IMAGES""
+            echo "images_out"=$IMAGES"" >> $GITHUB_OUTPUT
+          fi
+    outputs:
+      images: ${{ steps.get-images.outputs.images_out }}
 
-    - name: Run Makefile
-      run: make ubuntu_2204_base
-
-  windows_2022_base:
-    runs-on: [ self-hosted, gcve ]
-
+  build:
+    runs-on: [self-hosted, gcve]
+    needs: [selectimages]
+    strategy:
+      matrix:
+        image_type: ${{fromJson(needs.selectimages.outputs.images)}}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Run Makefile
-      run: make windows_2022_base
+      - name: Run Makefile
+        run: make ${{ matrix.image_type }}
