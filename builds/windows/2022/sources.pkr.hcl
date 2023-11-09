@@ -1,52 +1,66 @@
-source "vsphere-iso" "windows-server-2022" {
-  // Connection details
-  username            = var.vcenter_username
-  password            = var.vcenter_password
+locals {
+  timestamp     = regex_replace(timestamp(), "[- TZ:]", "")
+  name          = "base-windows-2022-${local.timestamp}"
+  build_version = formatdate("YY.MM", timestamp())
+  build_date    = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+}
+
+source "vsphere-iso" "win2022dc" {
+  # vCenter Credentials
+  username = var.vcenter_username
+  password = var.vcenter_password
+
+  # vCenter Details
   vcenter_server      = var.vcenter_server
-  insecure_connection = var.vcenter_insecure_connection
+  insecure_connection = var.vcenter_sslconnection
+  datacenter          = var.vcenter_datacenter
+  cluster             = var.vcenter_cluster
+  datastore           = var.vcenter_datastore
+  folder              = var.vcenter_folder
 
-  // Set the communicator to WinRM for Windows
-  communicator  = "winrm"
-  winrm_username = "Administrator"
-  winrm_password = "Hashi123!"
-  winrm_timeout  = "6h"
-
-  // Where to build
-  datacenter = lookup(var.region, "vsphere", "Datacenter")
-  cluster    = var.cluster
-  datastore  = var.datastore
-  folder     = var.folder
-
-  // Virtual machine configuration
-  convert_to_template = true
-  vm_name             = local.name
-  guest_os_type       = var.guest_os_type
-
-  // VM hardware specifications
-  CPUs                = 2
-  RAM                 = 4096
-  RAM_reserve_all     = true
-  disk_controller_type= ["pvscsi"]
-
-  // VM storage configuration
-  storage {
-    disk_size             = 51200 // Recommended size for Windows Server 2022
-    disk_thin_provisioned = true
-  }
-
-  // VM network configuration
+  # VM Hardware Configuration
+  vm_name       = local.name
+  notes         = "Version: ${local.build_version}\nBuild Time: ${local.build_date}\nOS: Windows Server 2022 Datacenter"
+  guest_os_type = var.vm_os_type
+  firmware      = var.vm_firmware
+  vm_version    = var.vm_hardware_version
+  CPUs          = var.vm_cpu_sockets
+  cpu_cores     = var.vm_cpu_cores
+  RAM           = var.vm_ram
   network_adapters {
-    network      = var.network
-    network_card = "vmxnet3"
+    network_card = var.vm_nic_type
+    network      = var.vm_network
   }
+  disk_controller_type = var.vm_disk_controller
+  storage {
+    disk_size             = var.vm_disk_size
+    disk_thin_provisioned = var.vm_disk_thin
+  }
+  configuration_parameters = var.config_parameters
 
-  // ISO configuration
-  iso_paths = var.iso_paths
-
-  // Include autounattend.xml and scripts on a virtual CD-ROM
-  cd_files = [
-    "${path.root}/data/autounattend.xml",
-    "${path.root}/data/scripts/*"
+  # Removable Media Configuration
+  iso_paths = [
+    "[${var.vcenter_iso_datastore}] ${var.os_iso_path}/${var.os_iso_file}",
+    "[${var.vcenter_iso_datastore}] ${var.vmtools_iso_path}/${var.vmtools_iso_file}"
   ]
-  cd_label = "WIN_INSTALL"
+
+  floppy_files = [
+    "${path.cwd}/builds/windows/bootfiles/2022/autounattend.xml",
+    //"../../scripts/common/install-vmtools64.cmd",
+    "${path.cwd}/builds/windows/scripts/initial-setup.ps1"
+  ]
+
+  remove_cdrom        = var.vm_cdrom_remove
+  convert_to_template = var.vm_convert_template
+
+  # Build Settings
+  boot_command     = ["<spacebar>"]
+  boot_wait        = "3s"
+  ip_wait_timeout  = "20m"
+  communicator     = "winrm"
+  winrm_timeout    = "8h"
+  winrm_username   = var.winrm_username
+  winrm_password   = var.winrm_password
+  shutdown_command = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Build Complete\""
+  shutdown_timeout = "1h"
 }
