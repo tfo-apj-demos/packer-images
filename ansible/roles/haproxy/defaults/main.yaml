@@ -1,1 +1,168 @@
 ---
+#---------------------------------------------------------------------
+### Install And Configure
+#---------------------------------------------------------------------
+docker: true
+haproxy: true
+keepalived: true
+sysctl_tuning: true
+haproxy_exporter: true
+keepalived_exporter: true
+data_plane_api: true
+ufw: true
+
+#---------------------------------------------------------------------
+### Haproxy Config
+#---------------------------------------------------------------------
+haproxy_install_type: docker-compose # service / docker-compose
+
+# Golabal configs
+haproxy_global:
+  home_dir: /opt/haproxy
+  version: 2.8
+  maxconn: 1000
+
+# Dashboard config
+haproxy_dashboard:
+  user: admin
+  password: admin
+
+# Haproxy timeout configs
+haproxy_timeout:
+  connect: 30s
+  client: 60s
+  server: 60s
+
+# Haproxy monitoring configs
+haproxy_monitoring_config:
+  port: 9090
+  uri: /stats
+  refresh: 10s
+
+# Haproxy logging configs
+haproxy_logging:
+  driver: json-file
+  maxfile: "3"
+  maxsize: 100m
+
+#---------------------------------------------------------------------
+### Keepalived Config
+#---------------------------------------------------------------------
+vrrp_auth_type: PASS
+
+# vrrp health check haproxy config
+vrrp_script_chk_haproxy:
+  script: "/usr/bin/killall -0 haproxy"
+  interval: 2
+  weight: 2
+
+vrrp_instances:
+  - vrrp_instance_name: VI_1
+    virtual_ipaddress: "84.106.57.166/27"
+    virtual_router_id: "56"
+    auth_password: "141a653b895287bf9"
+  - vrrp_instance_name: VI_2
+    virtual_ipaddress: "84.106.57.167/32"
+    virtual_router_id: "57"
+    auth_password: "141a653b895287ff9"
+  - vrrp_instance_name: VI_3
+    virtual_ipaddress: "84.106.57.168/32"
+    virtual_router_id: "58"
+    auth_password: "141a653b895287vf9"
+
+keepalived_exporter_config:
+  version: 1.3.0
+  port: 9165
+  path: /metrics
+
+#---------------------------------------------------------------------
+### Sysctl Config
+#---------------------------------------------------------------------
+sysctl_config:
+  - name: net.ipv4.ip_forward # Enable IP forwarding
+    value: 1
+  - name: net.ipv6.conf.all.disable_ipv6 # Disable IPv6 for all network interfaces
+    value: 1
+  - name: net.ipv6.conf.default.disable_ipv6 # Disable IPv6 for the default network interface
+    value: 1
+  - name: net.ipv4.ip_local_port_range # Set the range of local ports for outgoing connections
+    value: 32768 60999
+  - name: net.core.default_qdisc # Set the default queuing discipline to Fair Queueing
+    value: fq
+  - name: net.ipv4.tcp_congestion_control # Set TCP congestion control algorithm to BBR
+    value: bbr
+  - name: fs.file-max # Set the maximum number of file handles
+    value: 1000000
+  - name: net.core.rmem_max # Set the maximum receive socket buffer size
+    value: 104857600
+  - name: net.core.wmem_max # Set the maximum send socket buffer size
+    value: 104857600
+  - name: net.ipv4.tcp_window_scaling # Enable TCP window scaling
+    value: 1
+  - name: net.ipv4.tcp_rmem # Set TCP receive buffer sizes
+    value: 4096 87380 67108864
+  - name: net.ipv4.tcp_wmem # Set TCP send buffer sizes
+    value: 4096 65536 67108864
+  - name: net.ipv4.tcp_sack # Enable TCP Selective Acknowledgment (SACK)
+    value: 1
+  - name: net.ipv4.tcp_timestamps # Enable TCP timestamps
+    value: 1
+  - name: net.ipv4.tcp_max_tw_buckets # Set the maximum number of TCP Time-Wait buckets
+    value: 2000000
+  - name: net.ipv4.tcp_mem # Set TCP memory thresholds
+    value: 26214400 52428800 104857600
+  - name: net.core.rmem_default # Set the default receive socket buffer size
+    value: 26214400
+  - name: net.core.wmem_default # Set the default send socket buffer size
+    value: 26214400
+  - name: net.ipv4.tcp_fastopen # Enable TCP Fast Open
+    value: 3
+  - name: net.core.somaxconn # Set the maximum number of pending connections
+    value: 65535
+  - name: net.ipv4.tcp_max_syn_backlog # Set the maximum number of pending TCP SYN requests
+    value: 65535
+  - name: net.core.netdev_max_backlog # Set the maximum number of queued packets on network interfaces
+    value: 16384
+  - name: net.ipv4.ip_nonlocal_bind # This allows software to bind to addresses that aren't currently available on the host.
+    value: 1
+
+sysctl_ufw_config:
+  - name: net.netfilter.nf_conntrack_max
+    value: 2000000
+
+#---------------------------------------------------------------------
+### Data Plane API Config
+#---------------------------------------------------------------------
+
+# For container mode
+dataplaneapi:
+  user: admin
+  password: adminpwd
+  api:
+    command: /usr/bin/dataplaneapi
+    host: 0.0.0.0
+    port: 5555
+    haproxy_bin: /usr/sbin/haproxy
+    config_file: /usr/local/etc/haproxy/haproxy.cfg
+    reload_cmd: "kill -SIGUSR2 1"
+    restart_cmd: "kill -SIGUSR2 1"
+    reload_delay: 5
+
+#---------------------------------------------------------------------
+### UFW Config
+#---------------------------------------------------------------------
+ufw_state: enabled # enabled/disabled/reloaded
+
+ufw_rules:
+  - rule: allow
+    src: 172.16.0.0/16
+  - rule: allow
+    src: 172.20.0.0/16
+
+ufw_ports:
+  - rule: allow
+    port: 80
+    proto: tcp
+  - rule: allow
+    port: 443
+    proto: tcp
