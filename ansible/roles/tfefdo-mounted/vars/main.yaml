@@ -4,7 +4,7 @@
 
 # See https://developer.hashicorp.com/terraform/enterprise/flexible-deployments/install/docker/install
 #
-
+role_config: ""
 # Specific version of Terraform Enterprise to use
 terraform_version: 'v202311-1'
 
