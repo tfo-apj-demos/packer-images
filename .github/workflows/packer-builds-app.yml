@@ -34,11 +34,11 @@ jobs:
         run: |
           if [[ "${{ inputs.singleBuild }}" != "all" ]]; then
             export IMAGES=$(echo ${{ inputs.singleBuild }} | jq -R '["\(.)"]')
-            echo $IMAGES
+            echo "images_out=$IMAGES"
             echo "images_out=$IMAGES" >> $GITHUB_OUTPUT
           else
             export IMAGES=$(echo $DEFAULT_IMAGES | jq -R 'split(", ")')
-            echo $IMAGES
+            echo "images_out=$IMAGES"
             echo "images_out=$IMAGES" >> $GITHUB_OUTPUT
           fi
     outputs:
