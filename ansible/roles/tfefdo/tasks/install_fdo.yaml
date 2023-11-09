@@ -20,8 +20,8 @@
 
 - name: Use the HashiCorp license
   debug:
-    msg: "The HashiCorp license is {{ role_config['tfefdo']['hashicorp_license'] }}"
+    msg: "The HashiCorp license is {{ (role_config | fromjson)['tfefdo']['hashicorp_license'] }}"
 
 - name: Use the encryption password
   debug:
-    msg: "The encryption password is {{ role_config['tfefdo']['encryption_password'] }}"
+    msg: "The encryption password is {{ (role_config | fromjson)['tfefdo']['encryption_password'] }}"
