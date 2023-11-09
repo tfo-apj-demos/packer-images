@@ -1,4 +1,4 @@
-role = "tfefdo-mounted"
+role = "tfefdo_mounted"
 os_password="Hashi123!"
 owner = "Grant Orchard"
 project_id = "TFO"
