@@ -49,6 +49,7 @@ haproxy_logging:
 ### Keepalived Config
 #---------------------------------------------------------------------
 vrrp_auth_type: PASS
+vrrp_ip_interface: ens192
 
 # vrrp health check haproxy config
 vrrp_script_chk_haproxy:
