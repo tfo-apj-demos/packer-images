@@ -7,7 +7,8 @@ on:
         type: choice
         description: image override
         required: false
-        options: 
+        options:
+          - all
           - ubuntu_2204_vault
           - ubuntu_2204_postgres
           - ubuntu_2204_docker
@@ -31,8 +32,8 @@ jobs:
       - name: get-images
         id: get-images
         run: |
-          if [[ "${{inputs.singleBuild}}" != '' ]]; then
-            export IMAGES=$(jq -n '[\"${{inputs.singleBuild}}\"]')
+          if [[ "${{inputs.singleBuild}}" != "all" ]]; then
+            export IMAGES=$(echo ${{inputs.singleBuild}} | jq -R '["\(.)"]' )
             echo "images=$IMAGES" >> $GITHUB_OUTPUT
           else
             export IMAGES=$(echo $DEFAULT_IMAGES | jq -R 'split(", ")')
