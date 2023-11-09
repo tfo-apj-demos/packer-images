@@ -33,10 +33,10 @@ jobs:
         run: |
           if [[ "${{inputs.singleBuild}}" != '' ]]; then
             export IMAGES=$(jq -n '[\"${{inputs.singleBuild}}\"]')
-            echo "images=$IMAGES >> "$GITHUB_OUTPUT"
+            echo "images=$IMAGES" >> $GITHUB_OUTPUT
           else
             export IMAGES=$(echo $DEFAULT_IMAGES | jq -R 'split(", "))
-            echo "images=$IMAGES >> "$GITHUB_OUTPUT"
+            echo "images=$IMAGES" >> $GITHUB_OUTPUT
           fi
     outputs:
       images: ${{toJson(steps.get-images.outputs.images)}}
