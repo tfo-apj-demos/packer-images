@@ -2,6 +2,17 @@ name: Build VMware App Images
 
 on:
   workflow_dispatch:
+    inputs:
+      singleBuild:
+        type: choice
+        description: image override
+        required: false
+        options: 
+          - ubuntu_2204_vault
+          - ubuntu_2204_postgres
+          - ubuntu_2204_docker
+          - ubuntu_2204_docker
+          - ubuntu_2204_haproxy
   schedule:
    - cron:  '0 11 * * SUN' # UTC TIME
 
