@@ -1,22 +1,18 @@
 # vCenter Credentials
+variable "vcenter_server" {
+  description = "The FQDN of the vCenter Packer will connect to"
+  type = string
+  default = env("VCENTER_SERVER")
+}
 
 variable "vcenter_username" {
-  description = "The username Packer will use to login to vCenter"
-  type        = string
-  sensitive   = true
+  type = string
+  default = env("VCENTER_USERNAME")
 }
 
 variable "vcenter_password" {
-  description = "The password Packer will use to login to vCenter"
-  type        = string
-  sensitive   = true
-}
-
-# vCenter Details
-
-variable "vcenter_server" {
-  description = "The FQDN of the vCenter Packer will connect to"
-  type        = string
+  type = string
+  default = env("VCENTER_PASSWORD")
 }
 
 variable "vcenter_sslconnection" {
