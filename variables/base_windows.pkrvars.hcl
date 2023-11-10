@@ -5,11 +5,9 @@ owner       = "Grant Orchard"
 
 # vCenter credentials
 # Use environment variables or pass with build command
-vcenter_username = ""
-vcenter_password = ""
 
 # vCenter details
-vcenter_server = ""
+
 vcenter_sslconnection = true
 vcenter_datacenter = "Datacenter"
 vcenter_cluster = "cluster"
