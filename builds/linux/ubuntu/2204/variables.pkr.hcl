@@ -14,6 +14,11 @@ variable "vcenter_password" {
   default = env("VCENTER_PASSWORD")
 }
 
+variable "role_config" {
+  type    = string
+  default = env("ROLE_CONFIG")
+}
+
 variable "vcenter_insecure_connection" {
   type    = string
   default = false

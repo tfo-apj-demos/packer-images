@@ -1,0 +1,23 @@
+- name: keepalived restart
+  systemd:
+    state: restarted
+    enabled: yes
+    name: keepalived.service
+
+- name: haproxy restart
+  service:
+    state: restarted
+    name: haproxy
+
+- name: keepalived-exporter restart
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: keepalived-exporter.service
+
+- name: Start and Enable docker
+  systemd:
+    name: docker.service
+    state: started
+    enabled: true

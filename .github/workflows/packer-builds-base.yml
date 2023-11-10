@@ -1,0 +1,58 @@
+name: Build VMware Base Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      singleBuild:
+        type: choice
+        description: image override
+        required: false
+        options:
+          - all
+          - ubuntu_2204_base
+          - windows_2022_base
+  schedule:
+#     # * is a special character in YAML so you have to quote this string
+#     - cron:  '30 5,17 * * *'
+    - cron:  '0 10 * * SUN' # UTC TIME
+
+env:
+  DEFAULT_IMAGES: ubuntu_2204_base, windows_2022_base
+  HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+  HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+  HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
+  VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
+  VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
+  VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
+    
+jobs:
+  selectimages:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: get-images
+        id: get-images
+        run: |
+          if [[ "${{ inputs.singleBuild }}" != "all" ]]; then
+            export IMAGES=$(echo ${{ inputs.singleBuild }} | jq -R '["\(.)"]')
+            echo "images_out"=$IMAGES""
+            echo "images_out"=$IMAGES"" >> $GITHUB_OUTPUT
+          else
+            export IMAGES=$(echo $DEFAULT_IMAGES | jq -R 'split(", ")')
+            echo "images_out"=$IMAGES""
+            echo "images_out"=$IMAGES"" >> $GITHUB_OUTPUT
+          fi
+    outputs:
+      images: ${{ steps.get-images.outputs.images_out }}
+
+  build:
+    runs-on: [self-hosted, gcve]
+    needs: [selectimages]
+    strategy:
+      matrix:
+        image_type: ${{fromJson(needs.selectimages.outputs.images)}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+
+      - name: Run Makefile
+        run: make ${{ matrix.image_type }}

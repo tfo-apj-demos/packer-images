@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+    haproxy:
+        image: haproxytech/haproxy-debian:{{ haproxy_global.version }}
+        container_name: haproxy
+        volumes:
+            - ./config:/usr/local/etc/haproxy:rw
+        network_mode: host
+        user: root
+        restart: always
+        logging:
+          driver: {{haproxy_logging.driver}}
+          options:
+            max-file: {{haproxy_logging.maxfile}}
+            max-size: {{haproxy_logging.maxsize}}
