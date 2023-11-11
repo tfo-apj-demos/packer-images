@@ -163,6 +163,7 @@ variable "winrm_password" {
   description = "The winrm password that is used to connect to the VM. This should match the Autounattend.xml"
   type        = string
   sensitive   = true
+  default = env("WINDOWS_PASSWORD")
 }
 
 # Provisioner Settings
