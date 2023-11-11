@@ -24,6 +24,8 @@ env:
   VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
   VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
   VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
+  WINDOWS_PASSWORD: ${{secrets.WINDOWS_PASSWORD}}
+  LINUX_PASSWORD: ${{secrets.LINUX_PASSWORD}}
     
 jobs:
   selectimages:
