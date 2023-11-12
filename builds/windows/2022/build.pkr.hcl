@@ -18,16 +18,6 @@ build {
   sources = [
     "source.vsphere-iso.win2022dc",
   ]
-  
-  provisioner "powershell" {
-    inline = [
-      "echo 'Processing autounattend.xml with secret...'",
-      "$secret = \"${var.winrm_password}\"",
-      "$xml = Get-Content -Path '${path.cwd}/builds/windows/bootfiles/2022/autounattend.xml'",
-      "$xml = $xml -replace 'SECRET_PLACEHOLDER', $secret",
-      "Set-Content -Path '${path.cwd}/builds/windows/bootfiles/2022/autounattend.xml' -Value $xml -Force"
-    ]
-  }
 
   provisioner "windows-restart" {}
 
