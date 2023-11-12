@@ -43,7 +43,7 @@ vmtools_iso_file = "VMware-Tools-windows-12.3.5-22544099.iso"
 vm_cdrom_remove = true
 
 # Build Settings
-vm_convert_template = false
+vm_convert_template = true
 winrm_username = "Administrator"
 # Use environment variables or pass with build command
 winrm_password = "VMware1!"
