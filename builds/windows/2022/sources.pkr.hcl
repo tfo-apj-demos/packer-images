@@ -55,7 +55,7 @@ source "vsphere-iso" "win2022dc" {
 
   # Build Settings
   boot_command     = ["<spacebar>"]
-  boot_wait        = "3s"
+  boot_wait        = "1s"
   ip_wait_timeout  = "20m"
   communicator     = "winrm"
   winrm_timeout    = "8h"
