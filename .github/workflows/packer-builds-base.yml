@@ -56,5 +56,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4.1.1
 
+      # Conditional Step for Windows Password Replacement
+      - name: Replace Password in autounattend.xml
+        if: contains(matrix.image_type, 'windows')
+        run: |
+          sed -i 's/PLACEHOLDER_PASSWORD/${{ secrets.WINDOWS_PASSWORD }}/g' builds/windows/bootfiles/2022/autounattend.xml
+    
       - name: Run Makefile
         run: make ${{ matrix.image_type }}
