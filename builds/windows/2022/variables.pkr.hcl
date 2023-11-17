@@ -1,17 +1,18 @@
 # vCenter Credentials
 variable "vcenter_server" {
   description = "The FQDN of the vCenter Packer will connect to"
-  type = string
-  default = env("VCENTER_SERVER")
+  type        = string
+  default     = env("VCENTER_SERVER")
+
 }
 
 variable "vcenter_username" {
-  type = string
+  type    = string
   default = env("VCENTER_USERNAME")
 }
 
 variable "vcenter_password" {
-  type = string
+  type    = string
   default = env("VCENTER_PASSWORD")
 }
 
@@ -21,31 +22,42 @@ variable "vcenter_sslconnection" {
   default     = false
 }
 
-variable "vcenter_datacenter" {
-  description = "The name of the Datacenter in vCenter Packer will build in"
-  type        = string
+variable "region" {
+  type = map(string)
+  default = {
+    "aws"     = "us-west-2",
+    "vsphere" = "Datacenter",
+    "azure"   = "australiaeast"
+  }
 }
 
-variable "vcenter_cluster" {
+variable "cluster" {
   description = "The name of the Cluster in vCenter Packer will build in"
   type        = string
 }
 
-variable "vcenter_datastore" {
+variable "datastore" {
   description = "The name of the Datastore in vCenter Packer will build in"
   type        = string
 }
 
-variable "vcenter_folder" {
+variable "network" {
+  description = "The name of the network that the VM will connect to"
+  type        = string
+}
+
+variable "folder" {
   description = "The name of the Folder in vCenter Packer will build in"
   type        = string
+  default = "templates"
 }
 
 # VM Hardware Configuration
 
-variable "vm_os_type" {
+variable "guest_os_type" {
   description = "The Guest OS identifier for the VM"
   type        = string
+  default = "windows9Server64Guest"
 }
 
 variable "vm_firmware" {
@@ -57,6 +69,7 @@ variable "vm_firmware" {
 variable "vm_hardware_version" {
   description = "The VM hardware version"
   type        = number
+  default = 17
 }
 
 variable "vm_cpu_sockets" {
@@ -74,7 +87,7 @@ variable "vm_cpu_cores" {
 variable "vm_ram" {
   description = "The amount of RAM in Mb for the VM"
   type        = number
-  default     = 2048
+  default     = 4096
 }
 
 variable "vm_nic_type" {
@@ -83,9 +96,10 @@ variable "vm_nic_type" {
   default     = "vmxnet3"
 }
 
-variable "vm_network" {
-  description = "The name of the network that the VM will connect to"
-  type        = string
+variable "template" {
+  description = "The template to use for any clone (role) based deployment"
+  type = string
+  default = ""
 }
 
 variable "vm_disk_controller" {
@@ -97,7 +111,7 @@ variable "vm_disk_controller" {
 variable "vm_disk_size" {
   description = "The size of the disk (C:) for the VM"
   type        = number
-  default     = 20480
+  default     = 61440
 }
 
 variable "vm_disk_thin" {
@@ -109,6 +123,13 @@ variable "vm_disk_thin" {
 variable "config_parameters" {
   description = "The list of extra configuration parameters to add to the vmx file"
   type        = map(string)
+  default = {
+        "devices.hotplug" = "FALSE",
+        "guestInfo.svga.wddm.modeset" = "FALSE",
+        "guestInfo.svga.wddm.modesetCCD" = "FALSE",
+        "guestInfo.svga.wddm.modesetLegacySingle" = "FALSE",
+        "guestInfo.svga.wddm.modesetLegacyMulti" = "FALSE"
+  }
 }
 
 # Removable Media Configuration
@@ -116,26 +137,31 @@ variable "config_parameters" {
 variable "vcenter_iso_datastore" {
   description = "The name of the Datastore in vCenter the ISOs are located on"
   type        = string
+  default = "vsanDatastore"
 }
 
-variable "os_iso_path" {
+variable "iso_path" {
   description = "The path to the ISO file to be used for OS installation"
   type        = string
+  default = "ISO"
 }
 
 variable "os_iso_file" {
   description = "The name to the ISO file to be used for OS installation"
   type        = string
+  default = ""
 }
 
-variable "vmtools_iso_path" {
-  description = "The path to the ISO file to be used for VMware Tools installation"
+variable "role_iso_file" {
+  description = "The name to the ISO file to be used for OS installation"
   type        = string
+  default = ""
 }
 
 variable "vmtools_iso_file" {
   description = "The name to the ISO file to be used for VMware Tools installation"
   type        = string
+  default = ""
 }
 
 variable "vm_cdrom_remove" {
@@ -163,7 +189,7 @@ variable "winrm_password" {
   description = "The winrm password that is used to connect to the VM. This should match the Autounattend.xml"
   type        = string
   sensitive   = true
-  default = env("WINDOWS_PASSWORD")
+  default     = env("WINDOWS_PASSWORD")
 }
 
 # Provisioner Settings
@@ -173,15 +199,11 @@ variable "powershell_scripts" {
   type        = list(string)
 }
 
-variable "region" {
-  type = map(string)
-  default = {
-    "aws"     = "us-west-2",
-    "vsphere" = "Datacenter",
-    "azure"   = "australiaeast"
-  }
-}
-
 variable "owner" {
   type = string
+}
+
+variable "role" {
+  type        = string
+  description = "The application to trigger as part of the build process."
 }

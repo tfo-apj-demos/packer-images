@@ -32,7 +32,7 @@ Set-ItemProperty -Path 'HKLM:\SOFTWARE\VMware, Inc.\VMware Tools' -Name 'ShowTra
 
 # Enable Firewall
 Write-Host "Enable Windows Firewall"
-netsh Advfirewall set allprofiles state on
+netsh Advfirewall set allprofiles state off
 
 # Clear Event Logs
 Write-Host "Clear Event Logs"

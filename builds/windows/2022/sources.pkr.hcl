@@ -1,47 +1,53 @@
 locals {
   timestamp     = regex_replace(timestamp(), "[- TZ:]", "")
-  name          = "base-windows-2022-${local.timestamp}"
+  name          = "${var.role}-windows-2022-${local.timestamp}"
   build_version = formatdate("YY.MM", timestamp())
   build_date    = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
 }
 
-source "vsphere-iso" "win2022dc" {
-  # vCenter Credentials
+source "vsphere-iso" "this" {
+  // Connection details
   username = var.vcenter_username
   password = var.vcenter_password
-
-  # vCenter Details
   vcenter_server      = var.vcenter_server
   insecure_connection = var.vcenter_sslconnection
-  datacenter          = var.vcenter_datacenter
-  cluster             = var.vcenter_cluster
-  datastore           = var.vcenter_datastore
-  folder              = var.vcenter_folder
 
-  # VM Hardware Configuration
+  // Where to build
+  datacenter = lookup(var.region, "vsphere", "Datacenter")
+  cluster             = var.cluster
+  datastore           = var.datastore
+  folder              = var.folder
+
+  # Virtual Machine configuration
+  convert_to_template = var.vm_convert_template
+
   vm_name       = local.name
   notes         = "Version: ${local.build_version}\nBuild Time: ${local.build_date}\nOS: Windows Server 2022 Datacenter"
-  guest_os_type = var.vm_os_type
+  guest_os_type = var.guest_os_type
   firmware      = var.vm_firmware
   vm_version    = var.vm_hardware_version
   CPUs          = var.vm_cpu_sockets
   cpu_cores     = var.vm_cpu_cores
   RAM           = var.vm_ram
+  RAM_reserve_all      = true
+
   network_adapters {
     network_card = var.vm_nic_type
-    network      = var.vm_network
+    network      = var.network
   }
+
   disk_controller_type = var.vm_disk_controller
   storage {
     disk_size             = var.vm_disk_size
     disk_thin_provisioned = var.vm_disk_thin
   }
+
   configuration_parameters = var.config_parameters
 
   # Removable Media Configuration
   iso_paths = [
-    "[${var.vcenter_iso_datastore}] ${var.os_iso_path}/${var.os_iso_file}",
-    "[${var.vcenter_iso_datastore}] ${var.vmtools_iso_path}/${var.vmtools_iso_file}"
+    "[${var.vcenter_iso_datastore}] ${var.iso_path}/${var.os_iso_file}",
+    "[${var.vcenter_iso_datastore}] ${var.iso_path}/${var.vmtools_iso_file}"
   ]
 
   floppy_files = [
@@ -51,8 +57,7 @@ source "vsphere-iso" "win2022dc" {
   ]
 
   remove_cdrom        = var.vm_cdrom_remove
-  convert_to_template = var.vm_convert_template
-
+  
   # Build Settings
   boot_command     = ["<spacebar>"]
   boot_wait        = "1s"
@@ -63,4 +68,28 @@ source "vsphere-iso" "win2022dc" {
   winrm_password   = var.winrm_password
   shutdown_command = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Build Complete\""
   shutdown_timeout = "1h"
+}
+
+source "vsphere-clone" "this" {
+  vcenter_server      = var.vcenter_server
+  username            = var.vcenter_username
+  password            = var.vcenter_password
+
+  convert_to_template = var.vm_convert_template
+  
+  vm_name        = local.name
+  notes         = "Version: ${local.build_version}\nBuild Time: ${local.build_date}\nOS: Windows Server 2022 Datacenter\nApplication: ${var.role}"
+  template  = var.template
+  cluster   = var.cluster
+  datastore = var.datastore
+  folder    = var.folder
+
+  iso_paths = [
+    "[${var.vcenter_iso_datastore}] ${var.iso_path}/${var.role_iso_file}"
+  ]
+
+  communicator     = "winrm"
+  winrm_timeout    = "4h"
+  winrm_username   = var.winrm_username
+  winrm_password   = var.winrm_password
 }
