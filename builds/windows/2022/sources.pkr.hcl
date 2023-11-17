@@ -88,6 +88,10 @@ source "vsphere-clone" "this" {
     "[${var.vcenter_iso_datastore}] ${var.iso_path}/${var.role_iso_file}"
   ]
 
+  floppy_files = [
+    "${path.cwd}/builds/windows/scripts/${var.role_configuration_file}",
+  ]
+
   communicator     = "winrm"
   winrm_timeout    = "4h"
   winrm_username   = var.winrm_username
