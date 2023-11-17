@@ -29,3 +29,7 @@ ubuntu_2204_tfefdo:
 windows_2022_base:
 	packer init -var-file variables/base_windows.pkrvars.hcl builds/windows/2022
 	packer build -var-file variables/base_windows.pkrvars.hcl builds/windows/2022
+
+windows_2022_mssql:
+	packer init -var-file variables/mssql.pkrvars.hcl builds/windows/2022
+	packer build -var-file variables/mssql.pkrvars.hcl builds/windows/2022
