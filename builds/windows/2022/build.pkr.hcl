@@ -1,7 +1,11 @@
+locals {
+  sources = var.role == "base" ? [ "vsphere-iso.this" ] : [ "vsphere-clone.this" ]
+}
+
 packer {
   required_plugins {
     vsphere = {
-      version = "= 1.2.2"
+      version = "1.2.2"
       source  = "github.com/hashicorp/vsphere"
     }
 
@@ -15,9 +19,7 @@ packer {
 // Define the build
 build {
   name = "Windows Server 2022"
-  sources = [
-    "source.vsphere-iso.win2022dc",
-  ]
+  sources = local.sources
 
   provisioner "windows-restart" {}
 
@@ -40,10 +42,10 @@ build {
 
   // HCP Packer Registry configuration updated for Windows
   hcp_packer_registry {
-    bucket_name = "base-windows-2022"
+    bucket_name = "${var.role}-windows-2022"
 
     bucket_labels = {
-      "application" = "base"
+      "application" = var.role
       "os"          = "Windows"
       "version"     = "2022"
     }
