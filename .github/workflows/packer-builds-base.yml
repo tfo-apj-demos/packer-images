@@ -60,7 +60,7 @@ jobs:
       - name: Replace Password in autounattend.xml for Windows builds
         if: contains(matrix.image_type, 'windows')
         run: |
-          sed -i 's/PLACEHOLDER_PASSWORD/${{ secrets.WINDOWS_PASSWORD }}/g' builds/windows/bootfiles/2022/autounattend.xml
+          sed -i 's/WINDOWS_PASSWORD/${{ secrets.WINDOWS_PASSWORD }}/g' builds/windows/bootfiles/2022/autounattend.xml
     
       - name: Run Makefile
         run: make ${{ matrix.image_type }}
