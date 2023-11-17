@@ -3,7 +3,6 @@ variable "vcenter_server" {
   description = "The FQDN of the vCenter Packer will connect to"
   type        = string
   default     = env("VCENTER_SERVER")
-
 }
 
 variable "vcenter_username" {
@@ -75,7 +74,7 @@ variable "vm_hardware_version" {
 variable "vm_cpu_sockets" {
   description = "The number of CPU sockets for the VM"
   type        = number
-  default     = 2
+  default     = 4
 }
 
 variable "vm_cpu_cores" {
@@ -87,7 +86,7 @@ variable "vm_cpu_cores" {
 variable "vm_ram" {
   description = "The amount of RAM in Mb for the VM"
   type        = number
-  default     = 4096
+  default     = 8196
 }
 
 variable "vm_nic_type" {
@@ -152,17 +151,25 @@ variable "os_iso_file" {
   default = ""
 }
 
+variable "vmtools_iso_file" {
+  description = "The name to the ISO file to be used for VMware Tools installation"
+  type        = string
+  default = ""
+}
+
 variable "role_iso_file" {
   description = "The name to the ISO file to be used for OS installation"
   type        = string
   default = ""
 }
 
-variable "vmtools_iso_file" {
-  description = "The name to the ISO file to be used for VMware Tools installation"
+variable "role_configuration_file" {
+  description = "The name to the configuration file to be used for application installation"
   type        = string
   default = ""
 }
+
+
 
 variable "vm_cdrom_remove" {
   description = "Should the CDROMs be removed from the VM once build is complete"
