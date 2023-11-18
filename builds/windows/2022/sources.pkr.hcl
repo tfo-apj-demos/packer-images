@@ -7,29 +7,29 @@ locals {
 
 source "vsphere-iso" "this" {
   // Connection details
-  username = var.vcenter_username
-  password = var.vcenter_password
+  username            = var.vcenter_username
+  password            = var.vcenter_password
   vcenter_server      = var.vcenter_server
   insecure_connection = var.vcenter_sslconnection
 
   // Where to build
   datacenter = lookup(var.region, "vsphere", "Datacenter")
-  cluster             = var.cluster
-  datastore           = var.datastore
-  folder              = var.folder
+  cluster    = var.cluster
+  datastore  = var.datastore
+  folder     = var.folder
 
   # Virtual Machine configuration
   convert_to_template = var.vm_convert_template
 
-  vm_name       = local.name
-  notes         = "Version: ${local.build_version}\nBuild Time: ${local.build_date}\nOS: Windows Server 2022 Datacenter"
-  guest_os_type = var.guest_os_type
-  firmware      = var.vm_firmware
-  vm_version    = var.vm_hardware_version
-  CPUs          = var.vm_cpu_sockets
-  cpu_cores     = var.vm_cpu_cores
-  RAM           = var.vm_ram
-  RAM_reserve_all      = true
+  vm_name         = local.name
+  notes           = "Version: ${local.build_version}\nBuild Time: ${local.build_date}\nOS: Windows Server 2022 Datacenter"
+  guest_os_type   = var.guest_os_type
+  firmware        = var.vm_firmware
+  vm_version      = var.vm_hardware_version
+  CPUs            = var.vm_cpu_sockets
+  cpu_cores       = var.vm_cpu_cores
+  RAM             = var.vm_ram
+  RAM_reserve_all = true
 
   network_adapters {
     network_card = var.vm_nic_type
@@ -45,19 +45,15 @@ source "vsphere-iso" "this" {
   configuration_parameters = var.config_parameters
 
   # Removable Media Configuration
-  iso_paths = [
-    "[${var.vcenter_iso_datastore}] ${var.iso_path}/${var.os_iso_file}",
-    "[${var.vcenter_iso_datastore}] ${var.iso_path}/${var.vmtools_iso_file}"
-  ]
-
+  iso_paths = var.iso_paths
   floppy_files = [
     "${path.cwd}/builds/windows/bootfiles/2022/autounattend.xml",
-    "${path.cwd}/builds/windows/scripts/install-vmtools64.cmd",
-    "${path.cwd}/builds/windows/scripts/initial-setup.ps1"
+    "${path.cwd}/builds/windows/bootfiles/2022/install-vmtools64.cmd",
+    "${path.cwd}/builds/windows/bootfiles/2022/initial-setup.ps1"
   ]
 
-  remove_cdrom        = var.vm_cdrom_remove
-  
+  remove_cdrom = var.vm_cdrom_remove
+
   # Build Settings
   boot_command     = ["<spacebar>"]
   boot_wait        = "1s"
@@ -71,29 +67,27 @@ source "vsphere-iso" "this" {
 }
 
 source "vsphere-clone" "this" {
-  vcenter_server      = var.vcenter_server
-  username            = var.vcenter_username
-  password            = var.vcenter_password
+  vcenter_server = var.vcenter_server
+  username       = var.vcenter_username
+  password       = var.vcenter_password
 
   convert_to_template = var.vm_convert_template
-  
-  vm_name        = local.name
-  notes         = "Version: ${local.build_version}\nBuild Time: ${local.build_date}\nOS: Windows Server 2022 Datacenter\nApplication: ${var.role}"
+
+  vm_name   = local.name
+  notes     = "Version: ${local.build_version}\nBuild Time: ${local.build_date}\nOS: Windows Server 2022 Datacenter\nApplication: ${var.role}"
   template  = var.template
   cluster   = var.cluster
   datastore = var.datastore
   folder    = var.folder
 
-  iso_paths = [
-    "[${var.vcenter_iso_datastore}] ${var.iso_path}/${var.role_iso_file}"
-  ]
+  iso_paths = [ "${var.role_iso_file}" ] 
 
   floppy_files = [
-    "${path.cwd}/builds/windows/scripts/${var.role_configuration_file}",
+    "${path.cwd}/powershell/roles/${var.role}/${var.role_configuration_file}",
   ]
 
-  communicator     = "winrm"
-  winrm_timeout    = "4h"
-  winrm_username   = var.winrm_username
-  winrm_password   = var.winrm_password
+  communicator   = "winrm"
+  winrm_timeout  = "4h"
+  winrm_username = var.winrm_username
+  winrm_password = var.winrm_password
 }
