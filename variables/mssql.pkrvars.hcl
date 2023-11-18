@@ -3,7 +3,7 @@ role        = "mssql"
 owner       = "Grant Orchard"
 
 # VMware variables
-template = "base-windows-2022-20231117124452"
+template = "base-windows-2022-20231118020001"
 cluster   = "cluster"
 datastore = "vsanDatastore"
 network   = "seg-general"
