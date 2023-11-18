@@ -14,6 +14,7 @@ on:
           - ubuntu_2204_docker
           - ubuntu_2204_haproxy
           - ubuntu_2204_tfefdo
+          - windows_2022_mssql
   schedule:
    - cron:  '0 11 * * SUN' # UTC TIME
 
