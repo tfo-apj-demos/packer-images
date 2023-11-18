@@ -6,12 +6,12 @@ variable "vcenter_server" {
 }
 
 variable "vcenter_username" {
-  type    = string
+  type = string
   default = env("VCENTER_USERNAME")
 }
 
 variable "vcenter_password" {
-  type    = string
+  type = string
   default = env("VCENTER_PASSWORD")
 }
 
@@ -19,6 +19,20 @@ variable "vcenter_sslconnection" {
   description = "Is the connection to vCenter secure or not"
   type        = bool
   default     = false
+}
+
+variable "winrm_username" {
+  description = "The winrm username that is used to connect to the VM. This should match the Autounattend.xml"
+  type        = string
+  default     = "Administrator"
+  sensitive   = true
+}
+
+variable "winrm_password" {
+  description = "The winrm password that is used to connect to the VM. This should match the Autounattend.xml"
+  type        = string
+  sensitive   = true
+  default     = env("WINDOWS_PASSWORD")
 }
 
 variable "region" {
@@ -48,7 +62,7 @@ variable "network" {
 variable "folder" {
   description = "The name of the Folder in vCenter Packer will build in"
   type        = string
-  default = "templates"
+  default     = "templates"
 }
 
 # VM Hardware Configuration
@@ -56,7 +70,7 @@ variable "folder" {
 variable "guest_os_type" {
   description = "The Guest OS identifier for the VM"
   type        = string
-  default = "windows9Server64Guest"
+  default     = "windows9Server64Guest"
 }
 
 variable "vm_firmware" {
@@ -68,7 +82,7 @@ variable "vm_firmware" {
 variable "vm_hardware_version" {
   description = "The VM hardware version"
   type        = number
-  default = 17
+  default     = 17
 }
 
 variable "vm_cpu_sockets" {
@@ -97,8 +111,8 @@ variable "vm_nic_type" {
 
 variable "template" {
   description = "The template to use for any clone (role) based deployment"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "vm_disk_controller" {
@@ -123,53 +137,23 @@ variable "config_parameters" {
   description = "The list of extra configuration parameters to add to the vmx file"
   type        = map(string)
   default = {
-        "devices.hotplug" = "FALSE",
-        "guestInfo.svga.wddm.modeset" = "FALSE",
-        "guestInfo.svga.wddm.modesetCCD" = "FALSE",
-        "guestInfo.svga.wddm.modesetLegacySingle" = "FALSE",
-        "guestInfo.svga.wddm.modesetLegacyMulti" = "FALSE"
+    "devices.hotplug"                         = "FALSE",
+    "guestInfo.svga.wddm.modeset"             = "FALSE",
+    "guestInfo.svga.wddm.modesetCCD"          = "FALSE",
+    "guestInfo.svga.wddm.modesetLegacySingle" = "FALSE",
+    "guestInfo.svga.wddm.modesetLegacyMulti"  = "FALSE"
   }
 }
 
 # Removable Media Configuration
 
-variable "vcenter_iso_datastore" {
-  description = "The name of the Datastore in vCenter the ISOs are located on"
-  type        = string
-  default = "vsanDatastore"
+variable "iso_paths" {
+  type = list(string)
+  default = [
+    "[vsanDatastore] ISO/en-us_windows_server_2022_updated_oct_2022_x64_dvd_c5b651c9.iso",
+    "[vsanDatastore] ISO/VMware-Tools-windows-12.3.5-22544099.iso"
+  ]
 }
-
-variable "iso_path" {
-  description = "The path to the ISO file to be used for OS installation"
-  type        = string
-  default = "ISO"
-}
-
-variable "os_iso_file" {
-  description = "The name to the ISO file to be used for OS installation"
-  type        = string
-  default = ""
-}
-
-variable "vmtools_iso_file" {
-  description = "The name to the ISO file to be used for VMware Tools installation"
-  type        = string
-  default = ""
-}
-
-variable "role_iso_file" {
-  description = "The name to the ISO file to be used for OS installation"
-  type        = string
-  default = ""
-}
-
-variable "role_configuration_file" {
-  description = "The name to the configuration file to be used for application installation"
-  type        = string
-  default = ""
-}
-
-
 
 variable "vm_cdrom_remove" {
   description = "Should the CDROMs be removed from the VM once build is complete"
@@ -185,26 +169,7 @@ variable "vm_convert_template" {
   default     = true
 }
 
-variable "winrm_username" {
-  description = "The winrm username that is used to connect to the VM. This should match the Autounattend.xml"
-  type        = string
-  default     = "Administrator"
-  sensitive   = true
-}
-
-variable "winrm_password" {
-  description = "The winrm password that is used to connect to the VM. This should match the Autounattend.xml"
-  type        = string
-  sensitive   = true
-  default     = env("WINDOWS_PASSWORD")
-}
-
 # Provisioner Settings
-
-variable "powershell_scripts" {
-  description = "The list of PowerShell scripts to run when the OS is ready"
-  type        = list(string)
-}
 
 variable "owner" {
   type = string
@@ -213,4 +178,22 @@ variable "owner" {
 variable "role" {
   type        = string
   description = "The application to trigger as part of the build process."
+}
+
+variable "role_iso_file" {
+  description = "The name to the ISO file to be used for OS installation"
+  type        = string
+  default     = ""
+}
+
+variable "role_configuration_file" {
+  description = "The name to the configuration file to be used for application installation"
+  type        = string
+  default     = ""
+}
+
+variable "role_config" {
+  description = "Ability to pass specific configuration parameters to the script"
+  type        = string
+  default     = ""
 }
