@@ -1,5 +1,5 @@
 locals {
-  sources = var.role == "base" ? [ "vsphere-iso.this" ] : [ "vsphere-clone.this" ]
+  sources   = var.role == "base" ? ["vsphere-iso.this"] : ["vsphere-clone.this"]
 }
 
 packer {
@@ -18,7 +18,7 @@ packer {
 
 // Define the build
 build {
-  name = "Windows Server 2022"
+  name    = "Windows Server 2022"
   sources = local.sources
 
   provisioner "windows-restart" {}
@@ -26,7 +26,7 @@ build {
   provisioner "powershell" {
     elevated_user     = var.winrm_username
     elevated_password = var.winrm_password
-    scripts           = var.powershell_scripts
+    script            = "${path.cwd}/powershell/roles/${var.role}/install-${var.role}.ps1"
   }
 
   provisioner "windows-update" {
