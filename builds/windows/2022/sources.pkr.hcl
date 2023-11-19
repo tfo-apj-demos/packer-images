@@ -75,7 +75,7 @@ source "vsphere-clone" "this" {
 
   vm_name   = local.name
   notes     = "Version: ${local.build_version}\nBuild Time: ${local.build_date}\nOS: Windows Server 2022 Datacenter\nApplication: ${var.role}"
-  template  = var.template
+  template  = data.hcp-packer-image.base-windows-2022.id
   cluster   = var.cluster
   datastore = var.datastore
   folder    = var.folder

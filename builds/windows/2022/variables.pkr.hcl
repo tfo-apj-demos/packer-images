@@ -112,7 +112,7 @@ variable "vm_nic_type" {
 variable "template" {
   description = "The template to use for any clone (role) based deployment"
   type        = string
-  default     = ""
+  default = ""
 }
 
 variable "vm_disk_controller" {
