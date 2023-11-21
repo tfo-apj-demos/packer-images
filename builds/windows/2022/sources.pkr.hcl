@@ -80,8 +80,8 @@ source "vsphere-clone" "this" {
   datastore = var.datastore
   folder    = var.folder
 
+ # Application dependencies 
   iso_paths = [ "${var.role_iso_file}" ] 
-
   floppy_files = [
     "${path.cwd}/powershell/roles/${var.role}/${var.role_configuration_file}",
   ]
