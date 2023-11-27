@@ -36,8 +36,9 @@ jobs:
     steps:
       - name: get-images
         id: get-images
+        if: ${{ github.event.inputs.singleBuild != '' }}
         run: |
-          if [[ -n ${{ inputs.singleBuild }} ]] || [[ "${{ inputs.singleBuild }}" != "all" ]]; then
+          if [[ "${{ inputs.singleBuild }}" != "all" ]] && [[ -n "${{ github.event.inputs.singleBuild }}" ]]; then
             export IMAGES=$(echo ${{ inputs.singleBuild }} | jq -R '["\(.)"]')
             echo "images_out"=$IMAGES""
             echo "images_out"=$IMAGES"" >> $GITHUB_OUTPUT
