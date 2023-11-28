@@ -11,9 +11,26 @@
       - curl 
       - unzip
     update_cache: yes  # this will refresh your repository cache
-    
+
+- name: "Install Helm"
+  snap:
+    name: helm
+    classic: yes
+
+- name: "Install kubectl"
+  snap:
+    name: kubectl
+    classic: yes
+
 - name: "Docker Service"
   systemd:
     name: docker.service
     enabled: yes
     state: started
+    
+- name: Add user 'ubuntu' to the 'docker' group
+  ansible.builtin.user:
+    name: ubuntu
+    groups: docker
+    append: yes
+  become: true
