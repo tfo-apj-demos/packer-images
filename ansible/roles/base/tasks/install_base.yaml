@@ -96,3 +96,14 @@
 
 - name: Prepare cloud-init for first use
   command: /usr/bin/cloud-init clean --seed --logs
+
+
+- name: Extend logical volume to use 100% of the free space
+  ansible.builtin.command:
+    cmd: lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+
+- name: Resize the filesystem
+  ansible.builtin.filesystem:
+    fstype: ext4
+    resizefs: yes
+    dev: /dev/ubuntu-vg/ubuntu-lv
