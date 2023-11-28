@@ -86,7 +86,7 @@
       datasource_list: [ "VMware" ]
       datasource:
         VMware:
-          vmware_cust_file_max_wait: 45
+          vmware_cust_file_max_wait: 600
 
 - name: Disable traditional VMware customisation
   lineinfile:
