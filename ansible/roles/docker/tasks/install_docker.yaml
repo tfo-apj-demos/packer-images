@@ -34,3 +34,12 @@
     groups: docker
     append: yes
   become: true
+
+- name: Set timeout for cloud-init
+  copy: 
+    dest: /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
+    content: |
+      datasource_list: [ "VMware" ]
+      datasource:
+        VMware:
+          vmware_cust_file_max_wait: 600
