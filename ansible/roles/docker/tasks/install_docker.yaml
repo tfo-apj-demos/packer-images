@@ -52,6 +52,11 @@
 
 - name: Prepare cloud-init for first use
   command: /usr/bin/cloud-init clean --seed --logs
+  
+- name: Remove cloud-init networking configuration file
+  file:
+    path: /etc/cloud/cloud.cfg.d/subiquity-disable-cloudinit-networking.cfg
+    state: absent
 
 - name: vmware-tools config cloud-init wait
   ansible.builtin.lineinfile:
