@@ -27,7 +27,7 @@
     name: docker.service
     enabled: yes
     state: started
-    
+
 - name: Add user 'ubuntu' to the 'docker' group
   ansible.builtin.user:
     name: ubuntu
@@ -43,3 +43,12 @@
       datasource:
         VMware:
           vmware_cust_file_max_wait: 600
+
+- name: Disable traditional VMware customisation
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    state: present
+    line: 'disable_vmware_customization: true'
+
+- name: Prepare cloud-init for first use
+  command: /usr/bin/cloud-init clean --seed --logs
