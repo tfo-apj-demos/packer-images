@@ -111,4 +111,5 @@ source "vsphere-clone" "this" {
 	vm_name      = local.name
 	ssh_username = var.os_username
 	ssh_password = var.os_password
+  temporary_key_pair_type = "ed25519"
 }
