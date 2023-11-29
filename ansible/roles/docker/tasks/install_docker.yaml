@@ -52,3 +52,12 @@
 
 - name: Prepare cloud-init for first use
   command: /usr/bin/cloud-init clean --seed --logs
+
+- name: vmware-tools config cloud-init wait
+  ansible.builtin.lineinfile:
+    path: /etc/vmware-tools/tools.conf
+    create: yes
+    insertafter: EOF
+    line: |
+      [deployPkg]
+      wait-cloudinit-timeout=0
