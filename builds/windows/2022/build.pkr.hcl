@@ -13,6 +13,16 @@ packer {
       version = "0.14.3"
       source  = "github.com/rgl/windows-update"
     }
+
+    amazon = {
+      version = ">= 1.1.1"
+      source  = "github.com/hashicorp/amazon"
+    }
+
+    ansible = {
+      version = "~> 1"
+      source = "github.com/hashicorp/ansible"
+    }
   }
 }
 
