@@ -33,3 +33,7 @@ windows_2022_base:
 windows_2022_mssql:
 	packer init -var-file variables/mssql.pkrvars.hcl builds/windows/2022
 	packer build -var-file variables/mssql.pkrvars.hcl builds/windows/2022
+
+windows_2022_iis:
+	packer init -var-file variables/iis.pkrvars.hcl builds/windows/2022
+	packer build -var-file variables/iis.pkrvars.hcl builds/windows/2022
