@@ -81,7 +81,7 @@ source "vsphere-clone" "this" {
   folder    = var.folder
 
  # Application dependencies 
-  iso_paths = [ "${var.role_iso_file}" ] 
+  iso_paths = var.role_iso_file != "" ? [var.role_iso_file] : [] 
   floppy_files = [
     "${path.cwd}/powershell/roles/${var.role}/${var.role_configuration_file}",
   ]
