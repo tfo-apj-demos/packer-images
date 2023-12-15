@@ -15,11 +15,12 @@ on:
           - ubuntu_2204_haproxy
           - ubuntu_2204_tfefdo
           - windows_2022_mssql
+          - windows_2022_iis
   schedule:
    - cron:  '0 11 * * SUN' # UTC TIME
 
 env:
-  DEFAULT_IMAGES: ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_docker, ubuntu_2204_haproxy, ubuntu_2204_tfefdo, windows_2022_mssql
+  DEFAULT_IMAGES: ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_docker, ubuntu_2204_haproxy, ubuntu_2204_tfefdo, windows_2022_mssql, windows_2022_iis
   HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
   HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
   HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
