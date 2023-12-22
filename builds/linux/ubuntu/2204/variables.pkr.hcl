@@ -24,6 +24,17 @@ variable "vcenter_insecure_connection" {
   default = false
 }
 
+// Users and connectivity
+variable "os_username" {
+  type    = string
+  default = "ubuntu"
+}
+
+variable "os_password" {
+  type = string
+  default = env("LINUX_PASSWORD")
+}
+
 // Where to build
 variable "region" {
   type = map(string)
@@ -81,17 +92,6 @@ variable "os_language" {
 variable "os_keyboard_layout" {
   type    = string
   default = "us"
-}
-
-// Users and connectivity
-variable "os_username" {
-  type    = string
-  default = "ubuntu"
-}
-
-variable "os_password" {
-  type = string
-  #sensitive = true
 }
 
 // Metadata
