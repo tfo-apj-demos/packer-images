@@ -1,8 +1,8 @@
 # General variables
-role        = "base"
-owner       = "Grant Orchard"
+role  = "base"
+owner = "Cloud Platform Team"
 
 # VMware variables
-cluster = "cluster"
+cluster   = "cluster"
 datastore = "vsanDatastore"
-network = "seg-general"
+network   = "seg-packer"
