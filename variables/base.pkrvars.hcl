@@ -6,4 +6,4 @@ project_id  = "TFO"
 # VMware variables
 cluster   = "cluster"
 datastore = "vsanDatastore"
-network   = "seg-general"
+network   = "seg-packer"
