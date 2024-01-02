@@ -103,6 +103,8 @@ source "vsphere-clone" "this" {
 	password            = var.vcenter_password
   insecure_connection = var.vcenter_insecure_connection
 
+  convert_to_template = true
+
 	template  = data.hcp-packer-image.vsphere.id
 	cluster   = var.cluster
 	datastore = var.datastore
