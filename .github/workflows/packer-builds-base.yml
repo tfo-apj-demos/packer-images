@@ -65,5 +65,3 @@ jobs:
       - name: Run Makefile
         run: make ${{ matrix.image_type }}
 
-      - name: cleanup
-        uses: AutoModality/action-clean@v1
