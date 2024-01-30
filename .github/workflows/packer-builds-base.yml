@@ -66,4 +66,4 @@ jobs:
         run: make ${{ matrix.image_type }}
 
       - name: job cleanup
-        uses: TooMuch4U/runner-post-cleanup@v2.1
+        uses: TooMuch4U/actions-clean@v2.1
