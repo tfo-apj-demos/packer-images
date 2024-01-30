@@ -57,6 +57,8 @@ jobs:
       matrix:
         image_type: ${{fromJson(needs.selectimages.outputs.images)}}
     steps:
+      - uses: FraBle/clean-after-action@v1
+      
       - name: Checkout code
         uses: actions/checkout@v4.1.1
         
