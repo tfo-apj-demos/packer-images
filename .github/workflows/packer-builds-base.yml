@@ -64,6 +64,3 @@ jobs:
     
       - name: Run Makefile
         run: make ${{ matrix.image_type }}
-
-      - name: job cleanup
-        uses: TooMuch4U/actions-clean@v2.1
