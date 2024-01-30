@@ -13,3 +13,24 @@
     name: postgresql
     state: started
     enabled: yes
+
+- name: "Configure listen_addresses in postgresql.conf"
+  lineinfile:
+    path: /etc/postgresql/14/main/postgresql.conf
+    regexp: '^#?listen_addresses'
+    line: "listen_addresses = '*'"
+    state: present
+
+- name: "Allow remote connections in pg_hba.conf"
+  blockinfile:
+    path: /etc/postgresql/14/main/pg_hba.conf
+    block: |
+      host    all             all             0.0.0.0/0                       md5
+      host    all             all             ::/0                            md5
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    insertafter: EOF
+
+- name: "Restart PostgreSQL to apply changes"
+  service:
+    name: postgresql
+    state: restarted
