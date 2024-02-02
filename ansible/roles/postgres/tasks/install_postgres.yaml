@@ -6,6 +6,7 @@
     name:
       - "postgresql"
       - "postgresql-contrib"
+      - "python3-psycopg2"
     update_cache: yes  # this will refresh your repository cache
 
 - name: "Ensure PostgreSQL service is started and enabled"
