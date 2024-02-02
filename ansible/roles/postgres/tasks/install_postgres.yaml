@@ -31,6 +31,11 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     insertafter: EOF
 
+- name: "Restart PostgreSQL to apply changes"
+  service:
+    name: postgresql
+    state: restarted
+
 - name: "Create user for Vault management"
   postgresql_user:
     login_host: "{{ ansible_default_ipv4.address }}"
@@ -38,8 +43,3 @@
     password: a12337764bd794a123af5e90b80c2d97
     role_attr_flags: SUPERUSER
 
-
-- name: "Restart PostgreSQL to apply changes"
-  service:
-    name: postgresql
-    state: restarted
