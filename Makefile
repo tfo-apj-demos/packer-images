@@ -37,3 +37,7 @@ windows_2022_mssql:
 windows_2022_iis:
 	packer init -var-file variables/iis.pkrvars.hcl builds/windows/2022
 	packer build -var-file variables/iis.pkrvars.hcl builds/windows/2022
+
+ubuntu_2204_splunk:
+	packer init -var-file variables/splunk.pkrvars.hcl builds/linux/ubuntu/2204
+	packer build -var-file variables/splunk.pkrvars.hcl builds/linux/ubuntu/2204
