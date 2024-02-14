@@ -1,4 +1,11 @@
 ---
+- name: Add user 'splunk' to the 'splunk' group
+  ansible.builtin.user:
+    name: splunk
+    groups: splunk
+    append: yes
+  become: true
+
 - include_tasks: ../../splunk_common/tasks/set_as_hec_receiver.yml
 
 - include_tasks: ../../splunk_common/tasks/add_splunk_object.yml
