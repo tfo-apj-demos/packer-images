@@ -24,7 +24,7 @@ wait_for_splunk_retry_num: 60
 shc_sync_retry_num: 60
 splunk:
     role: splunk_standalone
-    build_location: /tmp/splunk.tgz
+    build_location: "https://download.splunk.com/products/splunk/releases/9.2.0.1/linux/splunk-9.2.0.1-d8ae995bf219-linux-2.6-amd64.deb"
     admin_user: admin
     app_paths:
         default: /opt/splunk/etc/apps
