@@ -12,6 +12,14 @@
     append: yes
   become: true
 
+- name: Give sudo access to splunk user
+  blockinfile:
+    path: /etc/sudoers
+    insertafter: 'root    ALL=(ALL)       ALL'
+    block: |
+      # Gives sudo access to the splunk group
+      %splunk        ALL=(ALL)       NOPASSWD: ALL
+
 - include_tasks: get_facts.yml
 
 - include_tasks: change_splunk_directory_owner.yml
