@@ -1,4 +1,12 @@
 ---
+- name: Install required packaged
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - acl
+    - python3-pip
+
 - name: Add group 'splunk'
   ansible.builtin.group:
     name: splunk
