@@ -1,11 +1,17 @@
 ---
+- name: Add group 'splunk'
+  ansible.builtin.group:
+    name: splunk
+    state: present
+  become: true
+
 - name: Add user 'splunk' to the 'splunk' group
   ansible.builtin.user:
     name: splunk
     groups: splunk
     append: yes
   become: true
-  
+
 - include_tasks: get_facts.yml
 
 - include_tasks: change_splunk_directory_owner.yml
