@@ -1,0 +1,14 @@
+---
+- name: Set root endpoint
+  ini_file:
+    dest: "{{ splunk.home }}/etc/system/local/web.conf"
+    section: settings
+    option: "root_endpoint"
+    value: "{{ splunk.root_endpoint }}"
+    owner: "{{ splunk.user }}"
+    group: "{{ splunk.group }}"
+  register: set_root_endpoint
+
+# Restart only when Splunk is running and when any of the above have changed
+- include_tasks: trigger_restart.yml
+  when: set_root_endpoint is changed

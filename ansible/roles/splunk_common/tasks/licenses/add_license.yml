@@ -1,0 +1,33 @@
+---
+- name: Download license
+  get_url:
+    url: "{{ lic }}"
+    dest: "{{ splunk.license_download_dest }}"
+    timeout: 20
+    mode: 0666
+  when: lic is match("^(https?|file)://.*")
+  register: downloaded_license_path
+  ignore_errors: yes
+  until: downloaded_license_path is success
+  retries: "{{ retry_num }}"
+  delay: "{{ retry_delay }}"
+
+- name: Ensure license path
+  stat:
+    path: "{{ splunk.license_download_dest if lic is match('^(https?|file)://.*') else lic }}"
+  register: lic_dest
+
+- name: Apply license
+  command: "{{ splunk.exec }} add licenses {{ lic_dest.stat.path }} -auth {{ splunk.admin_user }}:{{ splunk.password }}"
+  register: add_lic_cmd
+  changed_when: add_lic_cmd.rc == 0
+  become: yes
+  become_user: "{{ splunk.user }}"
+  no_log: "{{ hide_password }}"
+  ignore_errors: yes
+  when:
+    - lic_dest.stat.exists
+    - not (splunk.ignore_license | bool)
+    - splunk.role != "splunk_universal_forwarder"
+  notify:
+    - Restart the splunkd service

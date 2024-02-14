@@ -1,0 +1,55 @@
+---
+
+- name: Enable splunktcp-ssl input
+  ini_file:
+    dest: "{{ splunk.home }}/etc/system/local/inputs.conf"
+    section: "splunktcp-ssl:{{ splunk.s2s_port if splunk.s2s_port is defined else splunk.s2s.port }}"
+    option: "disabled"
+    value: "0"
+    owner: "{{ splunk.user }}"
+    group: "{{ splunk.group }}"
+  register: splunktcp_ssl_enabled
+
+- name: Remove splunktcp input
+  ini_file:
+    dest: "{{ splunk.home }}/etc/system/local/inputs.conf"
+    section: "splunktcp://{{ splunk.s2s_port if splunk.s2s_port is defined else splunk.s2s.port }}"
+    state: absent
+    owner: "{{ splunk.user }}"
+    group: "{{ splunk.group }}"
+  register: splunktcp_disabled
+
+- name: Configure SSL certificate path
+  ini_file:
+    dest: "{{ splunk.home }}/etc/system/local/inputs.conf"
+    section: SSL
+    option: serverCert
+    value: "{{ splunk.s2s.cert }}"
+    owner: "{{ splunk.user }}"
+    group: "{{ splunk.group }}"
+  register: splunktcp_ssl_cert_configured
+
+- name: Configure SSL password
+  ini_file:
+    dest: "{{ splunk.home }}/etc/system/local/inputs.conf"
+    section: SSL
+    option: sslPassword
+    value: "{{ splunk.s2s.password }}"
+    owner: "{{ splunk.user }}"
+    group: "{{ splunk.group }}"
+  register: splunktcp_ssl_pass_configured
+
+- name: Configure SSL root CA
+  ini_file:
+    dest: "{{ splunk.home }}/etc/system/local/inputs.conf"
+    section: SSL
+    option: rootCA
+    value: "{{ splunk.s2s.ca if splunk.s2s.ca else '$SPLUNK_HOME/etc/auth/cacert.pem' }}"
+    owner: "{{ splunk.user }}"
+    group: "{{ splunk.group }}"
+  when: ansible_system is not match("CYGWIN*|Win32NT")
+  register: splunktcp_ssl_ca_configured
+
+# Restart only when Splunk is running and when any of the above have changed
+- include_tasks: trigger_restart.yml
+  when: splunktcp_disabled is changed or splunktcp_ssl_cert_configured is changed or splunktcp_ssl_pass_configured is changed or splunktcp_ssl_ca_configured is changed

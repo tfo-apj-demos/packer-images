@@ -1,0 +1,131 @@
+---
+- include_tasks: get_facts.yml
+
+- include_tasks: change_splunk_directory_owner.yml
+  when:
+    - ansible_system is match("Linux")
+    - splunk_home_ownership_enforcement is defined
+    - splunk_home_ownership_enforcement | bool
+
+- include_tasks: update_etc.yml
+  register: etc_updated
+  when:
+    - ansible_system is match("Linux")
+    - splunk.build_location is none or splunk.build_location is not match("^(https?|file)://.*")
+
+- include_tasks: stop_splunk.yml
+  when:
+    - splunk_upgrade | bool or etc_updated is changed
+
+# Below we will either install or upgrade, which at this moment is the same task.
+- name: "Install Splunk"
+  include_tasks: install_splunk.yml
+  when:
+    - splunk_install | bool or (first_run | bool and splunk.build_location and splunk.build_location is match("^(https?|file)://.*"))
+
+- name: "Upgrade Splunk"
+  include_tasks: install_splunk.yml
+  when:
+    - not splunk_install
+    - not first_run
+    - splunk_upgrade | bool
+    - splunk.allow_upgrade is defined
+    - splunk.allow_upgrade | bool
+
+- include_tasks: enable_asan.yml
+  when:
+    - "'asan' in splunk and splunk.asan | bool"
+
+- include_tasks: remove_first_login.yml
+
+- include_tasks: install_java.yml
+  when:
+    - java_version is defined and java_version
+
+# This needs to be done before any encrypted passkeys are generated, and before first call to splunk status
+- include_tasks: set_splunk_secret.yml
+
+- include_tasks: set_general_symmkey_password.yml
+  when: "'pass4SymmKey' in splunk and splunk.pass4SymmKey"
+
+- include_tasks: enable_admin_auth.yml
+
+- include_tasks: set_launch_conf.yml
+  when:
+    - "'launch' in splunk and splunk.launch"
+
+- include_tasks: pre_splunk_start_commands.yml
+  ignore_errors: true
+
+- include_tasks: enable_s2s.yml
+  when:
+    - "('s2s_enable' in splunk) or ('s2s' in splunk and 'enable' in splunk.s2s)"
+    - "('s2s_port' in splunk and splunk.s2s_port) or ('s2s' in splunk and 'port' in splunk.s2s and splunk.s2s.port)"
+
+- include_tasks: enable_service.yml
+  when:
+    - splunk.enable_service and ansible_system is match("Linux")
+    - first_run | bool
+
+- include_tasks: set_http_port.yml
+  when:
+    - "'http_port' in splunk"
+    - splunk.http_port | int != 8000
+
+- include_tasks: set_mgmt_port.yml
+
+- include_tasks: set_root_endpoint.yml
+  when: "'root_endpoint' in splunk and splunk.root_endpoint"
+
+- include_tasks: set_appserver_port.yml
+  when:
+    - "'appserver' in splunk and 'port' in splunk.appserver"
+    - splunk.appserver.port | int != 8065
+
+- include_tasks: set_kvstore_port.yml
+  when:
+    - "'kvstore' in splunk and 'port' in splunk.kvstore"
+    - splunk.kvstore.port | int != 8191
+
+- include_tasks: enable_splunkweb_ssl.yml
+  when:
+    - "'http_enableSSL' in splunk and splunk.http_enableSSL is not none"
+    - splunk.http_enableSSL | bool
+
+- include_tasks: enable_splunkd_ssl.yml
+  when: "'ssl' in splunk and splunk.ssl"
+
+- include_tasks: set_splunk_connection_timeout.yml
+  when:
+    - "'connection_timeout' in splunk and splunk.connection_timeout"
+    - splunk.connection_timeout | int > 0
+
+- include_tasks: set_config_file.yml
+  vars:
+    conf_file: "{{ item.key }}.conf"
+    conf_directory: "{{ item.value.directory | default(splunk.home + '/etc/system/local', true) }}"
+    conf_stanzas: "{{ item.value.content | default({}) }}"
+  with_items: "{% if splunk.conf is mapping %}{{ splunk.conf | dict2items }}{% else %}{{ splunk.conf }}{% endif %}"
+  when: "'conf' in splunk and splunk.conf"
+
+# Generate outputs.conf before splunk starts to prevent data being indexed locally
+- include_tasks: enable_forwarding.yml
+  when:
+    # Indexers should never forward 
+    - splunk.role != "splunk_indexer"
+    - (splunk.role != "splunk_standalone" and splunk.role != "splunk_search_head") or
+        (splunk_indexer_cluster | bool or splunk_forward_servers is defined)
+
+- include_tasks: enable_dsp.yml
+  when: "'dsp' in splunk and 'enable' in splunk.dsp and splunk.dsp.enable"
+
+- include_tasks: start_splunk.yml
+
+- include_tasks: set_certificate_prefix.yml
+
+- include_tasks: clean_user_seed.yml
+
+- include_tasks: add_splunk_license.yml
+
+- include_tasks: disable_popups.yml
+  when: "'disable_popups' in splunk and splunk.disable_popups | bool"

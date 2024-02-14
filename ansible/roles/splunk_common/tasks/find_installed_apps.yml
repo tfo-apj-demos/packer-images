@@ -1,0 +1,14 @@
+---
+- name: Find all apps
+  find:
+    paths: "{{ splunk.app_paths.default }}"
+    recurse: no
+    file_type: directory
+  register: new_apps
+
+- name: Determine installed apps
+  set_fact:
+    installed_apps: "{{ (installed_apps | default([]) + [ item.path | basename ] | difference(default_apps)) | unique }}"
+  with_items: "{{ new_apps.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"

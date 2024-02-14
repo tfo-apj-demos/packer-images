@@ -1,0 +1,16 @@
+---
+- name: Create {{ conf_directory }} directory
+  file:
+    path: "{{ conf_directory }}"
+    state: directory
+  when: conf_directory is defined
+  become: yes
+  become_user: "{{ splunk.user }}"
+
+- include_tasks: set_config_stanza.yml
+  vars:
+    stanza_name: "{{ stanza.key }}"
+    stanza_settings: "{{ stanza.value | default({}) }}"
+  with_dict: "{{ conf_stanzas }}"
+  loop_control:
+    loop_var: stanza

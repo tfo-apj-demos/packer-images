@@ -1,0 +1,73 @@
+---
+- name: Create a dependency file
+  file:
+    path: /usr/share/man/man1
+    state: directory
+  when:
+    - ansible_distribution == 'Debian'
+  become: yes
+  become_user: "{{ privileged_user }}"
+
+- name: Adding source for Debian Buster
+  lineinfile:
+    path: /etc/apt/sources.list
+    line: deb http://security.debian.org/debian-security stretch/updates main
+  when:
+    - ansible_distribution == 'Debian'
+    - "'10' in ansible_distribution_version"
+  become: yes
+  become_user: "{{ privileged_user }}"
+
+- name: Install JDK for Debian
+  apt:
+    name: openjdk-8-jdk-headless
+    state: present
+    update_cache: yes
+  when:
+    - ansible_distribution == 'Debian'
+  become: yes
+  become_user: "{{ privileged_user }}"
+
+- name: Install openjdk for Redhat
+  command: "microdnf install java-1.8.0-openjdk"
+  when:
+    - ansible_distribution == 'RedHat'
+  become: yes
+  become_user: "{{ privileged_user }}"
+
+- name: Install openjdk for CentOS
+  yum:
+    name: java-1.8.0-openjdk
+    state: present
+  when:
+    - ansible_distribution == 'CentOS'
+  become: yes
+  become_user: "{{ privileged_user }}"
+
+- name: Create splunk-launch.conf
+  become: yes
+  become_user: "{{ privileged_user }}"
+  command: cp {{ splunk.home }}/etc/splunk-launch.conf.default {{ splunk.home }}/etc/splunk-launch.conf
+  ignore_errors: true
+  when:
+    - ansible_distribution == 'Debian' or ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+
+- name: Get JAVA_HOME
+  shell: 'readlink -f /usr/bin/java | sed "s:bin/java::"'
+  register: java_home
+  become: yes
+  become_user: "{{ privileged_user }}"
+  ignore_errors: true
+  when:
+    - ansible_distribution == 'Debian' or ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
+
+- name: Set JAVA_HOME in splunk-launch.conf
+  become: yes
+  become_user: "{{ privileged_user }}"
+  lineinfile:
+    path: "{{ splunk.home }}/etc/splunk-launch.conf"
+    regexp: '^JAVA_HOME'
+    line: "JAVA_HOME={{ java_home.stdout }}"
+  ignore_errors: true
+  when:
+    - ansible_distribution == 'Debian' or ansible_distribution == 'RedHat' or ansible_distribution == 'CentOS'
