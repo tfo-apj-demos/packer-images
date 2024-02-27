@@ -41,3 +41,7 @@ windows_2022_iis:
 ubuntu_2204_splunk:
 	packer init -var-file variables/splunk.pkrvars.hcl builds/linux/ubuntu/2204
 	packer build -var-file variables/splunk.pkrvars.hcl builds/linux/ubuntu/2204
+
+ubuntu_2204_nomad:
+	packer init -var-file variables/nomad.pkrvars.hcl builds/linux/ubuntu/2204
+	packer build -var-file variables/nomad.pkrvars.hcl builds/linux/ubuntu/2204
