@@ -1,0 +1,22 @@
+---
+- name: Install Nomad
+  become: true
+  apt:
+    name: nomad-enterprise
+    state: present
+    update_cache: yes
+
+- name: Allow Nomad to restart its systemd job
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    insertafter: '^# User privilege specification'
+    line: 'nomad   ALL=(ALL) NOPASSWD: /bin/systemctl restart nomad.service'
+    validate: 'visudo -cf %s'
+
+- name: Install Vault
+  become: true
+  apt:
+    name: vault-enterprise
+    state: present
+    update_cache: yes
