@@ -66,20 +66,25 @@
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
     headers: 
       X-Vault-Namespace: admin/tfo-apj-demos
-    dest: /etc/ssh/trusted-user-ca-keys.pem
+    dest: /tmp/ssh_ca.d/hcp-vault-ca-keys.pem
     mode: 0644
 
 - name: Add GCVE Vault SSH signing public certificate
   get_url:
     url: https://vault.hashicorp.local:8200/v1/ssh/public_key
-    dest: /etc/ssh/gcve-trusted-user-ca-keys.pem
+    dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
     mode: 0644
+
+- name: Add CA public certificates
+    assemble:
+      src: /tmp/ssh_ca.d/
+      dest: /etc/ssh/trusted-user-ca-keys.pem
 
 - name: Update ssh config
   lineinfile:
     path: /etc/ssh/sshd_config
     state: present
-    line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem /etc/ssh/gcve-trusted-user-ca-keys.pem
+    line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 
 - name: Download PKI CA certificate
   get_url:
