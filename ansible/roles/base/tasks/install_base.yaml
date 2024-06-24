@@ -76,9 +76,9 @@
     mode: 0644
 
 - name: Add CA public certificates
-    assemble:
-      src: /tmp/ssh_ca.d/
-      dest: /etc/ssh/trusted-user-ca-keys.pem
+  assemble:
+    src: /tmp/ssh_ca.d/
+    dest: /etc/ssh/trusted-user-ca-keys.pem
 
 - name: Update ssh config
   lineinfile:
