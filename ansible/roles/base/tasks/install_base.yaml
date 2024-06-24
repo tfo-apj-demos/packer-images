@@ -61,6 +61,11 @@
     state: stopped
     enabled: no
 
+- name: Create temporary directory for SSH CA storage
+  file:
+    path: /tmp/ssh_ca.d/
+    state: directory
+
 - name: Add HCP Vault SSH signing public certificate
   get_url:
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
