@@ -75,11 +75,15 @@
     mode: 0644
 
 - name: Add GCVE Vault SSH signing public certificate
-  get_url:
-    url: https://vault.hashicorp.local:8200/v1/ssh/public_key
+  copy:
+    content: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yqxpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/ywwcek+ZuFq2Z1yDKGoTTfZF2KLDtfjRnRbNB9bzd/tCzRF9SJxOrjHOONtpUmSAhceySF2FcSU1UkneuCFBHgCQq9f93pASPbXw3RSR3NSZMwM7YbsTUyIw2GED4419+qkAV4RHRHRNVk5CObEBxu5Wvx1TuPsmcDPWMYOXAiZlOSgtyaX1/x14JnWp8Q0YFhIBkNucCHVcXi4Q4/tZ+ftgakWpUUj3GkeLtdWSCtr58DcR5sEwqALSPHy21iiA6qQiJa6/rz3L/Nh3k5UMVMHPhF5358M0vCkN2MuZf66CE1fd4s82g0HfjlOf51H9XPlueECp1NwrbYiWQkpq79VaQCyijlXfvh6S3jKHkkRJArtWrdIt6k1jm6gbQUPWsZn6Yb4mXTPGw+tQneZvMP7SLG97JkpwmsLa9OgENz37OpzK2j01QF5C2rB1N3BKkCdm5mW4fQQjNWDirfnCjOshp4tS/lhGFCcqj6w18zFYllKx1Z0j5etxw==
     dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
     mode: 0644
-    validate_certs: false
+  # get_url:
+  #   url: https://vault.hashicorp.local:8200/v1/ssh/public_key
+  #   dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
+  #   mode: 0644
+  #   validate_certs: false
 
 - name: Add CA public certificates
   assemble:
