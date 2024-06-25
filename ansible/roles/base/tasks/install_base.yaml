@@ -79,6 +79,7 @@
     url: https://vault.hashicorp.local:8200/v1/ssh/public_key
     dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
     mode: 0644
+    validate_certs: false
 
 - name: Add CA public certificates
   assemble:
