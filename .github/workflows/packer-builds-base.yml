@@ -11,6 +11,7 @@ on:
           - all
           - ubuntu_2204_base
           - windows_2022_base
+          - rhel_9_base
   schedule:
 #     # * is a special character in YAML so you have to quote this string
 #     - cron:  '30 5,17 * * *'
