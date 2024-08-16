@@ -2,6 +2,35 @@ locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
   name      = "${var.role}-rhel-9-${local.timestamp}"
   base      = var.role == "base"
+
+  // New variables for Kickstart configuration
+  data_source_content = {
+    "/ks.cfg" = templatefile("${abspath(path.root)}/data/ks.pkrtpl.hcl", {
+      build_username           = var.os_username
+      build_password           = var.os_password
+      build_password_encrypted = bcrypt(var.os_password)
+      rhsm_username            = var.rhsm_username
+      rhsm_password            = var.rhsm_password
+      vm_guest_os_language     = var.os_language
+      vm_guest_os_keyboard     = var.os_keyboard_layout
+      vm_guest_os_timezone     = var.os_timezone
+      network = templatefile("${abspath(path.root)}/data/network.pkrtpl.hcl", {
+        device  = var.vm_network_device
+        ip      = var.vm_ip_address
+        netmask = var.vm_ip_netmask
+        gateway = var.vm_ip_gateway
+        dns     = var.vm_dns_list
+      })
+      storage = templatefile("${abspath(path.root)}/data/storage.pkrtpl.hcl", {
+        device     = var.vm_disk_device
+        swap       = var.vm_disk_use_swap
+        partitions = var.vm_disk_partitions
+        lvm        = var.vm_disk_lvm
+      })
+      additional_packages = join(" ", var.additional_packages)
+    })
+  }
+  data_source_command = "inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg"
 }
 
 source "vsphere-iso" "this" {
@@ -41,15 +70,14 @@ source "vsphere-iso" "this" {
 
   iso_paths = var.iso_paths
 
+  // Updated boot_command
   boot_command = [
     "<tab><wait>",
-    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rhel-vmware-ks-cfg<enter>"
+    " text ${local.data_source_command}<enter>"
   ]
 
-  cd_content = {
-    "/meta-data" = file(abspath("${path.root}/data/meta-data"))
-  }
-  cd_label = "cidata"
+  // Serve Kickstart file via HTTP
+  http_content = local.data_source_content
 
   // Post build connectivity
   ssh_username           = var.os_username

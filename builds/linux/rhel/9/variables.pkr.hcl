@@ -112,3 +112,98 @@ variable "debug_ansible" {
   type    = bool
   default = false
 }
+
+variable "vm_network_device" {
+  type        = string
+  description = "The network device of the VM."
+  default     = "ens192"
+}
+
+variable "vm_ip_address" {
+  type        = string
+  description = "The IP address of the VM (e.g. 172.16.100.192)."
+  default     = null
+}
+
+variable "vm_ip_netmask" {
+  type        = number
+  description = "The netmask of the VM (e.g. 24)."
+  default     = 24
+}
+
+variable "vm_ip_gateway" {
+  type        = string
+  description = "The gateway of the VM (e.g. 172.16.100.1)."
+  default     = null
+}
+
+variable "vm_dns_list" {
+  type        = list(string)
+  description = "The nameservers of the VM."
+  default     = ["8.8.8.8", "8.8.4.4"]
+}
+
+variable "vm_disk_device" {
+  type        = string
+  description = "The device for the virtual disk. (e.g. 'sda')"
+  default     = "sda"
+}
+
+variable "vm_disk_use_swap" {
+  type        = bool
+  description = "Whether to use a swap partition."
+  default     = true
+}
+
+variable "vm_disk_partitions" {
+  type = list(object({
+    name = string
+    size = number
+    format = object({
+      label  = string
+      fstype = string
+    })
+    mount = object({
+      path    = string
+      options = string
+    })
+    volume_group = string
+  }))
+  description = "The disk partitions for the virtual disk."
+  default     = [
+    {
+      name         = "boot"
+      size         = 1024
+      format       = { label = "boot" fstype = "ext4" }
+      mount        = { path = "/boot" options = "defaults" }
+      volume_group = ""
+    },
+    {
+      name         = "root"
+      size         = -1
+      format       = { label = "root" fstype = "xfs" }
+      mount        = { path = "/" options = "defaults" }
+      volume_group = ""
+    }
+  ]
+}
+
+variable "vm_disk_lvm" {
+  type = list(object({
+    name = string
+    partitions = list(object({
+      name = string
+      size = number
+      format = object({
+        label  = string
+        fstype = string
+      })
+      mount = object({
+        path    = string
+        options = string
+      })
+    }))
+  }))
+  description = "The LVM configuration for the virtual disk."
+  default     = []
+}
