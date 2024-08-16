@@ -42,11 +42,8 @@ source "vsphere-iso" "this" {
   iso_paths = var.iso_paths
 
   boot_command = [
-    "<esc><wait>",
-    "vmlinuz initrd=initrd.img inst.geoloc=0 rd.driver.blacklist=dm-multipath net.ifnames=0 biosdevname=0 ",
-    "ks=http://{{.HTTPIP}}:{{.HTTPPort}}/rhel-vmware-ks-cfg",
-    "<enter>",
-    "<wait>"
+    "<tab><wait>",
+    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rhel-vmware-ks-cfg<enter>"
   ]
 
   cd_content = {
