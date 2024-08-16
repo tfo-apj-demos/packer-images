@@ -174,15 +174,15 @@ variable "vm_disk_partitions" {
     {
       name         = "boot"
       size         = 1024
-      format       = { label = "boot" fstype = "ext4" }
-      mount        = { path = "/boot" options = "defaults" }
+      format       = { label = "boot", fstype = "ext4" }   # Comma added here
+      mount        = { path = "/boot", options = "defaults" }
       volume_group = ""
     },
     {
       name         = "root"
       size         = -1
-      format       = { label = "root" fstype = "xfs" }
-      mount        = { path = "/" options = "defaults" }
+      format       = { label = "root", fstype = "xfs" }   # Comma added here
+      mount        = { path = "/", options = "defaults" }
       volume_group = ""
     }
   ]
