@@ -51,14 +51,6 @@ source "vsphere-iso" "this" {
 
   cd_content = {
     "/meta-data" = file(abspath("${path.root}/data/meta-data"))
-    #"/user-data" = templatefile(abspath("${path.root}/data/user-data.pkrtpl.hcl"), {
-      hostname        = local.name
-      username        = var.os_username
-      password        = bcrypt(var.os_password)
-      timezone        = var.os_timezone
-      language        = var.os_language
-      keyboard_layout = var.os_keyboard_layout
-    })
   }
   cd_label = "cidata"
 
