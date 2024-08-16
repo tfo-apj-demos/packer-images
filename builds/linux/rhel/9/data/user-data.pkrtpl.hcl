@@ -3,8 +3,6 @@ hostname: ${hostname}
 users:
   - default
   - name: ${username}
-    ssh_authorized_keys:
-      - ${ssh_key}
     lock_passwd: false
     passwd: ${password}
     groups: [wheel]
