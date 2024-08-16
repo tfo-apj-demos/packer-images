@@ -42,13 +42,10 @@ source "vsphere-iso" "this" {
   iso_paths = var.iso_paths
 
   boot_command = [
-    "c<wait>",
-    "linux /casper/vmlinuz autoinstall quiet ---",
-    "<enter><wait>",
-    "initrd /casper/initrd",
-    "<enter><wait>",
-    "boot",
-    "<enter>"
+    "<esc><wait>",
+      "vmlinuz initrd=initrd.img inst.geoloc=0 rd.driver.blacklist=dm-multipath net.ifnames=0 biosdevname=0 ",
+      "ks=http://{{.HTTPIP}}:{{.HTTPPort}}/rhel-vmware-ks-cfg",
+      "<enter>"
   ]
 
   cd_content = {

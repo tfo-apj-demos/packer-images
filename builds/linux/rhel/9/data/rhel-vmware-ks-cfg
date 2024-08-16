@@ -1,0 +1,61 @@
+install
+cdrom
+lang en_US.UTF-8
+keyboard us
+network --bootproto=dhcp
+rootpw --plaintext kopicloud
+firewall --disable
+authconfig --enableshadow --passalgo=sha512
+timezone --utc America/Los_Angeles
+bootloader --location=mbr
+text
+skipx
+zerombr
+clearpart --all
+autopart
+firstboot --disabled
+reboot
+
+%packages
+@base
+@core
+biosdevname
+crash
+cyrus-sasl-gssapi
+cyrus-sasl-md5
+fuse-libs
+gcc
+gcc-c++
+glibc.i686
+iscsi-initiator-utils
+kernel-devel
+kernel-headers
+make
+ncompress
+net-snmp
+net-snmp-libs
+net-snmp-utils
+net-tools
+nfs-utils
+nfs4-acl-tools
+#ntp
+openssh-askpass
+patch
+#perl-Crypt-SSLeay
+perl-HTML-Tagset
+perl-libwww-perl
+rpcbind
+#screen
+star
+sudo
+syslinux
+vlock
+%end
+
+%post
+groupadd -g 9999 kopicloud
+useradd -u 9999 -g kopicloud -G wheel kopicloud
+echo "kopicloud" | passwd --stdin kopicloud
+sed -E -i '/Defaults[[:space:]]+requiretty/ s/^/#/' /etc/sudoers
+echo "kopicloud        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+%end
