@@ -42,12 +42,16 @@ source "vsphere-iso" "this" {
   iso_paths = var.iso_paths
 
   boot_command = [
-    "<tab> text ks=http://{{.HTTPIP}}:{{.HTTPPort}}/rhel-vmware-ks-cfg<enter><wait>"
+    "<esc><wait>",
+    "vmlinuz initrd=initrd.img inst.geoloc=0 rd.driver.blacklist=dm-multipath net.ifnames=0 biosdevname=0 ",
+    "ks=http://{{.HTTPIP}}:{{.HTTPPort}}/rhel-vmware-ks-cfg",
+    "<enter>",
+    "<wait>"
   ]
 
   cd_content = {
     "/meta-data" = file(abspath("${path.root}/data/meta-data"))
-    "/user-data" = templatefile(abspath("${path.root}/data/user-data.pkrtpl.hcl"), {
+    #"/user-data" = templatefile(abspath("${path.root}/data/user-data.pkrtpl.hcl"), {
       hostname        = local.name
       username        = var.os_username
       password        = bcrypt(var.os_password)
