@@ -1,16 +1,16 @@
 // vSphere connection details
 variable "vcenter_server" {
-  type = string
+  type    = string
   default = env("VCENTER_SERVER")
 }
 
 variable "vcenter_username" {
-  type = string
+  type    = string
   default = env("VCENTER_USERNAME")
 }
 
 variable "vcenter_password" {
-  type = string
+  type    = string
   default = env("VCENTER_PASSWORD")
 }
 
@@ -31,7 +31,7 @@ variable "os_username" {
 }
 
 variable "os_password" {
-  type = string
+  type    = string
   default = env("LINUX_PASSWORD")
 }
 
@@ -100,7 +100,7 @@ variable "owner" {
 }
 
 variable "project_id" {
-	type = string
+  type = string
 }
 
 variable "role" {
@@ -109,6 +109,6 @@ variable "role" {
 }
 
 variable "debug_ansible" {
-	type = bool
-	default = false
+  type    = bool
+  default = false
 }

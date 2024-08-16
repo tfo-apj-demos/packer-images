@@ -1,7 +1,7 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
-  name   = "${var.role}-rhel-9-${local.timestamp}"
-  base = var.role == "base"
+  name      = "${var.role}-rhel-9-${local.timestamp}"
+  base      = var.role == "base"
 }
 
 source "vsphere-iso" "this" {
@@ -42,10 +42,7 @@ source "vsphere-iso" "this" {
   iso_paths = var.iso_paths
 
   boot_command = [
-    "<esc><wait>",
-      "vmlinuz initrd=initrd.img inst.geoloc=0 rd.driver.blacklist=dm-multipath net.ifnames=0 biosdevname=0 ",
-      "ks=http://{{.HTTPIP}}:{{.HTTPPort}}/rhel-vmware-ks-cfg",
-      "<enter>"
+    "<tab> text ks=http://{{.HTTPIP}}:{{.HTTPPort}}/rhel-vmware-ks-cfg<enter><wait>"
   ]
 
   cd_content = {
@@ -70,20 +67,20 @@ source "vsphere-iso" "this" {
 }
 
 source "vsphere-clone" "this" {
-	vcenter_server      = var.vcenter_server
-	username            = var.vcenter_username
-	password            = var.vcenter_password
+  vcenter_server      = var.vcenter_server
+  username            = var.vcenter_username
+  password            = var.vcenter_password
   insecure_connection = var.vcenter_insecure_connection
 
   convert_to_template = true
 
-	template  = data.hcp-packer-image.vsphere.id
-	cluster   = var.cluster
-	datastore = var.datastore
-  folder     = var.folder
+  template  = data.hcp-packer-image.vsphere.id
+  cluster   = var.cluster
+  datastore = var.datastore
+  folder    = var.folder
 
-	vm_name      = local.name
-	ssh_username = var.os_username
-	ssh_password = var.os_password
+  vm_name                 = local.name
+  ssh_username            = var.os_username
+  ssh_password            = var.os_password
   temporary_key_pair_type = "ed25519"
 }

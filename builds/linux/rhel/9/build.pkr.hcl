@@ -1,18 +1,18 @@
 locals {
-	ansible_extra_arguments = var.debug_ansible ? [
-			"--extra-vars", "ansible_become_password=${var.os_password}",
-			"--extra-vars", "role=${var.role}",
-      "--extra-vars", "role_config='${var.role_config}'",
-			"-vvv",
-      "--scp-extra-args", "'-O'"
+  ansible_extra_arguments = var.debug_ansible ? [
+    "--extra-vars", "ansible_become_password=${var.os_password}",
+    "--extra-vars", "role=${var.role}",
+    "--extra-vars", "role_config='${var.role_config}'",
+    "-vvv",
+    "--scp-extra-args", "'-O'"
 
     ] : [
-			"--extra-vars", "ansible_become_password=${var.os_password}",
-			"--extra-vars", "role=${var.role}",
-      "--extra-vars", "role_config='${var.role_config}'",
-      "--scp-extra-args", "'-O'"
-		]
-  sources = var.role == "base" ? [ "vsphere-iso.this" ] : [ "vsphere-clone.this" ]
+    "--extra-vars", "ansible_become_password=${var.os_password}",
+    "--extra-vars", "role=${var.role}",
+    "--extra-vars", "role_config='${var.role_config}'",
+    "--scp-extra-args", "'-O'"
+  ]
+  sources = var.role == "base" ? ["vsphere-iso.this"] : ["vsphere-clone.this"]
 }
 
 packer {
@@ -25,10 +25,10 @@ packer {
       version = ">= 1.1.1"
       source  = "github.com/hashicorp/amazon"
     }
-    
+
     ansible = {
       version = "~> 1"
-      source = "github.com/hashicorp/ansible"
+      source  = "github.com/hashicorp/ansible"
     }
   }
 }
@@ -48,16 +48,16 @@ build {
   }
 
   hcp_packer_registry {
-  	bucket_name = "${var.role}-rhel-9"
+    bucket_name = "${var.role}-rhel-9"
 
-  	bucket_labels = {
-  		"application"   = var.role
-  	}
+    bucket_labels = {
+      "application" = var.role
+    }
 
-  	build_labels = {
-  		"rhel-version" = "9"
-  		"build-time" = timestamp()
-			"owner" = var.owner
-  	}
+    build_labels = {
+      "rhel-version" = "9"
+      "build-time"   = timestamp()
+      "owner"        = var.owner
+    }
   }
 }
