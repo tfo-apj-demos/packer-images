@@ -9,8 +9,8 @@ locals {
       build_username           = var.os_username
       build_password           = var.os_password
       build_password_encrypted = bcrypt(var.os_password)
-      rhsm_username            = var.rhsm_username
-      rhsm_password            = var.rhsm_password
+      #rhsm_username            = var.rhsm_username
+      #rhsm_password            = var.rhsm_password
       vm_guest_os_language     = var.os_language
       vm_guest_os_keyboard     = var.os_keyboard_layout
       vm_guest_os_timezone     = var.os_timezone

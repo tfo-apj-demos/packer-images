@@ -207,3 +207,9 @@ variable "vm_disk_lvm" {
   description = "The LVM configuration for the virtual disk."
   default     = []
 }
+
+variable "additional_packages" {
+  type        = list(string)
+  description = "Additional packages to install."
+  default     = []
+}
