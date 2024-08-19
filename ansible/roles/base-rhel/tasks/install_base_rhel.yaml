@@ -19,12 +19,6 @@
     gpgkey: file:///etc/pki/rpm-gpg/hashicorp-archive-keyring.asc
     enabled: yes
 
-- name: Add osquery repo key
-  get_url:
-    url: https://pkg.osquery.io/rpm/GPG
-    dest: /etc/pki/rpm-gpg/osquery.asc
-    mode: 0644
-
 - name: Add docker repo key
   get_url:
     url: https://download.docker.com/linux/centos/gpg
@@ -39,30 +33,11 @@
     gpgkey: file:///etc/pki/rpm-gpg/docker-archive-keyring.asc
     enabled: yes
 
-- name: Install packages
-  yum:
-    name:
-      - unzip
-    state: latest
-    update_cache: yes
-
-- name: Disable daily update
-  systemd:
-    name: dnf-automatic
-    state: stopped
-    enabled: no
-
 - name: Disable dnf-automatic.timer
   systemd:
     name: dnf-automatic.timer
     state: stopped
     enabled: no
-
-- name: Create temporary directory for SSH CA storage
-  file:
-    path: /tmp/ssh_ca.d/
-    state: directory
-    mode: '0755'
 
 - name: Add HCP Vault SSH signing public certificate
   get_url:
@@ -113,12 +88,6 @@
       datasource:
         VMware:
           vmware_cust_file_max_wait: 45
-
-- name: Disable traditional VMware customisation
-  lineinfile:
-    path: /etc/cloud/cloud.cfg
-    state: present
-    line: 'disable_vmware_customization: true'
 
 - name: Prepare cloud-init for first use
   command: /usr/bin/cloud-init clean --seed --logs
