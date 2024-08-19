@@ -58,33 +58,23 @@ source "vsphere-iso" "this" {
 
   network_adapters {
     network      = var.network
-    network_card = "e1000"
+    network_card = "vmxnet3"
   }
 
   iso_paths = var.iso_paths
 
-  
-  // Updated boot_command
-  boot_command = [
-    // This sends the "up arrow" key, typically used to navigate through boot menu options.
-    "<up>",
-    // This sends the "e" key. In the GRUB boot loader, this is used to edit the selected boot menu option.
-    "e",
-    // This sends two "down arrow" keys, followed by the "end" key, and then waits. This is used to navigate to a specific line in the boot menu option's configuration.
-    "<down><down><end><wait>",
-    // This types the string "text" followed by the value of the 'data_source_command' local variable.
-    // This is used to modify the boot menu option's configuration to boot in text mode and specify the kickstart data source configured in the common variables.
-    "text ${local.data_source_command}",
-    // This sends the "enter" key, waits, turns on the left control key, sends the "x" key, and then turns off the left control key. This is used to save the changes and exit the boot menu option's configuration, and then continue the boot process.
-    "<enter><wait><leftCtrlOn>x<leftCtrlOff>"
-  ]
+  cd_content = {
+    #"/meta-data" = file(abspath("${path.root}/data/meta-data"))
+    local.data_source_content
+  }
 
-  /*cd_content = {
-    "/meta-data" = file(abspath("${path.root}/data/meta-data"))
-  }*/
+  // Updated boot_command
+  boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
+
+  
 
   // Serve Kickstart file via HTTP
-  http_content = local.data_source_content
+  #http_content = local.data_source_content
 
   // Post build connectivity
   ssh_username           = var.os_username
