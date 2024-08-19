@@ -76,6 +76,10 @@ source "vsphere-iso" "this" {
     " text ${local.data_source_command}<enter>"
   ]
 
+  cd_content = {
+    "/meta-data" = file(abspath("${path.root}/data/meta-data"))
+  }
+
   // Serve Kickstart file via HTTP
   http_content = local.data_source_content
 
