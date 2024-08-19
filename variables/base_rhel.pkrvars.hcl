@@ -1,5 +1,5 @@
 # General variables
-role        = "base-rhel"
+role        = "base_rhel"
 owner       = "Cloud Platform Team"
 project_id  = "TFO"
 
