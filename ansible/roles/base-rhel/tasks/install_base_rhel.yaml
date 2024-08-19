@@ -33,12 +33,6 @@
     gpgkey: file:///etc/pki/rpm-gpg/docker-archive-keyring.asc
     enabled: yes
 
-- name: Disable dnf-automatic.timer
-  systemd:
-    name: dnf-automatic.timer
-    state: stopped
-    enabled: no
-
 - name: Add HCP Vault SSH signing public certificate
   get_url:
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
