@@ -25,14 +25,6 @@
     dest: /etc/pki/rpm-gpg/osquery.asc
     mode: 0644
 
-- name: Add osquery repository
-  yum_repository:
-    name: osquery
-    description: osquery repository
-    baseurl: https://pkg.osquery.io/rpm
-    gpgkey: file:///etc/pki/rpm-gpg/osquery.asc
-    enabled: yes
-
 - name: Add docker repo key
   get_url:
     url: https://download.docker.com/linux/centos/gpg
@@ -51,7 +43,6 @@
   yum:
     name:
       - unzip
-      - osquery
     state: latest
     update_cache: yes
 
