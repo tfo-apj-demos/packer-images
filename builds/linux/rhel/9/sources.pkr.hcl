@@ -62,9 +62,8 @@ source "vsphere-iso" "this" {
   }
 
   iso_paths = var.iso_paths
-
+  http_interface = "ens192"
   cd_content = local.data_source_content
-
   // Updated boot_command
   boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
 
