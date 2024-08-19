@@ -1,7 +1,7 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
-  name      = "${var.role}-rhel-9-${local.timestamp}"
-  base      = var.role == "base"
+  name      = "${var.role}-9-${local.timestamp}"
+  base      = var.role == "base-rhel"
 
   // New variables for Kickstart configuration
   data_source_content = {

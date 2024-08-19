@@ -12,7 +12,7 @@ locals {
     "--extra-vars", "role_config='${var.role_config}'",
     "--scp-extra-args", "'-O'"
   ]
-  sources = var.role == "base" ? ["vsphere-iso.this"] : ["vsphere-clone.this"]
+  sources = var.role == "base-rhel" ? ["vsphere-iso.this"] : ["vsphere-clone.this"]
 }
 
 packer {
@@ -48,7 +48,7 @@ build {
   }
 
   hcp_packer_registry {
-    bucket_name = "${var.role}-rhel-9"
+    bucket_name = "${var.role}-9"
 
     bucket_labels = {
       "application" = var.role
