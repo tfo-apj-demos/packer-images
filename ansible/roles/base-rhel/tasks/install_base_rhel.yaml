@@ -1,148 +1,143 @@
 ---
-- name: Configure RHEL System
-  hosts: all
-  become: yes
-  tasks:
+- name: Create temporary directory for SSH CA storage
+  file:
+    path: /tmp/ssh_ca.d/
+    state: directory
+    mode: '0755'
 
-    - name: Create temporary directory for SSH CA storage
-      file:
-        path: /tmp/ssh_ca.d/
-        state: directory
-        mode: '0755'
+- name: Add HashiCorp repo key
+  get_url:
+    url: https://rpm.releases.hashicorp.com/gpg
+    dest: /etc/pki/rpm-gpg/hashicorp-archive-keyring.asc
+    mode: 0644
 
-    - name: Add HashiCorp repo key
-      get_url:
-        url: https://rpm.releases.hashicorp.com/gpg
-        dest: /etc/pki/rpm-gpg/hashicorp-archive-keyring.asc
-        mode: 0644
+- name: Add HashiCorp repository
+  yum_repository:
+    name: hashicorp
+    description: "HashiCorp Stable - $basearch"
+    baseurl: https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable
+    gpgkey: file:///etc/pki/rpm-gpg/hashicorp-archive-keyring.asc
+    enabled: yes
 
-    - name: Add HashiCorp repository
-      yum_repository:
-        name: hashicorp
-        description: "HashiCorp Stable - $basearch"
-        baseurl: https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable
-        gpgkey: file:///etc/pki/rpm-gpg/hashicorp-archive-keyring.asc
-        enabled: yes
+- name: Add osquery repo key
+  get_url:
+    url: https://pkg.osquery.io/rpm/GPG
+    dest: /etc/pki/rpm-gpg/osquery.asc
+    mode: 0644
 
-    - name: Add osquery repo key
-      get_url:
-        url: https://pkg.osquery.io/rpm/GPG
-        dest: /etc/pki/rpm-gpg/osquery.asc
-        mode: 0644
+- name: Add osquery repository
+  yum_repository:
+    name: osquery
+    description: osquery repository
+    baseurl: https://pkg.osquery.io/rpm
+    gpgkey: file:///etc/pki/rpm-gpg/osquery.asc
+    enabled: yes
 
-    - name: Add osquery repository
-      yum_repository:
-        name: osquery
-        description: osquery repository
-        baseurl: https://pkg.osquery.io/rpm
-        gpgkey: file:///etc/pki/rpm-gpg/osquery.asc
-        enabled: yes
+- name: Add docker repo key
+  get_url:
+    url: https://download.docker.com/linux/centos/gpg
+    dest: /etc/pki/rpm-gpg/docker-archive-keyring.asc
+    mode: 0644
 
-    - name: Add docker repo key
-      get_url:
-        url: https://download.docker.com/linux/centos/gpg
-        dest: /etc/pki/rpm-gpg/docker-archive-keyring.asc
-        mode: 0644
+- name: Add docker repository
+  yum_repository:
+    name: docker-ce
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
+    gpgkey: file:///etc/pki/rpm-gpg/docker-archive-keyring.asc
+    enabled: yes
 
-    - name: Add docker repository
-      yum_repository:
-        name: docker-ce
-        description: Docker CE Stable - $basearch
-        baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
-        gpgkey: file:///etc/pki/rpm-gpg/docker-archive-keyring.asc
-        enabled: yes
+- name: Install packages
+  yum:
+    name:
+      - unzip
+      - osquery
+    state: latest
+    update_cache: yes
 
-    - name: Install packages
-      yum:
-        name:
-          - unzip
-          - osquery
-        state: latest
-        update_cache: yes
+- name: Disable daily update
+  systemd:
+    name: dnf-automatic
+    state: stopped
+    enabled: no
 
-    - name: Disable daily update
-      systemd:
-        name: dnf-automatic
-        state: stopped
-        enabled: no
+- name: Disable dnf-automatic.timer
+  systemd:
+    name: dnf-automatic.timer
+    state: stopped
+    enabled: no
 
-    - name: Disable dnf-automatic.timer
-      systemd:
-        name: dnf-automatic.timer
-        state: stopped
-        enabled: no
+- name: Create temporary directory for SSH CA storage
+  file:
+    path: /tmp/ssh_ca.d/
+    state: directory
+    mode: '0755'
 
-    - name: Create temporary directory for SSH CA storage
-      file:
-        path: /tmp/ssh_ca.d/
-        state: directory
-        mode: '0755'
+- name: Add HCP Vault SSH signing public certificate
+  get_url:
+    url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
+    headers: 
+      X-Vault-Namespace: admin/tfo-apj-demos
+    dest: /tmp/ssh_ca.d/hcp-vault-ca-keys.pem
+    mode: 0644
 
-    - name: Add HCP Vault SSH signing public certificate
-      get_url:
-        url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
-        headers: 
-          X-Vault-Namespace: admin/tfo-apj-demos
-        dest: /tmp/ssh_ca.d/hcp-vault-ca-keys.pem
-        mode: 0644
+- name: Add GCVE Vault SSH signing public certificate
+  copy:
+    content: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yqxpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/ywwcek+ZuFq2Z1yDKGoTTfZF2KLDtfjRnRbNB9bzd/tCzRF9SJxOrjHOONtpUmSAhceySF2FcSU1UkneuCFBHgCQq9f93pASPbXw3RSR3NSZMwM7YbsTUyIw2GED4419+qkAV4RHRHRNVk5CObEBxu5Wvx1TuPsmcDPWMYOXAiZlOSgtyaX1/x14JnWp8Q0YFhIBkNucCHVcXi4Q4/tZ+ftgakWpUUj3GkeLtdWSCtr58DcR5sEwqALSPHy21iiA6qQiJa6/rz3L/Nh3k5UMVMHPhF5358M0vCkN2MuZf66CE1fd4s82g0HfjlOf51H9XPlueECp1NwrbYiWQkpq79VaQCyijlXfvh6S3jKHkkRJArtWrdIt6k1jm6gbQUPWsZn6Yb4mXTPGw+tQneZvMP7SLG97JkpwmsLa9OgENz37OpzK2j01QF5C2rB1N3BKkCdm5mW4fQQjNWDirfnCjOshp4tS/lhGFCcqj6w18zFYllKx1Z0j5etxw==
+    dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
+    mode: 0644
 
-    - name: Add GCVE Vault SSH signing public certificate
-      copy:
-        content: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yqxpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/ywwcek+ZuFq2Z1yDKGoTTfZF2KLDtfjRnRbNB9bzd/tCzRF9SJxOrjHOONtpUmSAhceySF2FcSU1UkneuCFBHgCQq9f93pASPbXw3RSR3NSZMwM7YbsTUyIw2GED4419+qkAV4RHRHRNVk5CObEBxu5Wvx1TuPsmcDPWMYOXAiZlOSgtyaX1/x14JnWp8Q0YFhIBkNucCHVcXi4Q4/tZ+ftgakWpUUj3GkeLtdWSCtr58DcR5sEwqALSPHy21iiA6qQiJa6/rz3L/Nh3k5UMVMHPhF5358M0vCkN2MuZf66CE1fd4s82g0HfjlOf51H9XPlueECp1NwrbYiWQkpq79VaQCyijlXfvh6S3jKHkkRJArtWrdIt6k1jm6gbQUPWsZn6Yb4mXTPGw+tQneZvMP7SLG97JkpwmsLa9OgENz37OpzK2j01QF5C2rB1N3BKkCdm5mW4fQQjNWDirfnCjOshp4tS/lhGFCcqj6w18zFYllKx1Z0j5etxw==
-        dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
-        mode: 0644
+- name: Add CA public certificates
+  assemble:
+    src: /tmp/ssh_ca.d/
+    dest: /etc/ssh/trusted-user-ca-keys.pem
 
-    - name: Add CA public certificates
-      assemble:
-        src: /tmp/ssh_ca.d/
-        dest: /etc/ssh/trusted-user-ca-keys.pem
+- name: Update ssh config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 
-    - name: Update ssh config
-      lineinfile:
-        path: /etc/ssh/sshd_config
-        state: present
-        line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
+- name: Download PKI CA certificate
+  get_url:
+    url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
+    headers: 
+      X-Vault-Namespace: admin/tfo-apj-demos
+    dest: /usr/local/share/ca-certificates/hcp-vault-ca.crt
+    mode: 0644
 
-    - name: Download PKI CA certificate
-      get_url:
-        url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
-        headers: 
-          X-Vault-Namespace: admin/tfo-apj-demos
-        dest: /usr/local/share/ca-certificates/hcp-vault-ca.crt
-        mode: 0644
+- name: Register HCP Vault CA
+  command: update-ca-trust
 
-    - name: Register HCP Vault CA
-      command: update-ca-trust
+- name: Clean up for template conversion
+  file:
+    path: /etc/cloud/cloud.cfg.d/99-installer.cfg
+    state: absent
 
-    - name: Clean up for template conversion
-      file:
-        path: /etc/cloud/cloud.cfg.d/99-installer.cfg
-        state: absent
+- name: Set timeout for cloud-init
+  copy: 
+    dest: /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
+    content: |
+      datasource_list: [ "VMware" ]
+      datasource:
+        VMware:
+          vmware_cust_file_max_wait: 45
 
-    - name: Set timeout for cloud-init
-      copy: 
-        dest: /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
-        content: |
-          datasource_list: [ "VMware" ]
-          datasource:
-            VMware:
-              vmware_cust_file_max_wait: 45
+- name: Disable traditional VMware customisation
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    state: present
+    line: 'disable_vmware_customization: true'
 
-    - name: Disable traditional VMware customisation
-      lineinfile:
-        path: /etc/cloud/cloud.cfg
-        state: present
-        line: 'disable_vmware_customization: true'
+- name: Prepare cloud-init for first use
+  command: /usr/bin/cloud-init clean --seed --logs
 
-    - name: Prepare cloud-init for first use
-      command: /usr/bin/cloud-init clean --seed --logs
+- name: Extend logical volume to use 100% of the free space
+  ansible.builtin.command:
+    cmd: lvextend -l +100%FREE /dev/rhel/root
 
-    - name: Extend logical volume to use 100% of the free space
-      ansible.builtin.command:
-        cmd: lvextend -l +100%FREE /dev/rhel/root
-
-    - name: Resize the filesystem
-      ansible.builtin.filesystem:
-        fstype: ext4
-        resizefs: yes
-        dev: /dev/rhel/root
+- name: Resize the filesystem
+  ansible.builtin.filesystem:
+    fstype: ext4
+    resizefs: yes
+    dev: /dev/rhel/root
