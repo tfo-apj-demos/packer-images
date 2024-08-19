@@ -6,7 +6,7 @@ eula --agreed
 lang ${vm_guest_os_language}
 keyboard ${vm_guest_os_keyboard}
 
-network --bootproto=dhcp --device=ens192 --onboot=on
+network  --bootproto=dhcp --device=eth0
 
 rootpw --lock
 user --name=${build_username} --iscrypted --password=${build_password_encrypted} --groups=wheel
