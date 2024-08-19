@@ -14,13 +14,13 @@ locals {
       vm_guest_os_language     = var.os_language
       vm_guest_os_keyboard     = var.os_keyboard_layout
       vm_guest_os_timezone     = var.os_timezone
-      network = templatefile("${abspath(path.root)}/data/network.pkrtpl.hcl", {
+      /*network = templatefile("${abspath(path.root)}/data/network.pkrtpl.hcl", {
         device  = var.vm_network_device
         ip      = var.vm_ip_address
         netmask = var.vm_ip_netmask
         gateway = var.vm_ip_gateway
         dns     = var.vm_dns_list
-      })
+      })*/
       storage = templatefile("${abspath(path.root)}/data/storage.pkrtpl.hcl", {
         device     = var.vm_disk_device
         swap       = var.vm_disk_use_swap
