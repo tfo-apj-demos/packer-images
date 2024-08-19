@@ -64,7 +64,6 @@ source "vsphere-iso" "this" {
   iso_paths = var.iso_paths
 
   cd_content = {
-    #"/meta-data" = file(abspath("${path.root}/data/meta-data"))
     local.data_source_content
   }
 
