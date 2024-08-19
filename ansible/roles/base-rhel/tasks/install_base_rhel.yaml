@@ -52,12 +52,6 @@
     src: /tmp/ssh_ca.d/
     dest: /etc/ssh/trusted-user-ca-keys.pem
 
-- name: Update ssh config
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    state: present
-    line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
-
 - name: Download PKI CA certificate
   get_url:
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
@@ -66,32 +60,11 @@
     dest: /usr/local/share/ca-certificates/hcp-vault-ca.crt
     mode: 0644
 
+- name: Update ssh config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
+
 - name: Register HCP Vault CA
   command: update-ca-trust
-
-- name: Clean up for template conversion
-  file:
-    path: /etc/cloud/cloud.cfg.d/99-installer.cfg
-    state: absent
-
-- name: Set timeout for cloud-init
-  copy: 
-    dest: /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
-    content: |
-      datasource_list: [ "VMware" ]
-      datasource:
-        VMware:
-          vmware_cust_file_max_wait: 45
-
-- name: Prepare cloud-init for first use
-  command: /usr/bin/cloud-init clean --seed --logs
-
-- name: Extend logical volume to use 100% of the free space
-  ansible.builtin.command:
-    cmd: lvextend -l +100%FREE /dev/rhel/root
-
-- name: Resize the filesystem
-  ansible.builtin.filesystem:
-    fstype: ext4
-    resizefs: yes
-    dev: /dev/rhel/root
