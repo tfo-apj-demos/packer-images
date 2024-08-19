@@ -47,18 +47,18 @@
     dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
     mode: 0644
 
-- name: Add CA public certificates
-  assemble:
-    src: /tmp/ssh_ca.d/
-    dest: /etc/ssh/trusted-user-ca-keys.pem
-
 - name: Download PKI CA certificate
   get_url:
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
     headers: 
       X-Vault-Namespace: admin/tfo-apj-demos
-    dest: /usr/local/share/ca-certificates/hcp-vault-ca.crt
+    dest: /tmp/ssh_ca.d/hcp-vault-ca.crt
     mode: 0644
+
+- name: Add CA public certificates
+  assemble:
+    src: /tmp/ssh_ca.d/
+    dest: /etc/ssh/trusted-user-ca-keys.pem
 
 - name: Update ssh config
   lineinfile:
