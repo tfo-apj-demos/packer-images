@@ -21,13 +21,15 @@ skipx
 %packages --ignoremissing --excludedocs
 @core
 -iwl*firmware
+perl
+open-vm-tools
 %end
 
 %post
 # Install necessary packages
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 dnf makecache
-dnf install -y sudo open-vm-tools perl
+# dnf install -y sudo open-vm-tools perl
 %{ if additional_packages != "" ~}
 dnf install -y ${additional_packages}
 %{ endif ~}
