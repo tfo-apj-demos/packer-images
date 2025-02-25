@@ -1,6 +1,6 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
-  name   = "${var.role}-ubuntu-2204-${local.timestamp}${var.vtpm_enabled ? "_vtpm" : ""}"
+  name   = "${var.role}-ubuntu-2204-${local.timestamp}${var.enable_vtpm ? "_vtpm" : ""}"
   base = var.role == "base"
 }
 
