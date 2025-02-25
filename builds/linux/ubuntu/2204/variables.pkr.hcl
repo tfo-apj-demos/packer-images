@@ -117,3 +117,8 @@ variable "enable_vtpm" {
   type = bool
   default = false
 }
+
+variable "firmware" {
+  type    = string
+  default = "bios"
+}

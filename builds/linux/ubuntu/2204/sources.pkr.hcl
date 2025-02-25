@@ -55,6 +55,7 @@ source "vsphere-iso" "this" {
   disk_controller_type = ["pvscsi"]
 
   vTPM = var.enable_vtpm
+  firmware = var.firmware
 
   storage {
     disk_size             = 32768

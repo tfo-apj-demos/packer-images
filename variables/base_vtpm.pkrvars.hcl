@@ -10,3 +10,4 @@ network   = "seg-packer"
 
 # vTPM variables
 vtpm_enabled = true
+firmware     = "efi"
