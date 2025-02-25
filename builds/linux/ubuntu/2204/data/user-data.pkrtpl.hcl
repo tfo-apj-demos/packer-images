@@ -51,6 +51,7 @@ autoinstall:
       grub_device: false
       type: partition
       id: partition-0
+    # [CHANGED] Modified partition 2 to be /boot instead
     - device: disk-sda
       size: 2147483648
       wipe: superblock
@@ -65,15 +66,32 @@ autoinstall:
       preserve: false
       type: format
       id: format-0
+    # [NEW] Added EFI partition
     - device: disk-sda
-      size: 32209108992
+      size: 536870912  # 512MB for EFI partition
       wipe: superblock
-      flag: ''
-      number: 3
+      flag: boot
+      number: 3  # Changed from original partition-2's number
       preserve: false
       grub_device: false
       type: partition
-      id: partition-2
+      id: partition-efi
+    # [NEW] Added format for EFI partition
+    - fstype: fat32
+      volume: partition-efi
+      preserve: false
+      type: format
+      id: format-efi
+    # [CHANGED] Changed this to partition-4 for LVM
+    - device: disk-sda
+      size: 30G  # [CHANGED] Previously 32209108992 (30GB is more readable)
+      wipe: superblock
+      flag: ''
+      number: 4  # [CHANGED] Changed from 3
+      preserve: false
+      grub_device: false
+      type: partition
+      id: partition-2  # Kept original ID for compatibility
     - name: ubuntu-vg
       devices:
       - partition-2
@@ -82,7 +100,7 @@ autoinstall:
       id: lvm_volgroup-0
     - name: ubuntu-lv
       volgroup: lvm_volgroup-0
-      size: 16101933056B
+      size: 15G  # [CHANGED] Previously 16101933056B (15GB is more readable)
       wipe: superblock
       preserve: false
       type: lvm_partition
@@ -100,6 +118,11 @@ autoinstall:
       device: format-0
       type: mount
       id: mount-0
+    # [NEW] Added mount point for EFI partition
+    - path: /boot/efi
+      device: format-efi
+      type: mount
+      id: mount-efi
   user-data:
     disable_root: false
     timezone: ${timezone}
