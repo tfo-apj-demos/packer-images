@@ -10,6 +10,7 @@ on:
         options:
           - all
           - ubuntu_2204_base
+          - ubuntu_2204_base_vtpm
           - windows_2022_base
           - rhel_9_base
   schedule:
