@@ -54,6 +54,8 @@ source "vsphere-iso" "this" {
   RAM_reserve_all      = true
   disk_controller_type = ["pvscsi"]
 
+  vTPM = var.enable_vtpm
+
   storage {
     disk_size             = 32768
     disk_thin_provisioned = true
@@ -114,4 +116,5 @@ source "vsphere-clone" "this" {
 	ssh_username = var.os_username
 	ssh_password = var.os_password
   temporary_key_pair_type = "ed25519"
+
 }

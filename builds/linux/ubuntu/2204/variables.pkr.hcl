@@ -112,3 +112,8 @@ variable "debug_ansible" {
 	type = bool
 	default = false
 }
+
+variable "enable_vtpm" {
+  type = bool
+  default = false
+}
