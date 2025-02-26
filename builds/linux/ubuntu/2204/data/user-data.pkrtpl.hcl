@@ -28,6 +28,7 @@ autoinstall:
     layout: ${keyboard_layout}
   locale: ${language}
   network:
+    version: 2
     ethernets:
       ens192:
         dhcp4: true
