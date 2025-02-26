@@ -33,6 +33,7 @@ autoinstall:
       ens192:
         dhcp4: true
         dhcp6: false
+        optional: trueß
   packages:
     - open-vm-tools
   # refresh-installer:
