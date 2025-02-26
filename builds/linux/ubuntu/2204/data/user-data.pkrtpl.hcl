@@ -17,7 +17,8 @@ autoinstall:
       if [ -d /sys/firmware/efi ]; then
        apt install -y grub-efi
        apt install -y efibootmgr
-       efibootmgr -v
+       sudo efibootmgr -o 0005,0001,0000,0002,0003,0004
+       sudo update-grub
       fi
   identity:
     hostname: ${hostname}
