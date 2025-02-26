@@ -33,12 +33,6 @@ autoinstall:
   ssh:
     install-server: true
     allow-pw: true
-  late-commands:
-    - |
-      if [ -d /sys/firmware/efi ]; then
-        apt-get install -y efibootmgr
-        efibootmgr -o $(efibootmgr | perl -n -e '/Boot(.+)\* ubuntu/ && print $1')
-      fi
   user-data:
     disable_root: false
     timezone: ${timezone}
