@@ -33,8 +33,6 @@ autoinstall:
       ens192:
         dhcp4: true
         dhcp6: false
-        ipv6-disabled: true
-    version: 2
   packages:
     - open-vm-tools
   # refresh-installer:
