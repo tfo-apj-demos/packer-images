@@ -12,6 +12,12 @@ autoinstall:
   #   install: false
   early-commands:
     - sudo systemctl stop ssh
+  late-commands:
+    - |
+      if [ -d /sys/firmware/efi ]; then
+        apt-get install -y efibootmgr
+        efibootmgr -o $(efibootmgr | perl -n -e '/Boot(.+)\* ubuntu/ && print $1')
+      fi
   identity:
     hostname: ${hostname}
     username: ${username}
