@@ -9,5 +9,5 @@ datastore = "vsanDatastore"
 network   = "seg-packer"
 
 # vTPM variables
-vtpm_enabled = true
+enable_vtpm = true
 firmware     = "efi"
