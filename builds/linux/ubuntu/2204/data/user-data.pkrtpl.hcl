@@ -15,8 +15,9 @@ autoinstall:
   late-commands:
     - |
       if [ -d /sys/firmware/efi ]; then
-       sudo grub-install --target=x86_64-efi --recheck /dev/sda
-       update-grub
+       apt install -y grub-efi
+       apt install -y efibootmgr
+       efibootmgr -v
       fi
   identity:
     hostname: ${hostname}
