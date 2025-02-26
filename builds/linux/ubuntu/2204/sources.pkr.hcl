@@ -70,7 +70,7 @@ source "vsphere-iso" "this" {
   iso_paths = var.iso_paths
 
   boot_command = [
-    "c<wait>",
+    "<wait3s>c<wait3s>",
     "linux /casper/vmlinuz autoinstall quiet ---",
     "<enter><wait>",
     "initrd /casper/initrd",

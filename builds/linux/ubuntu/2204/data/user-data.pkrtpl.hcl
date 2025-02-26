@@ -64,7 +64,7 @@ storage:
       flag: boot,esp
       number: 2
       preserve: false
-      grub_device: false
+      grub_device: true
       type: partition
       id: partition-efi
     - fstype: fat32
