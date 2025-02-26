@@ -17,6 +17,9 @@ autoinstall:
       if [ -d /sys/firmware/efi ]; then
         apt-get install -y efibootmgr
         efibootmgr -o $(efibootmgr | perl -n -e '/Boot(.+)\* ubuntu/ && print $1')
+        ROOT_PART=$(mount | grep "on /target " | cut -d' ' -f1)
+        sed -i "s/GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"root=UUID=$(blkid -s UUID -o value $ROOT_PART)\"/" /target/etc/default/grub
+        curtin in-target --target=/target -- update-grub
       fi
   identity:
     hostname: ${hostname}
