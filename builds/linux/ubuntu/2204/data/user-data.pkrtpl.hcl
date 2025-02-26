@@ -39,7 +39,7 @@ autoinstall:
         apt-get install -y efibootmgr
         efibootmgr -o $(efibootmgr | perl -n -e '/Boot(.+)\* ubuntu/ && print $1')
       fi
-  storage:
+storage:
     config:
     - ptable: gpt
       path: /dev/sda
@@ -49,63 +49,84 @@ autoinstall:
       grub_device: true
       type: disk
       id: disk-sda
+    # BIOS boot needs a small unformatted partition flagged for bios_grub
     - device: disk-sda
-      size: 1048576
+      size: 1048576       # 1 MiB (adjust if needed)
       flag: bios_grub
       number: 1
       preserve: false
       grub_device: false
       type: partition
-      id: partition-0
+      id: partition-bios
+    # EFI systems require an EFI System Partition (ESP)
     - device: disk-sda
-      size: 2147483648
-      wipe: superblock
-      flag: ''
+      size: 524288000     # ~500 MiB; adjust as required
+      flag: boot,esp
       number: 2
       preserve: false
       grub_device: false
       type: partition
-      id: partition-1
-    - fstype: ext4
-      volume: partition-1
+      id: partition-efi
+    - fstype: fat32
+      volume: partition-efi
       preserve: false
       type: format
-      id: format-0
+      id: format-efi
+    # /boot partition (for kernel and initrd)
     - device: disk-sda
-      size: 32209108992
+      size: 2147483648    # ~2 GiB; adjust as needed
       wipe: superblock
       flag: ''
       number: 3
       preserve: false
       grub_device: false
       type: partition
-      id: partition-2
+      id: partition-boot
+    - fstype: ext4
+      volume: partition-boot
+      preserve: false
+      type: format
+      id: format-boot
+    # LVM partition for the main OS
+    - device: disk-sda
+      size: 32209108992   # main partition size; adjust as required
+      wipe: superblock
+      flag: ''
+      number: 4
+      preserve: false
+      grub_device: false
+      type: partition
+      id: partition-lvm
     - name: ubuntu-vg
       devices:
-      - partition-2
+      - partition-lvm
       preserve: false
       type: lvm_volgroup
       id: lvm_volgroup-0
     - name: ubuntu-lv
       volgroup: lvm_volgroup-0
-      size: 16101933056B
+      size: 16101933056B  # root volume size; adjust as needed
       wipe: superblock
       preserve: false
       type: lvm_partition
-      id: lvm_partition-0
+      id: lvm_partition-root
     - fstype: ext4
-      volume: lvm_partition-0
+      volume: lvm_partition-root
       preserve: false
       type: format
-      id: format-1
+      id: format-root
     - path: /
-      device: format-1
+      device: format-root
       type: mount
-      id: mount-1
+      id: mount-root
     - path: /boot
-      device: format-0
+      device: format-boot
       type: mount
-      id: mount-0
+      id: mount-boot
+    - path: /boot/efi
+      device: format-efi
+      type: mount
+      id: mount-efi
   user-data:
     disable_root: false
     timezone: ${timezone}
