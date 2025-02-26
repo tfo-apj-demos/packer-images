@@ -96,7 +96,7 @@ source "vsphere-iso" "this" {
   ssh_username           = var.os_username
   ssh_password           = var.os_password
   ssh_pty                = true
-  ssh_timeout            = "30m"
+  ssh_timeout            = "40m"
   ssh_handshake_attempts = 1000
 }
 
