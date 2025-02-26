@@ -49,7 +49,7 @@ source "vsphere-iso" "this" {
   guest_os_type       = var.guest_os_type
 
   CPUs = 2
-  RAM  = 4096
+  RAM  = 8192
 
   RAM_reserve_all      = true
   disk_controller_type = ["pvscsi"]

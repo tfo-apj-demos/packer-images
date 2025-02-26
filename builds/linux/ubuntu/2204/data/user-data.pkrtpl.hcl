@@ -44,8 +44,3 @@ autoinstall:
     disable_root: false
     timezone: ${timezone}
   version: 1
-  # identity:
-  #   hostname: ${hostname}
-  #   username: ${username}
-  #   password: ${password}
-  # version: 1
