@@ -18,7 +18,6 @@ autoinstall:
        apt install -y grub-efi
        apt install -y efibootmgr
        sudo efibootmgr -o 0005,0001,0000,0002,0003,0004
-       sudo update-grub
       fi
   identity:
     hostname: ${hostname}
