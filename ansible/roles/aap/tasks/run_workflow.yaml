@@ -5,7 +5,7 @@
       awx.awx.workflow_launch:
         workflow_template: "eda_workflow"
         extra_vars: "{{ extra_vars |  default(omit, true) }}"
-        validate_certs: "$CONTROLLER_VERIFY_SSL"
+        validate_certs: false
         scm_branch: "{{ scm_branch |  default(omit, true) }}"
       register: workflow_output
 
