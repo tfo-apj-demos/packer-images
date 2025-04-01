@@ -18,6 +18,7 @@ on:
           - ubuntu_2204_nomad
           - windows_2022_iis
           - ubuntu_2204_splunk
+          - ubuntu_2204_aap
           
   schedule:
    - cron:  '0 11 * * SUN' # UTC TIME
