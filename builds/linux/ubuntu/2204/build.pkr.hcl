@@ -44,6 +44,7 @@ build {
 
     ansible_env_vars = [
       "ANSIBLE_REMOTE_TMP=/tmp",
+      "CONTROLLER_HOST=${var.controller_host}",
     ]
   }
 

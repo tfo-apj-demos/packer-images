@@ -19,6 +19,11 @@ variable "role_config" {
   default = env("ROLE_CONFIG")
 }
 
+variable "controller_host" {
+  type    = string
+  default = env("CONTROLLER_HOST")
+}
+
 variable "vcenter_insecure_connection" {
   type    = string
   default = false

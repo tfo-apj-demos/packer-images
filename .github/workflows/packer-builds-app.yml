@@ -74,7 +74,6 @@ jobs:
       - name: Run Makefile with retries
         shell: bash
         run: |
-          export CONTROLLER_HOST="${{ env.CONTROLLER_HOST}}"
           max_attempts=3
           attempt=1
           until make ${{ matrix.image_type }} || [ $attempt -eq $max_attempts ]
