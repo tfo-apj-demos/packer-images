@@ -6,7 +6,6 @@
         controller_host: lookup('ansible.builtin.env', 'CONTROLLER_HOST'
         controller_user: "admin"
         controller_password: lookup('ansible.builtin.env', 'CONTROLLER_PASSWORD')
-        controller_project: lookup('ansible.builtin.env', 'CONTROLLER_PROJECT')
         workflow_template: "eda_workflow"
         extra_vars: "{{ extra_vars |  default(omit, true) }}"
         validate_certs: false
