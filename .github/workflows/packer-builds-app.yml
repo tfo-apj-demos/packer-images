@@ -38,7 +38,7 @@ env:
   CONTROLLER_USERNAME: admin
   CONTROLLER_PASSWORD: ${{ secrets.CONTROLLER_PASSWORD }}
   CONTROLLER_VERIFY_SSL: FALSE
-  CONTROLLER_PROJECT: "Demo Project"
+  CONTROLLER_PROJECT: "eda_example"
     
 jobs:
   selectimages:
