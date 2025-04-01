@@ -1,14 +1,15 @@
 ---
-- name: "Disable Multicast DNS on Ubuntu for local domain"
-  hosts: all
-  become: yes
-
+- name: Disable MulticastDNS in systemd-resolved
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^MulticastDNS='
+    line: 'MulticastDNS=no'
+    insertafter: '^\[Resolve\]'
 - name: Restart systemd-resolved
-  systemd:
+  ansible.builtin.systemd:
     name: systemd-resolved
     state: restarted
-
-- name: "launch a workflow and wait for the workflow to finish"
+- name: "Launch a workflow and wait for the workflow to finish"
   block:
     - name: Launch a workflow template with extra_vars on remote controller instance when project is set
       awx.awx.workflow_launch:
@@ -21,7 +22,7 @@
         scm_branch: "{{ scm_branch |  default(omit, true) }}"
       register: workflow_output
 
-    - name: print out workflow_output
+    - name: Print out workflow_output
       debug:
         var: workflow_output
 

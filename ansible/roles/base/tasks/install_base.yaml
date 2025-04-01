@@ -1,41 +1,47 @@
 ---
-- name: Disable Multicast DNS (mDNS) on Ubuntu for *.local domain
-  hosts: all
-  become: yes
-  tasks:
+- name: Disable MulticastDNS in systemd-resolved
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^MulticastDNS='
+    line: 'MulticastDNS=no'
+    insertafter: '^\[Resolve\]'
+- name: Restart systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
 
 - name: Add HashiCorp repo key
-  get_url:
+  ansible.builtin.get_url:
     url: https://apt.releases.hashicorp.com/gpg
     dest: /usr/share/keyrings/hashicorp-archive-keyring.asc
     mode: 0644
 
 - name: Add HashiCorp repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.asc] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
     state: present
     mode: 0666
 
 - name: Add osquery repo key
-  get_url:
+  ansible.builtin.get_url:
     url: https://pkg.osquery.io/deb/pubkey.gpg
     dest: /usr/share/keyrings/osquery.asc
     mode: 0644
 
 - name: Add osquery repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: deb [signed-by=/usr/share/keyrings/osquery.asc] https://pkg.osquery.io/deb deb main
     state: present
     mode: 0666
 
 - name: Add docker repo key
-  get_url:
+  ansible.builtin.et_url:
     url: https://download.docker.com/linux/ubuntu/gpg
     dest: /usr/share/keyrings/docker-archive-keyring.asc
     mode: 0644
 
 - name: Add docker repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: deb [signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://download.docker.com/linux/ubuntu jammy stable
     state: present
     mode: 0666
