@@ -3,6 +3,7 @@ locals {
 			"--extra-vars", "ansible_become_password=${var.os_password}",
 			"--extra-vars", "role=${var.role}",
       "--extra-vars", "role_config='${var.role_config}'",
+      "--extra-vars", "CONTROLLER_HOST='${var.controller_host}'",
 			"-vvv",
       "--scp-extra-args", "'-O'"
 
