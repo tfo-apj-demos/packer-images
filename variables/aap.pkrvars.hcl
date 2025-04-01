@@ -1,5 +1,5 @@
 # General variables
-role        = "aap_workflow"
+role        = "aap"
 owner = "Cloud Platform Team"
 project_id  = "TFO"
 
