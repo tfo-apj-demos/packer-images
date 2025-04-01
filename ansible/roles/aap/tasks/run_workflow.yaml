@@ -4,7 +4,7 @@
     - name: Launch a workflow template with extra_vars on remote controller instance when project is set
       awx.awx.workflow_launch:
         controller_host: lookup('ansible.builtin.env', 'CONTROLLER_HOST'
-        controller_user: "admin"
+        controller_username: "admin"
         controller_password: lookup('ansible.builtin.env', 'CONTROLLER_PASSWORD')
         workflow_template: "eda_workflow"
         extra_vars: "{{ extra_vars |  default(omit, true) }}"
