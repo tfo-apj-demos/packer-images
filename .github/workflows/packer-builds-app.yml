@@ -37,7 +37,7 @@ env:
   CONTROLLER_HOST: "aap-aap.apps.openshift-01.hashicorp.local"
   CONTROLLER_USERNAME: admin
   CONTROLLER_PASSWORD: ${{ secrets.CONTROLLER_PASSWORD }}
-  CONTROLLER_VERIFY_SSL: FALSE
+  CONTROLLER_VERIFY_SSL: false
   CONTROLLER_PROJECT: "eda_example"
     
 jobs:
