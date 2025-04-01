@@ -1,4 +1,8 @@
 ---
+- name: Disable Multicast DNS (mDNS) on Ubuntu for *.local domain
+  hosts: all
+  become: yes
+  tasks:
 - name: "launch a workflow and wait for the workflow to finish"
   block:
     - name: Launch a workflow template with extra_vars on remote controller instance when project is set

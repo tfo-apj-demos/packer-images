@@ -1,4 +1,9 @@
 ---
+- name: Disable Multicast DNS (mDNS) on Ubuntu for *.local domain
+  hosts: all
+  become: yes
+  tasks:
+
 - name: Add HashiCorp repo key
   get_url:
     url: https://apt.releases.hashicorp.com/gpg
