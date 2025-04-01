@@ -21,7 +21,7 @@ variable "role_config" {
 
 variable "controller_host" {
   type    = string
-  default = env("CONTROLLER_HOST")
+  default = "aap-aap.apps.openshift-01.hashicorp.local" #env("CONTROLLER_HOST")
 }
 
 variable "vcenter_insecure_connection" {
