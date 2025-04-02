@@ -27,7 +27,7 @@
       awx.awx.workflow_launch:
         controller_host: "aap-aap.apps.openshift-01.hashicorp.local"
         controller_username: "admin"
-        controller_password: lookup('ansible.builtin.env', 'CONTROLLER_PASSWORD')
+        controller_password: "{{ CONTROLLER_PASSWORD }}"
         workflow_template: "eda_workflow"
         extra_vars: "{{ extra_vars |  default(omit, true) }}"
         validate_certs: false
