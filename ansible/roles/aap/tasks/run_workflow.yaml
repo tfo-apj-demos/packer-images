@@ -1,14 +1,18 @@
 ---
-- name: Disable MulticastDNS in systemd-resolved
-  ansible.builtin.lineinfile:
+- name: Configure systemd-resolved.conf to handle .local domains
+  lineinfile:
     path: /etc/systemd/resolved.conf
-    regexp: '^MulticastDNS='
-    line: 'MulticastDNS=no'
+    regexp: '^#?Domains='
+    line: 'Domains=~local'
     insertafter: '^\[Resolve\]'
+  register: resolved_conf
 - name: Restart systemd-resolved
   ansible.builtin.systemd:
     name: systemd-resolved
     state: restarted
+- name: sleep for 5 seconds
+  ansible.builtin.pause:
+    seconds: 5
 - name: "Launch a workflow and wait for the workflow to finish"
   block:
     - name: Launch a workflow template with extra_vars on remote controller instance when project is set
