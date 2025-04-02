@@ -38,6 +38,7 @@ env:
   CONTROLLER_PASSWORD: ${{ secrets.CONTROLLER_PASSWORD }}
   CONTROLLER_VERIFY_SSL: false
   CONTROLLER_PROJECT: "eda_example"
+  ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
     
 jobs:
   selectimages:
