@@ -35,7 +35,7 @@
     mode: 0666
 
 - name: Add docker repo key
-  ansible.builtin.et_url:
+  ansible.builtin.get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
     dest: /usr/share/keyrings/docker-archive-keyring.asc
     mode: 0644
