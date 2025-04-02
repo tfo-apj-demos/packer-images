@@ -1,0 +1,4 @@
+collections:
+  - name: ansible.controller
+    version: 4.6.10
+

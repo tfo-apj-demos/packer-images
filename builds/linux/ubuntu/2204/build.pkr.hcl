@@ -39,6 +39,7 @@ build {
   sources = local.sources
 
   provisioner "ansible" {
+    galaxy_file = "${path.cwd}/ansible/requirements.yaml"
     playbook_file = "${path.cwd}/ansible/playbook.yaml"
     user          = var.os_username
 
