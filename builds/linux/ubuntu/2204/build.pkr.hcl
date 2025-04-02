@@ -4,6 +4,7 @@ locals {
 			"--extra-vars", "role=${var.role}",
       "--extra-vars", "role_config='${var.role_config}'",
       "--extra-vars", "CONTROLLER_HOST='${var.controller_host}'",
+      "--extra-vars", "CONTROLLER_PASSWORD='${var.controller_password}'",
 			"-vvv",
       "--scp-extra-args", "'-O'"
 
@@ -46,6 +47,7 @@ build {
     ansible_env_vars = [
       "ANSIBLE_REMOTE_TMP=/tmp",
       "CONTROLLER_HOST=${var.controller_host}",
+      "CONTROLLER_PASSWORD=${var.controller_password}"
     ]
   }
 
