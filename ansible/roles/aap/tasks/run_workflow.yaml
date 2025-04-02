@@ -24,7 +24,7 @@
 - name: "Launch a workflow and wait for the workflow to finish"
   block:
     - name: Launch a workflow template with extra_vars on remote controller instance when project is set
-      awx.awx.workflow_launch:
+      ansible.controller.workflow_launch:
         controller_host: "aap-aap.apps.openshift-01.hashicorp.local"
         controller_username: "admin"
         controller_password: "{{ CONTROLLER_PASSWORD }}"
