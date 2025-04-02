@@ -39,7 +39,7 @@ build {
   sources = local.sources
 
   provisioner "ansible" {
-    galaxy_file = "${path.cwd}/ansible/requirements.yaml"
+    galaxy_command = "ansible-galaxy collection install ${path.cwd}/ansible/ansible-controller-4.6.10.tar.gz"
     playbook_file = "${path.cwd}/ansible/playbook.yaml"
     user          = var.os_username
 
