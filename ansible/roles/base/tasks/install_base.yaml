@@ -1,10 +1,11 @@
 ---
-- name: Disable MulticastDNS in systemd-resolved
-  ansible.builtin.lineinfile:
+- name: Configure systemd-resolved.conf to handle .local domains
+  lineinfile:
     path: /etc/systemd/resolved.conf
-    regexp: '^MulticastDNS='
-    line: 'MulticastDNS=no'
+    regexp: '^#?Domains='
+    line: 'Domains=~local'
     insertafter: '^\[Resolve\]'
+  register: resolved_conf
 - name: Restart systemd-resolved
   ansible.builtin.systemd:
     name: systemd-resolved
