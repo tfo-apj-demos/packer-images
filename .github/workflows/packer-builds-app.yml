@@ -39,6 +39,7 @@ env:
   CONTROLLER_PASSWORD: ${{ secrets.CONTROLLER_PASSWORD }}
   CONTROLLER_VERIFY_SSL: false
   CONTROLLER_PROJECT: "eda_example"
+  CONTROLLER_OPTIONAL_API_URLPATTERN_PREFIX: "controller"
     
 jobs:
   selectimages:
