@@ -1,15 +1,21 @@
 ---
-- name: Configure systemd-resolved.conf to handle .local domains
+- name: Configure systemd-resolved DNS settings
   lineinfile:
     path: /etc/systemd/resolved.conf
-    regexp: '^#?Domains='
-    line: 'Domains=~local'
+    regexp: "^#?{{ item.option }}="
+    line: "{{ item.option }}={{ item.value }}"
     insertafter: '^\[Resolve\]'
+  loop:
+    - { option: "DNS", value: "172.21.15.150" }
+    - { option: "MulticastDNS", value: "no" }
+    - { option: "Domains", value: "~hashicorp.local" }
   register: resolved_conf
+
 - name: Restart systemd-resolved
   ansible.builtin.systemd:
     name: systemd-resolved
     state: restarted
+    daemon_reload: yes
 
 - name: Add HashiCorp repo key
   ansible.builtin.get_url:

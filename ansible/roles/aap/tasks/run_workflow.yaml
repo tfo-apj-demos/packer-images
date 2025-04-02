@@ -1,7 +1,7 @@
 ---
 - name: Configure systemd-resolved.conf to handle .local domains
   lineinfile:
-    path: /etc/systemd/resolved.conf
+    path: /etc/resolve.conf
     regexp: '^#?Domains='
     line: 'Domains=~local'
     insertafter: '^\[Resolve\]'
