@@ -34,12 +34,10 @@ env:
   ROLE_CONFIG: ${{ secrets.ROLE_CONFIG }}
   WINDOWS_PASSWORD: ${{secrets.WINDOWS_PASSWORD}}
   LINUX_PASSWORD: ${{secrets.LINUX_PASSWORD}}
-  CONTROLLER_HOST: "aap-aap.apps.openshift-01.hashicorp.local"
   CONTROLLER_USERNAME: admin
   CONTROLLER_PASSWORD: ${{ secrets.CONTROLLER_PASSWORD }}
   CONTROLLER_VERIFY_SSL: false
   CONTROLLER_PROJECT: "eda_example"
-  CONTROLLER_OPTIONAL_API_URLPATTERN_PREFIX: "controller"
     
 jobs:
   selectimages:
