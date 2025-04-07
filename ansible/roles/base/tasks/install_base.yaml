@@ -35,11 +35,19 @@
     dest: /usr/share/keyrings/osquery.asc
     mode: 0644
 
-- name: Add osquery repository
-  ansible.builtin.apt_repository:
-    repo: deb [signed-by=/usr/share/keyrings/osquery.asc] https://pkg.osquery.io/deb deb main
-    state: present
-    mode: 0666
+# - name: Add osquery repository
+#   ansible.builtin.apt_repository:
+#     repo: deb [signed-by=/usr/share/keyrings/osquery.asc] https://pkg.osquery.io/deb deb main
+#     state: present
+#     mode: 0666
+- name: Download osquery .deb package
+  get_url:
+    url: https://pkg.osquery.io/deb/osquery_5.16.0-1.linux_amd64.deb
+    dest: /tmp/osquery_5.16.0-1.linux_amd64.deb
+
+- name: Install osquery .deb package
+  apt:
+    deb: /tmp/osquery_5.16.0-1.linux_amd64.deb
 
 - name: Add docker repo key
   ansible.builtin.get_url:
