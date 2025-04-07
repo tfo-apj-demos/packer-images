@@ -29,17 +29,22 @@
     state: present
     mode: 0666
 
+- name: Update apt cache to pre-populate package lists
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Disable cloud-init apt update (optional)
+  copy:
+    dest: /etc/cloud/cloud.cfg.d/90-disable-apt-update.cfg
+    content: |
+      apt_update: false
+
 - name: Add osquery repo key
   ansible.builtin.get_url:
     url: https://pkg.osquery.io/deb/pubkey.gpg
     dest: /usr/share/keyrings/osquery.asc
     mode: 0644
 
-# - name: Add osquery repository
-#   ansible.builtin.apt_repository:
-#     repo: deb [signed-by=/usr/share/keyrings/osquery.asc] https://pkg.osquery.io/deb deb main
-#     state: present
-#     mode: 0666
 - name: Download osquery .deb package
   get_url:
     url: https://pkg.osquery.io/deb/osquery_5.16.0-1.linux_amd64.deb
