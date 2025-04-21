@@ -23,11 +23,11 @@
     dest: /usr/share/keyrings/hashicorp-archive-keyring.asc
     mode: 0644
 
-# - name: Add HashiCorp repository
-#   ansible.builtin.apt_repository:
-#     repo: deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.asc] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
-#     state: present
-#     mode: 0666
+ - name: Add HashiCorp repository
+   ansible.builtin.apt_repository:
+     repo: deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.asc] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+     state: present
+     mode: 0666
 
 - name: Update apt cache to pre-populate package lists
   ansible.builtin.apt:
@@ -60,11 +60,11 @@
     dest: /usr/share/keyrings/docker-archive-keyring.asc
     mode: 0644
 
-# - name: Add docker repository
-#   ansible.builtin.apt_repository:
-#     repo: deb [signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://download.docker.com/linux/ubuntu jammy stable
-#     state: present
-#     mode: 0666
+ - name: Add docker repository
+   ansible.builtin.apt_repository:
+     repo: deb [signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://download.docker.com/linux/ubuntu jammy stable
+     state: present
+     mode: 0666
 
 - name: Install packages
   apt:
