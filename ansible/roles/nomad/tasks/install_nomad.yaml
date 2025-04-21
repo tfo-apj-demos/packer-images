@@ -1,4 +1,8 @@
 ---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    
 - name: Install Nomad
   become: true
   apt:
