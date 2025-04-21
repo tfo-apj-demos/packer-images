@@ -33,11 +33,11 @@
   ansible.builtin.apt:
     update_cache: yes
 
-- name: Disable cloud-init apt update (optional)
-  copy:
-    dest: /etc/cloud/cloud.cfg.d/90-disable-apt-update.cfg
-    content: |
-      apt_update: false
+# - name: Disable cloud-init apt update (optional)
+#   copy:
+#     dest: /etc/cloud/cloud.cfg.d/90-disable-apt-update.cfg
+#     content: |
+#       apt_update: false
 
 - name: Add osquery repo key
   ansible.builtin.get_url:
