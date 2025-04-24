@@ -1275,7 +1275,7 @@
     line: Defaults logfile={{ var_sudo_logfile }}
     validate: /usr/sbin/visudo -cf %s
   when:
-  - '"sudo" in ansible_facts.packages'
+  - "'sudo' in ansible_facts.packages"
   - edit_sudoers_logfile_option is defined and not edit_sudoers_logfile_option.changed
   tags:
     - CCE-83527-2
@@ -1351,7 +1351,7 @@
 
 - name: Require Re-Authentication When Using the sudo Command - Ensure timestamp_timeout
     has the appropriate value in /etc/sudoers
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sudoers
     regexp: ^[\s]*Defaults\s(.*)\btimestamp_timeout[\s]*=[\s]*[-]?\w+\b(.*)$
     line: Defaults \1timestamp_timeout={{ var_sudo_timestamp_timeout }}\2
@@ -1374,14 +1374,14 @@
 
 - name: Require Re-Authentication When Using the sudo Command - Enable timestamp_timeout
     option with correct value in /etc/sudoers
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sudoers
     line: Defaults timestamp_timeout={{ var_sudo_timestamp_timeout }}
     validate: /usr/sbin/visudo -cf %s
   when:
-  - '"sudo" in ansible_facts.packages'
-  - |
-    edit_sudoers_timestamp_timeout_option is defined and not edit_sudoers_timestamp_timeout_option.changed
+    - '"sudo" in ansible_facts.packages'
+    - |
+      edit_sudoers_timestamp_timeout_option is defined and not edit_sudoers_timestamp_timeout_option.changed
   tags:
     - CCE-90029-0
     - DISA-STIG-RHEL-09-432015
@@ -1397,7 +1397,7 @@
 
 - name: Require Re-Authentication When Using the sudo Command - Remove timestamp_timeout
     wrong values in /etc/sudoers
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sudoers
     regexp: ^[\s]*Defaults\s.*\btimestamp_timeout[\s]*=[\s]*(?!{{ var_sudo_timestamp_timeout
       }}\b)[-]?\w+\b.*$
@@ -2256,7 +2256,7 @@
 
   - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/password-auth
       File. - Check if pam_faillock.so is already enabled
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/pam.d/system-auth
       regexp: .*auth.*pam_faillock\.so (preauth|authfail)
       state: absent
@@ -2266,7 +2266,7 @@
 
   - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/password-auth
       File. - Enable pam_faillock.so preauth editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so preauth
       insertbefore: ^auth.*sufficient.*pam_unix\.so.*
@@ -2279,7 +2279,7 @@
 
   - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/password-auth
       File. - Enable pam_faillock.so authfail editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so authfail
       insertbefore: ^auth.*required.*pam_deny\.so.*
@@ -2292,7 +2292,7 @@
 
   - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/password-auth
       File. - Enable pam_faillock.so account section editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: account     required      pam_faillock.so
       insertbefore: ^account.*required.*pam_unix\.so.*
@@ -2402,7 +2402,7 @@
 
   - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/system-auth
       File. - Check if pam_faillock.so is already enabled
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/pam.d/system-auth
       regexp: .*auth.*pam_faillock\.so (preauth|authfail)
       state: absent
@@ -2412,7 +2412,7 @@
 
   - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/system-auth
       File. - Enable pam_faillock.so preauth editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so preauth
       insertbefore: ^auth.*sufficient.*pam_unix\.so.*
@@ -2425,7 +2425,7 @@
 
   - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/system-auth
       File. - Enable pam_faillock.so authfail editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so authfail
       insertbefore: ^auth.*required.*pam_deny\.so.*
@@ -2438,7 +2438,7 @@
 
   - name: Configure the Use of the pam_faillock.so Module in the /etc/pam.d/system-auth
       File. - Enable pam_faillock.so account section editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: account     required      pam_faillock.so
       insertbefore: ^account.*required.*pam_unix\.so.*
@@ -2760,7 +2760,7 @@
 
   - name: 'Limit Password Reuse: password-auth - Check if expected PAM module line
       is present in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so\s*.*
       state: absent
@@ -2774,7 +2774,7 @@
 
     - name: 'Limit Password Reuse: password-auth - Check if required PAM module line
         is present in {{ pam_file_path }} with different control'
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         path: '{{ pam_file_path }}'
         regexp: ^\s*password\s+.*\s+pam_pwhistory.so\s*
         state: absent
@@ -2794,7 +2794,7 @@
 
     - name: 'Limit Password Reuse: password-auth - Ensure the required PAM module
         line is included in {{ pam_file_path }}'
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         dest: '{{ pam_file_path }}'
         insertafter: ^password.*requisite.*pam_pwquality\.so
         line: password    {{ pam_module_control }}    pam_pwhistory.so
@@ -2863,7 +2863,7 @@
 
   - name: 'Limit Password Reuse: password-auth - Ensure the pam_pwhistory.so remember
       parameter in /etc/security/pwhistory.conf'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/security/pwhistory.conf
       regexp: ^\s*remember\s*=
       line: remember = {{ var_password_pam_remember }}
@@ -3237,7 +3237,7 @@
 
   - name: 'Limit Password Reuse: password-auth - Check if expected PAM module line
       is present in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so\s*.*
       state: absent
@@ -3251,7 +3251,7 @@
 
     - name: 'Limit Password Reuse: password-auth - Check if required PAM module line
         is present in {{ pam_file_path }} with different control'
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         path: '{{ pam_file_path }}'
         regexp: ^\s*password\s+.*\s+pam_pwhistory.so\s*
         state: absent
@@ -3271,7 +3271,7 @@
 
     - name: 'Limit Password Reuse: password-auth - Ensure the required PAM module
         line is included in {{ pam_file_path }}'
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         dest: '{{ pam_file_path }}'
         line: password    {{ pam_module_control }}    pam_pwhistory.so
       register: result_pam_module_add
@@ -3299,7 +3299,7 @@
 
   - name: 'Limit Password Reuse: password-auth - Check if the required PAM module
       option is present in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so\s*.*\sremember\b
       state: absent
@@ -3309,7 +3309,7 @@
 
   - name: 'Limit Password Reuse: password-auth - Ensure the "remember" PAM option
       for "pam_pwhistory.so" is included in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       backrefs: true
       regexp: ^(\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so.*)
@@ -3322,7 +3322,7 @@
 
   - name: 'Limit Password Reuse: password-auth - Ensure the required value for "remember"
       PAM option from "pam_pwhistory.so" in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       backrefs: true
       regexp: ^(\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so\s+.*)(remember)=[0-9a-zA-Z]+\s*(.*)
@@ -3658,7 +3658,7 @@
 
   - name: 'Limit Password Reuse: system-auth - Check if expected PAM module line is
       present in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so\s*.*
       state: absent
@@ -3672,7 +3672,7 @@
 
     - name: 'Limit Password Reuse: system-auth - Check if required PAM module line
         is present in {{ pam_file_path }} with different control'
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         path: '{{ pam_file_path }}'
         regexp: ^\s*password\s+.*\s+pam_pwhistory.so\s*
         state: absent
@@ -3692,7 +3692,7 @@
 
     - name: 'Limit Password Reuse: system-auth - Ensure the required PAM module line
         is included in {{ pam_file_path }}'
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         dest: '{{ pam_file_path }}'
         insertafter: ^password.*requisite.*pam_pwquality\.so
         line: password    {{ pam_module_control }}    pam_pwhistory.so
@@ -3761,7 +3761,7 @@
 
   - name: 'Limit Password Reuse: system-auth - Ensure the pam_pwhistory.so remember
       parameter in /etc/security/pwhistory.conf'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/security/pwhistory.conf
       regexp: ^\s*remember\s*=
       line: remember = {{ var_password_pam_remember }}
@@ -4064,8 +4064,7 @@
     - name: 'Limit Password Reuse: system-auth - Create an authselect custom profile
         based on the current profile'
       ansible.builtin.command:
-        cmd: authselect create-profile hardening -b {{ authselect_current_profile
-          }}
+        cmd: authselect create-profile hardening -b {{ authselect_current_profile }}
       when:
       - result_authselect_check_cmd is success
       - authselect_current_profile is not match("^(custom/|local)")
@@ -4122,8 +4121,7 @@
     - name: 'Limit Password Reuse: system-auth - Change the PAM file to be edited
         according to the custom authselect profile'
       ansible.builtin.set_fact:
-        pam_file_path: /etc/authselect/{{ authselect_custom_profile }}/{{ pam_file_path
-          | basename }}
+        pam_file_path: /etc/authselect/{{ authselect_custom_profile }}/{{ pam_file_path_basename }}
     when:
     - result_authselect_present.stat.exists
 
@@ -4134,7 +4132,7 @@
 
   - name: 'Limit Password Reuse: system-auth - Check if expected PAM module line is
       present in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so\s*.*
       state: absent
@@ -4148,7 +4146,7 @@
 
     - name: 'Limit Password Reuse: system-auth - Check if required PAM module line
         is present in {{ pam_file_path }} with different control'
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         path: '{{ pam_file_path }}'
         regexp: ^\s*password\s+.*\s+pam_pwhistory.so\s*
         state: absent
@@ -4168,7 +4166,7 @@
 
     - name: 'Limit Password Reuse: system-auth - Ensure the required PAM module line
         is included in {{ pam_file_path }}'
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         dest: '{{ pam_file_path }}'
         line: password    {{ pam_module_control }}    pam_pwhistory.so
       register: result_pam_module_add
@@ -4196,7 +4194,7 @@
 
   - name: 'Limit Password Reuse: system-auth - Check if the required PAM module option
       is present in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so\s*.*\sremember\b
       state: absent
@@ -4206,7 +4204,7 @@
 
   - name: 'Limit Password Reuse: system-auth - Ensure the "remember" PAM option for
       "pam_pwhistory.so" is included in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       backrefs: true
       regexp: ^(\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so.*)
@@ -4219,7 +4217,7 @@
 
   - name: 'Limit Password Reuse: system-auth - Ensure the required value for "remember"
       PAM option from "pam_pwhistory.so" in {{ pam_file_path }}'
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       backrefs: true
       regexp: ^(\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_pwhistory.so\s+.*)(remember)=[0-9a-zA-Z]+\s*(.*)
@@ -4377,7 +4375,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Check if pam_faillock.so
       is already enabled
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/pam.d/system-auth
       regexp: .*auth.*pam_faillock\.so (preauth|authfail)
       state: absent
@@ -4387,7 +4385,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Enable pam_faillock.so preauth
       editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so preauth
       insertbefore: ^auth.*sufficient.*pam_unix\.so.*
@@ -4400,7 +4398,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Enable pam_faillock.so authfail
       editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so authfail
       insertbefore: ^auth.*required.*pam_deny\.so.*
@@ -4413,7 +4411,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Enable pam_faillock.so account
       section editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: account     required      pam_faillock.so
       insertbefore: ^account.*required.*pam_unix\.so.*
@@ -4469,7 +4467,7 @@
 
 - name: Lock Accounts After Failed Password Attempts - Ensure the pam_faillock.so
     deny parameter in /etc/security/faillock.conf
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/security/faillock.conf
     regexp: ^\s*deny\s*=
     line: deny = {{ var_accounts_passwords_pam_faillock_deny }}
@@ -4494,45 +4492,37 @@
     - no_reboot_needed
     - restrict_strategy
 
-- name: Lock Accounts After Failed Password Attempts - Ensure the pam_faillock.so
-    deny parameter not in PAM files
+- name: Lock Accounts After Failed Password Attempts - Ensure the pam_faillock.so deny parameter not in PAM files
   block:
 
-  - name: Lock Accounts After Failed Password Attempts - Check if /etc/pam.d/system-auth
-      file is present
+  - name: Lock Accounts After Failed Password Attempts - Check if /etc/pam.d/system-auth file is present
     ansible.builtin.stat:
       path: /etc/pam.d/system-auth
     register: result_pam_file_present
 
-  - name: Lock Accounts After Failed Password Attempts - Check the proper remediation
-      for the system
+  - name: Lock Accounts After Failed Password Attempts - Check the proper remediation for the system
     block:
 
-    - name: Lock Accounts After Failed Password Attempts - Define the PAM file to
-        be edited as a local fact
+    - name: Lock Accounts After Failed Password Attempts - Define the PAM file to be edited as a local fact
       ansible.builtin.set_fact:
         pam_file_path: /etc/pam.d/system-auth
 
-    - name: Lock Accounts After Failed Password Attempts - Check if system relies
-        on authselect tool
+    - name: Lock Accounts After Failed Password Attempts - Check if system relies on authselect tool
       ansible.builtin.stat:
         path: /usr/bin/authselect
       register: result_authselect_present
 
-    - name: Lock Accounts After Failed Password Attempts - Ensure authselect custom
-        profile is used if authselect is present
+    - name: Lock Accounts After Failed Password Attempts - Ensure authselect custom profile is used if authselect is present
       block:
 
-      - name: Lock Accounts After Failed Password Attempts - Check integrity of authselect
-          current profile
+      - name: Lock Accounts After Failed Password Attempts - Check integrity of authselect current profile
         ansible.builtin.command:
           cmd: authselect check
         register: result_authselect_check_cmd
         changed_when: false
         failed_when: false
 
-      - name: Lock Accounts After Failed Password Attempts - Informative message based
-          on the authselect integrity check result
+      - name: Lock Accounts After Failed Password Attempts - Informative message based on the authselect integrity check result
         ansible.builtin.assert:
           that:
           - result_authselect_check_cmd.rc == 0
@@ -4547,8 +4537,7 @@
           success_msg:
           - authselect integrity check passed
 
-      - name: Lock Accounts After Failed Password Attempts - Get authselect current
-          profile
+      - name: Lock Accounts After Failed Password Attempts - Get authselect current profile
         ansible.builtin.shell:
           cmd: authselect current -r | awk '{ print $1 }'
         register: result_authselect_profile
@@ -4556,8 +4545,7 @@
         when:
         - result_authselect_check_cmd is success
 
-      - name: Lock Accounts After Failed Password Attempts - Define the current authselect
-          profile as a local fact
+      - name: Lock Accounts After Failed Password Attempts - Define the current authselect profile as a local fact
         ansible.builtin.set_fact:
           authselect_current_profile: '{{ result_authselect_profile.stdout }}'
           authselect_custom_profile: '{{ result_authselect_profile.stdout }}'
@@ -4565,8 +4553,7 @@
         - result_authselect_profile is not skipped
         - result_authselect_profile.stdout is match("custom/")
 
-      - name: Lock Accounts After Failed Password Attempts - Define the new authselect
-          custom profile as a local fact
+      - name: Lock Accounts After Failed Password Attempts - Define the new authselect custom profile as a local fact
         ansible.builtin.set_fact:
           authselect_current_profile: '{{ result_authselect_profile.stdout }}'
           authselect_custom_profile: custom/hardening
@@ -4596,8 +4583,7 @@
       - name: Lock Accounts After Failed Password Attempts - Create an authselect
           custom profile based on the current profile
         ansible.builtin.command:
-          cmd: authselect create-profile hardening -b {{ authselect_current_profile
-            }}
+          cmd: authselect create-profile hardening -b {{ authselect_current_profile }}
         when:
         - result_authselect_check_cmd is success
         - authselect_current_profile is not match("^(custom/|local)")
@@ -4622,8 +4608,7 @@
         - authselect_current_profile is not match("custom/")
         - authselect_custom_profile is not match(authselect_current_profile)
 
-      - name: Lock Accounts After Failed Password Attempts - Ensure the authselect
-          custom profile is selected
+      - name: Lock Accounts After Failed Password Attempts - Ensure the authselect custom profile is selected
         ansible.builtin.command:
           cmd: authselect select {{ authselect_custom_profile }}
         register: result_pam_authselect_select_profile
@@ -4644,8 +4629,7 @@
         - result_authselect_features is not skipped
         - result_pam_authselect_select_profile is not skipped
 
-      - name: Lock Accounts After Failed Password Attempts - Ensure authselect changes
-          are applied
+      - name: Lock Accounts After Failed Password Attempts - Ensure authselect changes are applied
         ansible.builtin.command:
           cmd: authselect apply-changes -b --backup=after-hardening-custom-profile
         when:
@@ -4895,7 +4879,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Check if pam_faillock.so
       deny parameter is already enabled in pam files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/pam.d/system-auth
       regexp: .*auth.*pam_faillock\.so (preauth|authfail).*deny
       state: absent
@@ -4905,7 +4889,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Ensure the inclusion of pam_faillock.so
       preauth deny parameter in auth section
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       backrefs: true
       regexp: (^\s*auth\s+)([\w\[].*\b)(\s+pam_faillock.so preauth.*)
@@ -4919,7 +4903,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Ensure the inclusion of pam_faillock.so
       authfail deny parameter in auth section
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       backrefs: true
       regexp: (^\s*auth\s+)([\w\[].*\b)(\s+pam_faillock.so authfail.*)
@@ -4933,7 +4917,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Ensure the desired value
       for pam_faillock.so preauth deny parameter in auth section
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       backrefs: true
       regexp: (^\s*auth\s+)([\w\[].*\b)(\s+pam_faillock.so preauth.*)(deny)=[0-9]+(.*)
@@ -4947,7 +4931,7 @@
 
   - name: Lock Accounts After Failed Password Attempts - Ensure the desired value
       for pam_faillock.so authfail deny parameter in auth section
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       backrefs: true
       regexp: (^\s*auth\s+)([\w\[].*\b)(\s+pam_faillock.so authfail.*)(deny)=[0-9]+(.*)
@@ -5100,7 +5084,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Check if pam_faillock.so
       is already enabled
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/pam.d/system-auth
       regexp: .*auth.*pam_faillock\.so (preauth|authfail)
       state: absent
@@ -5110,7 +5094,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Enable pam_faillock.so preauth
       editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so preauth
       insertbefore: ^auth.*sufficient.*pam_unix\.so.*
@@ -5123,7 +5107,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Enable pam_faillock.so authfail
       editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: auth        required      pam_faillock.so authfail
       insertbefore: ^auth.*required.*pam_deny\.so.*
@@ -5136,7 +5120,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Enable pam_faillock.so account
       section editing PAM files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       line: account     required      pam_faillock.so
       insertbefore: ^account.*required.*pam_unix\.so.*
@@ -5192,7 +5176,7 @@
 
 - name: Set Lockout Time for Failed Password Attempts - Ensure the pam_faillock.so
     unlock_time parameter in /etc/security/faillock.conf
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/security/faillock.conf
     regexp: ^\s*unlock_time\s*=
     line: unlock_time = {{ var_accounts_passwords_pam_faillock_unlock_time }}
@@ -5618,7 +5602,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Check if pam_faillock.so
       unlock_time parameter is already enabled in pam files
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/pam.d/system-auth
       regexp: .*auth.*pam_faillock\.so (preauth|authfail).*unlock_time
       state: absent
@@ -5628,7 +5612,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Ensure the inclusion of
       pam_faillock.so preauth unlock_time parameter in auth section
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       backrefs: true
       regexp: (^\s*auth\s+)([\w\[].*\b)(\s+pam_faillock.so preauth.*)
@@ -5643,7 +5627,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Ensure the inclusion of
       pam_faillock.so authfail unlock_time parameter in auth section
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       backrefs: true
       regexp: (^\s*auth\s+)([\w\[].*\b)(\s+pam_faillock.so authfail.*)
@@ -5658,7 +5642,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Ensure the desired value
       for pam_faillock.so preauth unlock_time parameter in auth section
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       backrefs: true
       regexp: (^\s*auth\s+)([\w\[].*\b)(\s+pam_faillock.so preauth.*)(unlock_time)=[0-9]+(.*)
@@ -5672,7 +5656,7 @@
 
   - name: Set Lockout Time for Failed Password Attempts - Ensure the desired value
       for pam_faillock.so authfail unlock_time parameter in auth section
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ item }}'
       backrefs: true
       regexp: (^\s*auth\s+)([\w\[].*\b)(\s+pam_faillock.so authfail.*)(unlock_time)=[0-9]+(.*)
@@ -5745,7 +5729,7 @@
 
 - name: Ensure PAM Enforces Password Requirements - Prevent the Use of Dictionary
     Words - Ensure dictcheck is not set in pwquality.conf.d
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: '{{ item.path }}'
     regexp: ^\s*\bdictcheck\b.*
     state: absent
@@ -5767,7 +5751,7 @@
 
 - name: Ensure PAM Enforces Password Requirements - Prevent the Use of Dictionary
     Words - Ensure PAM variable dictcheck is set accordingly
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*dictcheck
@@ -5831,7 +5815,7 @@
 
 - name: Ensure PAM Enforces Password Requirements - Minimum Different Characters -
     Ensure difok is not set in pwquality.conf.d
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: '{{ item.path }}'
     regexp: ^\s*\bdifok\b.*
     state: absent
@@ -5854,7 +5838,7 @@
 
 - name: Ensure PAM Enforces Password Requirements - Minimum Different Characters -
     Ensure PAM variable difok is set accordingly
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*difok
@@ -5955,7 +5939,7 @@
 
 - name: Set Password Maximum Consecutive Repeating Characters - Ensure maxrepeat is
     not set in pwquality.conf.d
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: '{{ item.path }}'
     regexp: ^\s*\bmaxrepeat\b.*
     state: absent
@@ -5976,7 +5960,7 @@
 
 - name: Set Password Maximum Consecutive Repeating Characters - Ensure PAM variable
     maxrepeat is set accordingly
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*maxrepeat
@@ -6037,7 +6021,7 @@
 
 - name: Ensure PAM Enforces Password Requirements - Minimum Different Categories -
     Ensure minclass is not set in pwquality.conf.d
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: '{{ item.path }}'
     regexp: ^\s*\bminclass\b.*
     state: absent
@@ -6059,7 +6043,7 @@
 
 - name: Ensure PAM Enforces Password Requirements - Minimum Different Categories -
     Ensure PAM variable minclass is set accordingly
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*minclass
@@ -6129,7 +6113,7 @@
 
 - name: Ensure PAM Enforces Password Requirements - Minimum Length - Ensure minlen
     is not set in pwquality.conf.d
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: '{{ item.path }}'
     regexp: ^\s*\bminlen\b.*
     state: absent
@@ -6155,7 +6139,7 @@
 
 - name: Ensure PAM Enforces Password Requirements - Minimum Length - Ensure PAM variable
     minlen is set accordingly
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*minlen
@@ -6204,7 +6188,7 @@
 
 - name: Set Password Hashing Algorithm in /etc/libuser.conf - Set Password Hashing
     Algorithm in /etc/libuser.conf
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/libuser.conf
     insertafter: ^\s*\[defaults]
     regexp: ^#?crypt_style
@@ -6486,7 +6470,7 @@
 
   - name: Set PAM's Password Hashing Algorithm - password-auth - Check if expected
       PAM module line is present in {{ pam_file_path }}
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_unix.so\s*.*
       state: absent
@@ -6500,7 +6484,7 @@
 
     - name: Set PAM's Password Hashing Algorithm - password-auth - Check if required
         PAM module line is present in {{ pam_file_path }} with different control
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         path: '{{ pam_file_path }}'
         regexp: ^\s*password\s+.*\s+pam_unix.so\s*
         state: absent
@@ -6520,7 +6504,7 @@
 
     - name: Set PAM's Password Hashing Algorithm - password-auth - Ensure the required
         PAM module line is included in {{ pam_file_path }}
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         dest: '{{ pam_file_path }}'
         line: password    {{ pam_module_control }}    pam_unix.so
       register: result_pam_module_add
@@ -6549,7 +6533,7 @@
 
   - name: Set PAM's Password Hashing Algorithm - password-auth - Check if the required
       PAM module option is present in {{ pam_file_path }}
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_unix.so\s*.*\s{{
         var_password_hashing_algorithm_pam }}\b
@@ -6560,7 +6544,7 @@
 
   - name: Set PAM's Password Hashing Algorithm - password-auth - Ensure the "{{ var_password_hashing_algorithm_pam
       }}" PAM option for "pam_unix.so" is included in {{ pam_file_path }}
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       backrefs: true
       regexp: ^(\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_unix.so.*)
@@ -7027,7 +7011,7 @@
 
   - name: Set PAM's Password Hashing Algorithm - Check if expected PAM module line
       is present in {{ pam_file_path }}
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_unix.so\s*.*
       state: absent
@@ -7041,7 +7025,7 @@
 
     - name: Set PAM's Password Hashing Algorithm - Check if required PAM module line
         is present in {{ pam_file_path }} with different control
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         path: '{{ pam_file_path }}'
         regexp: ^\s*password\s+.*\s+pam_unix.so\s*
         state: absent
@@ -7061,7 +7045,7 @@
 
     - name: Set PAM's Password Hashing Algorithm - Ensure the required PAM module
         line is included in {{ pam_file_path }}
-      ansible.builtin.ansible.builtin.lineinfile:
+      ansible.builtin.lineinfile:
         dest: '{{ pam_file_path }}'
         line: password    {{ pam_module_control }}    pam_unix.so
       register: result_pam_module_add
@@ -7089,7 +7073,7 @@
 
   - name: Set PAM's Password Hashing Algorithm - Check if the required PAM module
       option is present in {{ pam_file_path }}
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       regexp: ^\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_unix.so\s*.*\s{{
         var_password_hashing_algorithm_pam }}\b
@@ -7100,7 +7084,7 @@
 
   - name: Set PAM's Password Hashing Algorithm - Ensure the "{{ var_password_hashing_algorithm_pam
       }}" PAM option for "pam_unix.so" is included in {{ pam_file_path }}
-    ansible.builtin.ansible.builtin.lineinfile:
+    ansible.builtin.lineinfile:
       path: '{{ pam_file_path }}'
       backrefs: true
       regexp: ^(\s*password\s+{{ pam_module_control | regex_escape() }}\s+pam_unix.so.*)
@@ -7921,7 +7905,7 @@
 
 - name: Ensure the Group Used by pam_wheel.so Module Exists on System and is Empty
     - Ensure {{ var_pam_wheel_group_for_su }} Group is Empty
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/group
     regexp: ^({{ var_pam_wheel_group_for_su }}:[^:]+:[0-9]+:).*$
     line: \1
@@ -8080,7 +8064,7 @@
 
 - name: Enforce Usage of pam_wheel with Group Parameter for su Authentication - Add
     the group to the /etc/pam.d/su file
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/pam.d/su
     state: present
     regexp: ^[\s]*#[\s]*auth[\s]+required[\s]+pam_wheel\.so[\s]+use_uid group=$
@@ -8520,7 +8504,7 @@
 
 
 - name: Check if umask in /etc/bashrc is already set
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/bashrc
     regexp: ^[^#]*\bumask\s+\d+$
     state: absent
@@ -8561,7 +8545,7 @@
     - restrict_strategy
 
 - name: Ensure the Default umask is Appended Correctly
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     path: /etc/bashrc
     line: umask {{ var_accounts_user_umask }}
@@ -8598,7 +8582,7 @@
 
 
 - name: Check if UMASK is already set
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/login.defs
     regexp: ^(\s*)UMASK\s+.*
     state: absent
@@ -8639,7 +8623,7 @@
     - restrict_strategy
 
 - name: Ensure the Default UMASK is Appended Correctly
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     path: /etc/login.defs
     line: UMASK {{ var_accounts_user_umask }}
@@ -8704,7 +8688,7 @@
 
 - name: Ensure the Default Umask is Set Correctly in /etc/profile - Ensure umask Is
     Set in /etc/profile if Not Already Set Elsewhere
-  ansible.builtin.ansible.builtin.lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     mode: 420
     path: /etc/profile
