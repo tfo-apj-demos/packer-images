@@ -1,0 +1,37 @@
+---
+- name: Ensure OpenSCAP scanner and SCAP Security Guide are installed
+  package:
+    name:
+      - openscap-scanner
+      - scap-security-guide
+    state: present
+
+- name: Determine OpenSCAP profile ID
+  set_fact:
+    report_profile_id: "{{ openscap_profile_map[openscap_profile] }}"
+
+- name: Verify SCAP datastream exists
+  stat:
+    path: "{{ openscap_ds_path }}"
+  register: ds_stat
+
+- name: Fail if SCAP datastream is missing
+  fail:
+    msg: "SCAP datastream not found at {{ openscap_ds_path }}"
+  when: not ds_stat.stat.exists
+
+- name: Run OpenSCAP XCCDF evaluation (ARF and HTML)
+  shell: |
+    oscap xccdf eval \
+      --profile {{ report_profile_id }} \
+      --results-arf /tmp/{{ inventory_hostname }}.arf.xml \
+      --report /tmp/{{ inventory_hostname }}.html \
+      {{ openscap_ds_path }}
+  register: scop_eval_result
+  failed_when: scop_eval_result.rc not in [0, 2, -11]
+
+- name: Show location of generated reports
+  debug:
+    msg:
+      - "ARF report: /tmp/{{ inventory_hostname }}.arf.xml"
+      - "HTML report: /tmp/{{ inventory_hostname }}.html"

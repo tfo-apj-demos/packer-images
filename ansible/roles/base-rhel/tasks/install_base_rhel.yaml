@@ -81,12 +81,14 @@
 
 ####### To install certain packages, the system initially needs to be registered to access.redhat.com
 
-- name: register the system to access.redhat.com
+- name: Register the system to access.redhat.com
   community.general.redhat_subscription:
     state: present
     activationkey: "{{ redhat_activation_key }}"
     org_id: "{{ redhat_org_id }}"
-    
+    auto_attach: true
+  register: subscription_result
+
 
 - name: Install required packages
   ansible.builtin.package:

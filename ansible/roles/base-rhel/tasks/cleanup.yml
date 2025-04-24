@@ -1,0 +1,6 @@
+---
+- name: Unregister from access.redhat.com
+  community.general.redhat_subscription:
+    state: absent
+  register: subscription_result
+  ignore_errors: true

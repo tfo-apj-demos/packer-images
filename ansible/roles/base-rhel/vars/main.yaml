@@ -61,3 +61,13 @@ sshd_strong_macs: !!str >
   -hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1-96,umac-64@openssh.com,
   hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,
   hmac-sha1-96-etm@openssh.com,umac-64-etm@openssh.com
+# Default variables for openscap_report role
+# Choose between 'cis_server_l1' or 'essential_8'
+openscap_profile: cis_server_l1
+
+# Map of profile keys to OpenSCAP profile IDs
+openscap_profile_map:
+  cis_server_l1: xccdf_org.ssgproject.content_profile_cis_server_l1
+  essential_8: xccdf_org.ssgproject.content_profile_au_essential_8
+# Path to the SCAP datastream for RHEL9
+openscap_ds_path: /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
