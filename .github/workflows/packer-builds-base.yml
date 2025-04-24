@@ -29,7 +29,7 @@ env:
   WINDOWS_PASSWORD: ${{secrets.WINDOWS_PASSWORD}}
   LINUX_PASSWORD: ${{secrets.LINUX_PASSWORD}}
   REDHAT_ACTIVATION_KEY: ${{ secrets.REDHAT_ACTIVATION_KEY }}
-  REDHAT_ORG_ID:         ${{ secrets.REDHAT_ORG_ID }}
+  REDHAT_ORG_ID: ${{ secrets.REDHAT_ORG_ID }}
     
 jobs:
   selectimages:
