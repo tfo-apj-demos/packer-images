@@ -65,7 +65,7 @@
     - package_aide_installed
 
 - name: Gather the package facts
-  ansible.builtin.ansible.builtin.package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-83438-2
@@ -165,7 +165,7 @@
 
 
 - name: Gather the package facts
-  ansible.builtin.ansible.builtin.package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-87757-1
@@ -192,7 +192,7 @@
     - medium_severity
     - no_reboot_needed
     - restrict_strategy
-  ansible.builtin.ansible.builtin.package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   when: '"kernel" in ansible_facts.packages'
 
