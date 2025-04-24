@@ -223,3 +223,13 @@ variable "additional_packages" {
   description = "Additional packages to install."
   default     = []
 }
+
+variable "enable_vtpm" {
+  type = bool
+  default = false
+}
+
+variable "firmware" {
+  type    = string
+  default = "bios"
+}

@@ -51,6 +51,9 @@ source "vsphere-iso" "this" {
   RAM_reserve_all      = true
   disk_controller_type = ["pvscsi"]
 
+  vTPM = var.enable_vtpm
+  firmware = var.firmware
+
   storage {
     disk_size             = 32768
     disk_thin_provisioned = true

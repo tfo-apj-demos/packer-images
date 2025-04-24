@@ -10,6 +10,11 @@ rhel_9_base:
 	packer init -var-file variables/base_rhel.pkrvars.hcl builds/linux/rhel/9
 	packer build -var-file variables/base_rhel.pkrvars.hcl builds/linux/rhel/9
 
+rhel_9_base_vtpm:
+	packer init -var-file variables/base_rhel_vtpm.pkrvars.hcl builds/linux/rhel/9
+	packer build -var-file variables/base_rhel_vtpm.pkrvars.hcl builds/linux/rhel/9
+
+
 ubuntu_2204_k8s:
 	packer init -var-file variables/k8s.pkrvars.hcl builds/linux/ubuntu/2204
 	packer build -var-file variables/k8s.pkrvars.hcl builds/linux/ubuntu/2204
