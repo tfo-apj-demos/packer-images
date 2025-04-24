@@ -5,12 +5,12 @@ locals {
     "--extra-vars", "role_config='${var.role_config}'",
     "-vvv",
     "--scp-extra-args", "'-O'",
-    "--extra-vars", "redhat_activation_key=${var.REDHAT_ACTIVATION_KEY}",
-    "--extra-vars", "redhat_org_id=${var.REDHAT_ORG_ID}",
     ] : [
     "--extra-vars", "ansible_become_password=${var.os_password}",
     "--extra-vars", "role=${var.role}",
     "--extra-vars", "role_config='${var.role_config}'",
+    "--extra-vars", "redhat_activation_key=${var.REDHAT_ACTIVATION_KEY}",
+    "--extra-vars", "redhat_org_id=${var.REDHAT_ORG_ID}",
     "--scp-extra-args", "'-O'"
   ]
   sources = var.role == "base-rhel" ? ["vsphere-iso.this"] : ["vsphere-clone.this"]
