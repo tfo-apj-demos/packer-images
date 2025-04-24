@@ -47,8 +47,10 @@
 
 - name: Ensure aide is installed
   ansible.builtin.package:
-    name: aide
+    name: '{{ item }}'
     state: present
+  with_items:
+    - aide
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-90843-4
@@ -85,8 +87,8 @@
   ansible.builtin.package:
     name: '{{ item }}'
     state: present
-    with_items:
-      - aide
+  with_items:
+    - aide
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-83438-2
@@ -2040,8 +2042,8 @@
     mode: 493
     state: directory
   with_items:
-  - distro.d
-  - distro.d/locks
+    - distro.d
+    - distro.d/locks
   when: '"gdm" in ansible_facts.packages'
   tags:
     - CCE-86529-5
@@ -2064,8 +2066,8 @@
     mode: 420
     state: touch
   with_items:
-  - 00-security-settings
-  - locks/00-security-settings-lock
+    - 00-security-settings
+    - locks/00-security-settings-lock
   when: '"gdm" in ansible_facts.packages'
   tags:
     - CCE-86529-5
@@ -7808,8 +7810,8 @@
     passwd -l {{ item }}
   with_items: '{{ users_nopasswd.stdout_lines }}'
   when:
-  - '"kernel" in ansible_facts.packages'
-  - users_nopasswd is not skipped and users_nopasswd.stdout_lines | length > 0
+    - '"kernel" in ansible_facts.packages'
+    - users_nopasswd is not skipped and users_nopasswd.stdout_lines | length > 0
   tags:
     - CCE-85972-8
     - DISA-STIG-RHEL-09-611155
@@ -10334,7 +10336,7 @@
     name: '{{ item }}'
     state: present
   with_items:
-  - firewalld
+    - firewalld
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-86137-7
@@ -10453,7 +10455,7 @@
     name: '{{ item }}'
     state: present
   with_items:
-  - firewalld
+    - firewalld
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-86116-1
@@ -13074,7 +13076,7 @@
     name: '{{ item }}'
     state: present
   with_items:
-  - NetworkManager
+    - NetworkManager
   tags:
     - CCE-84066-0
     - DISA-STIG-RHEL-09-291040
@@ -18322,10 +18324,10 @@
     dest: '{{ item.path }}'
     regexp: (selinux|enforcing)=0
   with_items:
-  - '{{ result_grub_d.files }}'
+    - '{{ result_grub_d.files }}'
   when:
-  - '"kernel" in ansible_facts.packages'
-  - '"grub2-common" in ansible_facts.packages'
+    - '"kernel" in ansible_facts.packages'
+    - '"grub2-common" in ansible_facts.packages'
   tags:
     - CCE-84078-5
     - NIST-800-171-3.1.2
@@ -19280,7 +19282,7 @@
     mode: u-s,g-xwrs,o-xwrt
     state: directory
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-84183-3
@@ -19341,7 +19343,7 @@
     mode: u-s,g-xwrs,o-xwrt
     state: directory
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-84175-9
@@ -19403,7 +19405,7 @@
     mode: u-s,g-xwrs,o-xwrt
     state: directory
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-84173-4
@@ -19465,7 +19467,7 @@
     mode: u-s,g-xwrs,o-xwrt
     state: directory
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-84181-7
@@ -19527,7 +19529,7 @@
     mode: u-s,g-xwrs,o-xwrt
     state: directory
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-84187-4
@@ -20626,8 +20628,8 @@
     state: absent
   with_items: '{{ rhosts_locations.files | map(attribute=''path'') | list }}'
   when:
-  - '"rsh-server" in ansible_facts.packages'
-  - rhosts_locations is success
+    - '"rsh-server" in ansible_facts.packages'
+    - rhosts_locations is success
   tags:
     - CCE-84145-2
     - NIST-800-53-CM-6(a)
@@ -20962,7 +20964,7 @@
     group: ssh_keys
     state: file
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-86127-8
@@ -21009,7 +21011,7 @@
     group: '0'
     state: file
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-86136-9
@@ -21111,7 +21113,7 @@
     owner: '0'
     state: file
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-86119-5
@@ -21158,7 +21160,7 @@
     owner: '0'
     state: file
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-86130-2
@@ -21284,7 +21286,7 @@
     mode: u-xs,g-xwrs,o-xwrt
     state: file
   with_items:
-  - '{{ root_owned_keys.stdout_lines }}'
+    - '{{ root_owned_keys.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-90820-2
@@ -21336,7 +21338,7 @@
     mode: u-xs,g-xws,o-xwrt
     state: file
   with_items:
-  - '{{ dedicated_group_owned_keys.stdout_lines }}'
+    - '{{ dedicated_group_owned_keys.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-90820-2
@@ -21410,7 +21412,7 @@
     mode: u-xs,g-xws,o-xwt
     state: file
   with_items:
-  - '{{ files_found.stdout_lines }}'
+    - '{{ files_found.stdout_lines }}'
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-90819-4
