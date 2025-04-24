@@ -29,7 +29,7 @@
 ###############################################################################
 
 - name: Gather the package facts
-  ansible.builtin.ansible.builtin.package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-90843-4
