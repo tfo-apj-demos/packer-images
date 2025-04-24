@@ -14,6 +14,16 @@ variable "vcenter_password" {
   default = env("VCENTER_PASSWORD")
 }
 
+variable "REDHAT_ACTIVATION_KEY" {
+  type    = string
+  default = env("REDHAT_ACTIVATION_KEY")
+}
+
+variable "REDHAT_ORG_ID" {
+  type    = string
+  default = env("REDHAT_ORG_ID")
+}
+
 variable "role_config" {
   type    = string
   default = env("ROLE_CONFIG")
