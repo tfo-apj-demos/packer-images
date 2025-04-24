@@ -1,6 +1,7 @@
 ---
 vars:
   redhat_activation_key: "packer-demo"
+  redhat_org_id: "18372743"
 
 - name: Include base RHEL tasks
   ansible.builtin.include_tasks:

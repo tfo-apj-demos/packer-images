@@ -85,6 +85,7 @@
   community.general.redhat_subscription:
     state: present
     activationkey: "{{ redhat_activation_key }}"
+    org_id: "{{ redhat_org_id }}"
     
 
 - name: Install required packages
