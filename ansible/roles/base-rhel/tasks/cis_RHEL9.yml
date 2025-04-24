@@ -125,7 +125,7 @@
 - name: Build and Test AIDE Database - Check Whether the Stock AIDE Database Exists
   ansible.builtin.stat:
     path: /var/lib/aide/aide.db.new.gz
-    register: aide_database_stat
+  register: aide_database_stat
   when: '"kernel" in ansible_facts.packages'
   tags:
     - CCE-83438-2
