@@ -1,3 +1,5 @@
 ---
-- include_tasks: install_base_rhel.yaml
-
+- name: Include base RHEL tasks
+  ansible.builtin.include_tasks: install_base_rhel.yaml
+- name: Include CIS RHEL9 tasks
+  ansible.builtin.include_tasks: cis_RHEL9.yml

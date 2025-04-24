@@ -1,70 +1,106 @@
 ---
 - name: Create temporary directory for SSH CA storage
-  file:
+  ansible.builtin.file:
     path: /tmp/ssh_ca.d/
     state: directory
     mode: '0755'
 
 - name: Add HashiCorp repo key
-  get_url:
+  ansible.builtin.get_url:
     url: https://rpm.releases.hashicorp.com/gpg
     dest: /etc/pki/rpm-gpg/hashicorp-archive-keyring.asc
-    mode: 0644
+    mode: "0644"
 
 - name: Add HashiCorp repository
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: hashicorp
     description: "HashiCorp Stable - $basearch"
     baseurl: https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable
     gpgkey: file:///etc/pki/rpm-gpg/hashicorp-archive-keyring.asc
-    enabled: yes
+    enabled: true
 
 - name: Add docker repo key
-  get_url:
+  ansible.builtin.get_url:
     url: https://download.docker.com/linux/centos/gpg
     dest: /etc/pki/rpm-gpg/docker-archive-keyring.asc
-    mode: 0644
+    mode: "0644"
 
 - name: Add docker repository
-  yum_repository:
+  ansible.builtin.yum_repository:
     name: docker-ce
     description: Docker CE Stable - $basearch
     baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
     gpgkey: file:///etc/pki/rpm-gpg/docker-archive-keyring.asc
-    enabled: yes
+    enabled: true
 
 - name: Add HCP Vault SSH signing public certificate
-  get_url:
+  ansible.builtin.get_url:
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
-    headers: 
+    headers:
       X-Vault-Namespace: admin/tfo-apj-demos
     dest: /tmp/ssh_ca.d/hcp-vault-ca-keys.pem
-    mode: 0644
+    mode: "0644"
 
 - name: Add GCVE Vault SSH signing public certificate
-  copy:
-    content: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yqxpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/ywwcek+ZuFq2Z1yDKGoTTfZF2KLDtfjRnRbNB9bzd/tCzRF9SJxOrjHOONtpUmSAhceySF2FcSU1UkneuCFBHgCQq9f93pASPbXw3RSR3NSZMwM7YbsTUyIw2GED4419+qkAV4RHRHRNVk5CObEBxu5Wvx1TuPsmcDPWMYOXAiZlOSgtyaX1/x14JnWp8Q0YFhIBkNucCHVcXi4Q4/tZ+ftgakWpUUj3GkeLtdWSCtr58DcR5sEwqALSPHy21iiA6qQiJa6/rz3L/Nh3k5UMVMHPhF5358M0vCkN2MuZf66CE1fd4s82g0HfjlOf51H9XPlueECp1NwrbYiWQkpq79VaQCyijlXfvh6S3jKHkkRJArtWrdIt6k1jm6gbQUPWsZn6Yb4mXTPGw+tQneZvMP7SLG97JkpwmsLa9OgENz37OpzK2j01QF5C2rB1N3BKkCdm5mW4fQQjNWDirfnCjOshp4tS/lhGFCcqj6w18zFYllKx1Z0j5etxw==
+  ansible.builtin.copy:
+    content: |
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yq
+      xpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/ywwcek+ZuFq2Z1yDKGo
+      TTfZF2KLDtfjRnRbNB9bzd/tCzRF9SJxOrjHOONtpUmSAhceySF2FcSU1UkneuCFBHgCQq9f93pASPbXw3RSR3NSZMwM7YbsTUyIw2GED4419+qkAV4RHR
+      HRNVk5CObEBxu5Wvx1TuPsmcDPWMYOXAiZlOSgtyaX1/x14JnWp8Q0YFhIBkNucCHVcXi4Q4/tZ+ftgakWpUUj3GkeLtdWSCtr58DcR5sEwqALSPHy21ii
+      A6qQiJa6/rz3L/Nh3k5UMVMHPhF5358M0vCkN2MuZf66CE1fd4s82g0HfjlOf51H9XPlueECp1NwrbYiWQkpq79VaQCyijlXfvh6S3jKHkkRJArtWrdIt6
+      k1jm6gbQUPWsZn6Yb4mXTPGw+tQneZvMP7SLG97JkpwmsLa9OgENz37OpzK2j01QF5C2rB1N3BKkCdm5mW4fQQjNWDirfnCjOshp4tS/lhGFCcqj6w18zF
+      YllKx1Z0j5etxw==
     dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
-    mode: 0644
+    mode: "0644"
 
 - name: Download PKI CA certificate
-  get_url:
+  ansible.builtin.get_url:
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
-    headers: 
+    headers:
       X-Vault-Namespace: admin/tfo-apj-demos
     dest: /tmp/ssh_ca.d/hcp-vault-ca.crt
-    mode: 0644
+    mode: "0644"
 
 - name: Add CA public certificates
-  assemble:
+  ansible.builtin.assemble:
     src: /tmp/ssh_ca.d/
     dest: /etc/ssh/trusted-user-ca-keys.pem
+    mode: "0644"
 
 - name: Update ssh config
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     state: present
     line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 
 - name: Register HCP Vault CA
-  command: update-ca-trust
+  ansible.builtin.command: update-ca-trust
+  args:
+    creates: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - sos
+      - open-vm-tools
+    state: present
+
+- name: Disable root SSH login
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+
+- name: Create devops user
+  ansible.builtin.user:
+    name: devops
+    groups: wheel
+    shell: /bin/bash
+    create_home: true
+
+- name: Add sudo rule for devops
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/devops
+    content: "devops ALL=(ALL) NOPASSWD:ALL\n"
+    mode: "0440"
