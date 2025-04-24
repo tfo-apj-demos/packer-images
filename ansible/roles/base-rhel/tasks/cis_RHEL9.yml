@@ -539,7 +539,7 @@
     - unknown_strategy
 
 - name: Disable the GNOME3 Login User List
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dconf/db/distro.d/00-security-settings
     section: org/gnome/login-screen
     option: disable-user-list
@@ -613,7 +613,7 @@
     - unknown_strategy
 
 - name: Disable XDMCP in GDM
-  ini_file:
+  community.general.ini_file: 
     path: /etc/gdm/custom.conf
     section: xdmcp
     option: Enable
@@ -650,7 +650,7 @@
     - unknown_strategy
 
 - name: Disable GNOME3 Automounting - automount
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dconf/db/local.d/00-security-settings
     section: org/gnome/desktop/media-handling
     option: automount
@@ -741,7 +741,7 @@
     - unknown_strategy
 
 - name: Disable GNOME3 Automounting - automount-open
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dconf/db/local.d/00-security-settings
     section: org/gnome/desktop/media-handling
     option: automount-open
@@ -836,7 +836,7 @@
     - unknown_strategy
 
 - name: Disable GNOME3 Automounting - autorun-never
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dconf/db/local.d/00-security-settings
     section: org/gnome/desktop/media-handling
     option: autorun-never
@@ -928,7 +928,7 @@
 
 
 - name: Set GNOME3 Screensaver Inactivity Timeout
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dconf/db/local.d/00-security-settings
     section: org/gnome/desktop/session
     option: idle-delay
@@ -999,7 +999,7 @@
 
 
 - name: Set GNOME3 Screensaver Lock Delay After Activation Period
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dconf/db/local.d/00-security-settings
     section: org/gnome/desktop/screensaver
     option: lock-delay
@@ -1448,7 +1448,7 @@
     - no_reboot_needed
 
 - name: Ensure GPG check is globally activated
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dnf/dnf.conf
     section: main
     option: gpgcheck
@@ -1953,7 +1953,7 @@
     - unknown_strategy
 
 - name: Enable GNOME3 Login Warning Banner
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dconf/db/distro.d/00-security-settings
     section: org/gnome/login-screen
     option: banner-message-enable
@@ -2083,7 +2083,7 @@
     - unknown_strategy
 
 - name: Set the GNOME3 Login Warning Banner Text
-  ini_file:
+  community.general.ini_file: 
     dest: /etc/dconf/db/distro.d/00-security-settings
     section: org/gnome/login-screen
     option: banner-message-text
@@ -10032,7 +10032,7 @@
 
 - name: Ensure journald is configured to compress large log files - Add missing configuration
     to correct section
-  ini_file:
+  community.general.ini_file: 
     path: '{{item}}'
     section: Journal
     option: Compress
@@ -10055,7 +10055,7 @@
 
 - name: Ensure journald is configured to compress large log files - Add configuration
     to new remediation file
-  ini_file:
+  community.general.ini_file: 
     path: /etc/systemd/journald.conf.d/complianceascode_hardening.conf
     section: Journal
     option: Compress
@@ -10129,7 +10129,7 @@
 
 - name: Ensure journald is configured to write log files to persistent disk - Add
     missing configuration to correct section
-  ini_file:
+  community.general.ini_file: 
     path: '{{item}}'
     section: Journal
     option: Storage
@@ -10152,7 +10152,7 @@
 
 - name: Ensure journald is configured to write log files to persistent disk - Add
     configuration to new remediation file
-  ini_file:
+  community.general.ini_file: 
     path: /etc/systemd/journald.conf.d/complianceascode_hardening.conf
     section: Journal
     option: Storage
@@ -10608,7 +10608,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.all.accept_ra is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv6.conf.all.accept_ra
     value: '{{ sysctl_net_ipv6_conf_all_accept_ra_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -10702,7 +10702,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.all.accept_redirects is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv6.conf.all.accept_redirects
     value: '{{ sysctl_net_ipv6_conf_all_accept_redirects_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -10792,7 +10792,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.all.accept_source_route is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv6.conf.all.accept_source_route
     value: '{{ sysctl_net_ipv6_conf_all_accept_source_route_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -10882,7 +10882,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.all.forwarding is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv6.conf.all.forwarding
     value: '{{ sysctl_net_ipv6_conf_all_forwarding_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -10971,7 +10971,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.default.accept_ra is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv6.conf.default.accept_ra
     value: '{{ sysctl_net_ipv6_conf_default_accept_ra_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11059,7 +11059,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.default.accept_redirects is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv6.conf.default.accept_redirects
     value: '{{ sysctl_net_ipv6_conf_default_accept_redirects_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11162,7 +11162,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.default.accept_source_route is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv6.conf.default.accept_source_route
     value: '{{ sysctl_net_ipv6_conf_default_accept_source_route_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11261,7 +11261,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.accept_redirects is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.all.accept_redirects
     value: '{{ sysctl_net_ipv4_conf_all_accept_redirects_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11357,7 +11357,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.accept_source_route is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.all.accept_source_route
     value: '{{ sysctl_net_ipv4_conf_all_accept_source_route_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11447,7 +11447,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.log_martians is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.all.log_martians
     value: '{{ sysctl_net_ipv4_conf_all_log_martians_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11546,7 +11546,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.rp_filter is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.all.rp_filter
     value: '{{ sysctl_net_ipv4_conf_all_rp_filter_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11647,7 +11647,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.secure_redirects is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.all.secure_redirects
     value: '{{ sysctl_net_ipv4_conf_all_secure_redirects_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11753,7 +11753,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.accept_redirects is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.default.accept_redirects
     value: '{{ sysctl_net_ipv4_conf_default_accept_redirects_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11852,7 +11852,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.accept_source_route is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.default.accept_source_route
     value: '{{ sysctl_net_ipv4_conf_default_accept_source_route_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -11942,7 +11942,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.log_martians is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.default.log_martians
     value: '{{ sysctl_net_ipv4_conf_default_log_martians_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -12033,7 +12033,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.rp_filter is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.default.rp_filter
     value: '{{ sysctl_net_ipv4_conf_default_rp_filter_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -12122,7 +12122,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.secure_redirects is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.default.secure_redirects
     value: '{{ sysctl_net_ipv4_conf_default_secure_redirects_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -12222,7 +12222,7 @@
 
 
 - name: Ensure sysctl net.ipv4.icmp_echo_ignore_broadcasts is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.icmp_echo_ignore_broadcasts
     value: '{{ sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -12323,7 +12323,7 @@
 
 
 - name: Ensure sysctl net.ipv4.icmp_ignore_bogus_error_responses is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.icmp_ignore_bogus_error_responses
     value: '{{ sysctl_net_ipv4_icmp_ignore_bogus_error_responses_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -12434,7 +12434,7 @@
 
 
 - name: Ensure sysctl net.ipv4.tcp_syncookies is set
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.tcp_syncookies
     value: '{{ sysctl_net_ipv4_tcp_syncookies_value }}'
     sysctl_file: /etc/sysctl.conf
@@ -12543,7 +12543,7 @@
     - sysctl_net_ipv4_conf_all_send_redirects
 
 - name: Ensure sysctl net.ipv4.conf.all.send_redirects is set to 0
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.all.send_redirects
     value: '0'
     sysctl_file: /etc/sysctl.conf
@@ -12650,7 +12650,7 @@
     - sysctl_net_ipv4_conf_default_send_redirects
 
 - name: Ensure sysctl net.ipv4.conf.default.send_redirects is set to 0
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.conf.default.send_redirects
     value: '0'
     sysctl_file: /etc/sysctl.conf
@@ -12756,7 +12756,7 @@
     - sysctl_net_ipv4_ip_forward
 
 - name: Ensure sysctl net.ipv4.ip_forward is set to 0
-  sysctl:
+  ansible.posix.sysctl: 
     name: net.ipv4.ip_forward
     value: '0'
     sysctl_file: /etc/sysctl.conf
@@ -17984,7 +17984,7 @@
     - sysctl_kernel_yama_ptrace_scope
 
 - name: Ensure sysctl kernel.yama.ptrace_scope is set to 1
-  sysctl:
+  ansible.posix.sysctl: 
     name: kernel.yama.ptrace_scope
     value: '1'
     sysctl_file: /etc/sysctl.conf
@@ -18022,7 +18022,7 @@
     - restrict_strategy
 
 - name: Set 'ProcessSizeMax' to '0' in the [Coredump] section of '/etc/systemd/coredump.conf'
-  ini_file:
+  community.general.ini_file: 
     path: /etc/systemd/coredump.conf
     section: Coredump
     option: ProcessSizeMax
@@ -18065,7 +18065,7 @@
     - restrict_strategy
 
 - name: Set 'Storage' to 'none' in the [Coredump] section of '/etc/systemd/coredump.conf'
-  ini_file:
+  community.general.ini_file: 
     path: /etc/systemd/coredump.conf
     section: Coredump
     option: Storage
@@ -18165,7 +18165,7 @@
     - sysctl_kernel_randomize_va_space
 
 - name: Ensure sysctl kernel.randomize_va_space is set to 2
-  sysctl:
+  ansible.posix.sysctl: 
     name: kernel.randomize_va_space
     value: '2'
     sysctl_file: /etc/sysctl.conf
@@ -22951,8 +22951,8 @@
     ansible.builtin.lineinfile:
       path: /etc/ssh/sshd_config
       create: true
-      regexp: (?i)(?i)^\s*MACs\s+
-      line: MACs {{ sshd_strong_macs }}
+      regexp: '(?i)(?i)^\s*MACs\s+'
+      line: 'MACs {{ sshd_strong_macs | regex_replace("\s+","") | regex_replace(",$","") }}'
       state: present
       insertbefore: BOF
       validate: /usr/sbin/sshd -t -f %s
