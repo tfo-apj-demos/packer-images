@@ -79,6 +79,14 @@
   args:
     creates: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
+####### To install certain packages, the system initially needs to be registered to access.redhat.com
+
+- name: register the system to access.redhat.com
+  community.general.redhat_subscription:
+    state: present
+    activationkey: "{{ redhat_activation_key }}"
+    
+
 - name: Install required packages
   ansible.builtin.package:
     name:
