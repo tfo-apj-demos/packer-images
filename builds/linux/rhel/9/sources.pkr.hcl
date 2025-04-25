@@ -24,6 +24,20 @@ locals {
     })
   }
   data_source_command = "inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg"
+
+  ### Below are the boot commands for the different types of booting
+  # BIOS (legacy) + CDROM:
+  bios_boot_command = [
+    "<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"
+  ]                                        # uses <tab> to get to the prompt and cdrom:/ks.cfg :contentReference[oaicite:0]{index=0}
+
+  # UEFI + CDROM:
+  efi_boot_command = [
+    "e<wait>",                             # press “e” to edit the GRUB entry :contentReference[oaicite:1]{index=1}
+    "<down><down><end><wait> inst.text inst.ks=cdrom:/ks.cfg inst.gpt inst.efi",
+                                           # append your install flags + GPT/EFI auto‐partition :contentReference[oaicite:2]{index=2}
+    "<ctrl>x<wait>"                        # Ctrl-X to boot with the edited line :contentReference[oaicite:3]{index=3}
+  ]
 }
 
 source "vsphere-iso" "this" {
@@ -68,8 +82,10 @@ source "vsphere-iso" "this" {
   http_interface = "ens192"
   cd_content = local.data_source_content
   // Updated boot_command
-  boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
-
+  #boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
+  boot_command = var.bios == "efi"
+    ? local.efi_boot_command
+    : local.bios_boot_command
   
 
   // Serve Kickstart file via HTTP
