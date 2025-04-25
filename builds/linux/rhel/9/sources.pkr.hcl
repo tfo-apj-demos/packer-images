@@ -83,10 +83,11 @@ source "vsphere-iso" "this" {
   cd_content = local.data_source_content
   // Updated boot_command
   #boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
-  boot_command = var.bios == "efi"
-    ? local.efi_boot_command
-    : local.bios_boot_command
-  
+  boot_command = ( 
+    var.bios == "efi"
+      ? local.efi_boot_command
+      : local.bios_boot_command
+  )
 
   // Serve Kickstart file via HTTP
   #http_content = local.data_source_content
