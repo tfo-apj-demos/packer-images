@@ -16,10 +16,7 @@ timezone ${vm_guest_os_timezone}
 network --bootproto=dhcp --device=ens192 --onboot=yes
 
 rootpw --lock
-user --name=${build_username} \
-     --iscrypted \
-     --password=${build_password_encrypted} \
-     --groups=wheel
+user --name=${build_username} --iscrypted --password=${build_password_encrypted} --groups=wheel
 
 firewall --enabled --ssh
 authselect select sssd
@@ -41,8 +38,7 @@ clearpart --all --initlabel --drives=sda
 #clearpart --all --initlabel gpt --drives=sda
 
 # EFI System Partition (FAT32, ~600 MiB)
-part /boot/efi   --fstype=vfat  --size=600   --label=EFI-SYSTEM \
-                  --fsoptions="umask=0077,shortname=winnt"
+part /boot/efi   --fstype=vfat  --size=600   --label=EFI-SYSTEM --fsoptions="umask=0077,shortname=winnt"
 # Standard /boot partition (ext4, 1 GiB)
 part /boot       --fstype=ext4  --size=1024  --label=BOOT
 
