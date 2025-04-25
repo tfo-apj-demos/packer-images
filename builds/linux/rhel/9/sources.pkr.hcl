@@ -84,7 +84,7 @@ source "vsphere-iso" "this" {
   // Updated boot_command
   #boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
   boot_command = ( 
-    var.bios == "efi"
+    var.firmware == "efi"
       ? local.efi_boot_command
       : local.bios_boot_command
   )
