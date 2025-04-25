@@ -257,11 +257,11 @@ variable "vm_disk_lvm" {
   default     = []
 }
 
-variable "additional_packages" {
-  type        = list(string)
-  description = "Additional packages to install."
-  default     = []
-}
+# variable "additional_packages" {
+#   type        = list(string)
+#   description = "Additional packages to install."
+#   default     = []
+# }
 
 variable "enable_vtpm" {
   type = bool
