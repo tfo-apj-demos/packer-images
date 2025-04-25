@@ -273,12 +273,12 @@ variable "firmware" {
   default = "bios"
 }
 
-variable "vm_boot_mode" {
-  description = "Which partition scheme to use: 'bios' or 'efi'"
-  type        = string
-  default     = "bios"
-  validation {
-    condition     = contains(["bios","efi"], var.vm_boot_mode)
-    error_message = "vm_boot_mode must be either 'bios' or 'efi'"
-  }
-}
+# #variable "vm_boot_mode" {
+# #  description = "Which partition scheme to use: 'bios' or 'efi'"
+# #  type        = string
+# #  default     = "bios"
+# #  validation {
+#     condition     = contains(["bios","efi"], var.vm_boot_mode)
+#     error_message = "vm_boot_mode must be either 'bios' or 'efi'"
+#   }
+# }
