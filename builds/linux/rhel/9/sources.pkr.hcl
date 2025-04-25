@@ -22,6 +22,7 @@ locals {
       #   lvm        = var.vm_disk_lvm
       # })
       #additional_packages = join(" ", var.additional_packages)
+      firmware                 = var.firmware
     })
   }
   data_source_command = "inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg"
