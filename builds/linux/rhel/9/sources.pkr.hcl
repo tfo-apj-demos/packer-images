@@ -61,7 +61,7 @@ source "vsphere-iso" "this" {
   vm_name             = local.name
   guest_os_type       = var.guest_os_type
 
-  CPUs = 2
+  CPUs = 4
   RAM  = 4096
 
   RAM_reserve_all      = true
@@ -71,7 +71,7 @@ source "vsphere-iso" "this" {
   firmware = var.firmware
 
   storage {
-    disk_size             = 32768
+    disk_size = 51200
     disk_thin_provisioned = true
   }
 
