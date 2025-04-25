@@ -17,6 +17,9 @@ timezone ${vm_guest_os_timezone}
 ### Initialize any invalid partition tables found on disks.
 zerombr
 
+### Sets how the boot loader should be installed.
+bootloader --location=mbr
+
 ### Removes partitions from the system, prior to creation of new partitions. 
 ### By default, no partitions are removed.
 ### --linux	erases all Linux partitions.
