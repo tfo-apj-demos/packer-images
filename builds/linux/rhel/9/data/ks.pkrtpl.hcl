@@ -42,8 +42,8 @@ logvol /var        --fstype=xfs  --name=lv_var    --vgname=sysvg --size=4096  --
 logvol /var/log    --fstype=xfs  --name=lv_log    --vgname=sysvg --size=4096  --label=LOGFS    --fsoptions="nodev,noexec,nosuid"
 logvol /var/log/audit --fstype=xfs --name=lv_audit --vgname=sysvg --size=4096 --label=AUDITFS --fsoptions="nodev,noexec,nosuid"
 
-# Install GRUB to UEFI
-bootloader --location=partition --boot-drive=sda
+# Install GRUB to UEFI (EFI System Partition)
+bootloader --location=partition --boot-drive=sda --no-mbr --append="root=LABEL=ROOTFS"
 
 services --enabled=NetworkManager,sshd
 skipx
