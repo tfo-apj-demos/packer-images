@@ -43,7 +43,7 @@ logvol /var/log    --fstype=xfs  --name=lv_log    --vgname=sysvg --size=4096  --
 logvol /var/log/audit --fstype=xfs --name=lv_audit --vgname=sysvg --size=4096 --label=AUDITFS --fsoptions="nodev,noexec,nosuid"
 
 # Install GRUB to UEFI
-bootloader --location=partition --bootloader-id=RHEL9 --bootloader-efi --efi-directory=/boot/efi
+bootloader --location=partition --boot-drive=sda
 
 services --enabled=NetworkManager,sshd
 skipx
