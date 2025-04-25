@@ -34,7 +34,7 @@ locals {
 
   # UEFI + CDROM:
   efi_boot_command = [
-    "e<wait> <down><down><end><wait> inst.text inst.ks=cdrom:/ks.cfg inst.gpt inst.efi <ctrl>x<wait>"                        # Ctrl-X to boot with the edited line :contentReference[oaicite:3]{index=3}
+    "e<wait> <down><down><end><wait> inst.text inst.ks=cdrom:/ks.cfg inst.gpt inst.efi <enter><wait><leftCtrlOn>x<leftCtrlOff><wait>"                        # Ctrl-X to boot with the edited line :contentReference[oaicite:3]{index=3}
   ]
 
   # CDROM type based on firmware
