@@ -15,12 +15,12 @@ locals {
       vm_guest_os_language     = var.os_language
       vm_guest_os_keyboard     = var.os_keyboard_layout
       vm_guest_os_timezone     = var.os_timezone
-      storage = templatefile("${abspath(path.root)}/data/storage.pkrtpl.hcl", {
-        device     = var.vm_disk_device
-        swap       = var.vm_disk_use_swap
-        partitions = var.vm_disk_partitions
-        lvm        = var.vm_disk_lvm
-      })
+      # storage = templatefile("${abspath(path.root)}/data/storage.pkrtpl.hcl", {
+      #   device     = var.vm_disk_device
+      #   swap       = var.vm_disk_use_swap
+      #   partitions = var.vm_disk_partitions
+      #   lvm        = var.vm_disk_lvm
+      # })
       additional_packages = join(" ", var.additional_packages)
     })
   }
