@@ -88,8 +88,8 @@ source "vsphere-iso" "this" {
 
   cdrom_type = local.cdrom_type
 
-  
-  boot_order = ["cdrom", "disk", "network"]
+
+  boot_order = "cdrom,disk,ethernet"
   // Updated boot_command
   #boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
   boot_command = var.firmware == "efi" ? local.efi_boot_command : local.bios_boot_command
