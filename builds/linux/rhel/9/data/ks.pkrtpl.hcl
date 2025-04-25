@@ -59,13 +59,14 @@ logvol /var/log/audit --fstype=xfs --name=lv_audit --vgname=sysvg --size=4096 --
 
 # UEFI/GPT mode – installer auto-installs into the ESP
 # No --location=mbr; default UEFI install will use /boot/efi
-bootloader --timeout=5 --append="crashkernel=auto"
+bootloader --timeout=5 --append="crashkernel=auto" --location=partition --boot-drive=sda
 
 ###############################################################################
 # Services & packages
 ###############################################################################
 
 services --enabled=NetworkManager,sshd
+skipx
 
 %packages --ignoremissing --excludedocs
 @core
