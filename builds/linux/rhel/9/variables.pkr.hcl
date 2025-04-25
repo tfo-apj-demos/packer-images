@@ -198,45 +198,45 @@ variable "bios_vm_disk_partitions" {
   ]
 }
 
-variable "efi_vm_disk_partitions" {
-  type = list(object({
-    name         = string
-    size         = number
-    format = object({
-      label  = string
-      fstype = string
-    })
-    mount = object({
-      path    = string
-      options = string
-    })
-    volume_group = string
-  }))
-  description = "The disk partitions for the virtual disk."
-  default = [
-    {
-      name         = "efi"
-      size         = 200                    # ~200 MB for the EFI System Partition
-      format       = { label = "EFI" fstype = "vfat" }
-      mount        = { path = "/boot/efi" options = "defaults" }
-      volume_group = ""
-    },
-    {
-      name         = "boot"
-      size         = 1024                   # 1 GB for /boot
-      format       = { label = "boot" fstype = "ext4" }
-      mount        = { path = "/boot" options = "defaults" }
-      volume_group = ""
-    },
-    {
-      name         = "root"
-      size         = -1                     # use the rest of the disk
-      format       = { label = "root" fstype = "xfs" }
-      mount        = { path = "/" options = "defaults" }
-      volume_group = ""
-    }
-  ]
-}
+# variable "efi_vm_disk_partitions" {
+#   type = list(object({
+#     name         = string
+#     size         = number
+#     format = object({
+#       label  = string
+#       fstype = string
+#     })
+#     mount = object({
+#       path    = string
+#       options = string
+#     })
+#     volume_group = string
+#   }))
+#   description = "The disk partitions for the virtual disk."
+#   default = [
+#     {
+#       name         = "efi"
+#       size         = 200                    # ~200 MB for the EFI System Partition
+#       format       = { label = "EFI", fstype = "vfat" }
+#       mount        = { path = "/boot/efi", options = "defaults" }
+#       volume_group = ""
+#     },
+#     {
+#       name         = "boot"
+#       size         = 1024                   # 1 GB for /boot
+#       format       = { label = "boot" fstype = "ext4" }
+#       mount        = { path = "/boot" options = "defaults" }
+#       volume_group = ""
+#     },
+#     {
+#       name         = "root"
+#       size         = -1                     # use the rest of the disk
+#       format       = { label = "root" fstype = "xfs" }
+#       mount        = { path = "/" options = "defaults" }
+#       volume_group = ""
+#     }
+#   ]
+# }
 variable "vm_disk_lvm" {
   type = list(object({
     name = string
