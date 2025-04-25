@@ -36,14 +36,13 @@ zerombr
 clearpart --all --initlabel --drives=sda
 
 # EFI System Partition (FAT32, ~600 MiB)
-{{- if firmware == "efi" }}
+#{{- if firmware == "efi" }}
 # UEFI: use GPT + ESP
-clearpart --all --initlabel gpt --drives=sda
+#clearpart --all --initlabel gpt --drives=sda
 
 # EFI System Partition (FAT32, ~600 MiB)
 part /boot/efi   --fstype=vfat  --size=600   --label=EFI-SYSTEM \
                   --fsoptions="umask=0077,shortname=winnt"
-
 # Standard /boot partition (ext4, 1 GiB)
 part /boot       --fstype=ext4  --size=1024  --label=BOOT
 
@@ -68,9 +67,11 @@ logvol /var/log/audit --fstype=xfs --name=lv_audit --vgname=sysvg --size=4096 --
 
 # UEFI/GPT mode – installer auto-installs into the ESP
 # No --location=mbr; default UEFI install will use /boot/efi
-{{- if firmware == "efi" }}
+#{{- if firmware == "efi" }}
 bootloader --timeout=5 --append="crashkernel=auto"
-
+#{{- else }}
+#bootloader --location=mbr --timeout=5 --append="crashkernel=auto"
+#{{- end }}
 ###############################################################################
 # Services & packages
 ###############################################################################
