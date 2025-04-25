@@ -1,6 +1,7 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
-  name      = "${var.role}-9-${local.timestamp}"
+  #name      = "${var.role}-9-${local.timestamp}"
+  name   = "${var.role}-9-${local.timestamp}${var.enable_vtpm ? "_vtpm" : ""}"  
   base      = var.role == "base-rhel"
 
   // New variables for Kickstart configuration
