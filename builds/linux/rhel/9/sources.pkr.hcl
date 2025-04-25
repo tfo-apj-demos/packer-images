@@ -34,10 +34,7 @@ locals {
 
   # UEFI + CDROM:
   efi_boot_command = [
-    "e<wait>",                             # press “e” to edit the GRUB entry :contentReference[oaicite:1]{index=1}
-    "<down><down><end><wait> inst.text inst.ks=cdrom:/ks.cfg inst.gpt inst.efi",
-                                           # append your install flags + GPT/EFI auto‐partition :contentReference[oaicite:2]{index=2}
-    "<ctrl>x<wait>"                        # Ctrl-X to boot with the edited line :contentReference[oaicite:3]{index=3}
+    "e<wait> <down><down><end><wait> inst.text inst.ks=cdrom:/ks.cfg inst.gpt inst.efi <ctrl>x<wait>"                        # Ctrl-X to boot with the edited line :contentReference[oaicite:3]{index=3}
   ]
 
   # CDROM type based on firmware
