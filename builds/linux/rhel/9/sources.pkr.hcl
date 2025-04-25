@@ -38,6 +38,10 @@ locals {
                                            # append your install flags + GPT/EFI auto‐partition :contentReference[oaicite:2]{index=2}
     "<ctrl>x<wait>"                        # Ctrl-X to boot with the edited line :contentReference[oaicite:3]{index=3}
   ]
+
+  # CDROM type based on firmware
+  cdrom_type = var.firmware == "efi" ? "sata" : "ide"
+
 }
 
 source "vsphere-iso" "this" {
@@ -81,6 +85,11 @@ source "vsphere-iso" "this" {
   iso_paths = var.iso_paths
   http_interface = "ens192"
   cd_content = local.data_source_content
+
+  cdrom_type = local.cdrom_type
+
+  
+  boot_order = ["cdrom", "disk", "network"]
   // Updated boot_command
   #boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
   boot_command = var.firmware == "efi" ? local.efi_boot_command : local.bios_boot_command
