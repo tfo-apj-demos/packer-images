@@ -13,7 +13,7 @@ firewall --enabled --ssh
 authselect select sssd
 selinux --enforcing
 timezone ${vm_guest_os_timezone}
-#${storage}
+#storage
 ### Initialize any invalid partition tables found on disks.
 zerombr
 
