@@ -52,13 +52,16 @@ logvol /var/log/audit --fstype=xfs --vgname=sysvg --size=4096   --name=lv_audit 
 ###############################################################################
 # --location=mbr here triggers the installer to register UEFI entry
 # and copy bootloader into /boot/efi automatically.
-bootloader --timeout=5 --append="crashkernel=auto" --location=mbr --driveorder=sda
+#bootloader --timeout=5 --append="crashkernel=auto" --location=mbr --driveorder=sda
+bootloader --timeout=5 --append="crashkernel=auto" --driveorder=sda
 
 services --enabled=NetworkManager,sshd
 
 %packages --ignoremissing --excludedocs
 @core
 efibootmgr
+grub2-efi-x64 
+shim-x64
 -iwl*firmware
 perl
 open-vm-tools
@@ -67,7 +70,7 @@ open-vm-tools
 ###############################################################################
 # Post-install: EPEL, sudo, NM tweaks, then fix UEFI entries
 ###############################################################################
-%post
+%post --log=/var/log/kickstart_post.log --interpreter=/bin/bash -x
 # EPEL
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 dnf makecache
