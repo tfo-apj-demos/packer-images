@@ -80,7 +80,7 @@ open-vm-tools
 # Post-install configuration
 ###############################################################################
 
-%post
+%post --log=/root/ks-post.log
 # Ensure EPEL repo is enabled
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 dnf makecache
@@ -100,17 +100,19 @@ systemctl restart NetworkManager
 # Check if the EFI boot entry exists for the disk
 efibootmgr -v | grep "BootOrder"
 # If EFI entry exists, modify it to prioritize disk
-efibootmgr -o 0005,0006,0000,0001,0002 # (assuming 0000 is the EFI Virtual Disk boot entry)
+#efibootmgr -o 0005,0006,0000,0001,0002 # (assuming 0000 is the EFI Virtual Disk boot entry)
 
-%end
+# 1) Find the boot numbers
+DISK_ENTRY=$(efibootmgr -v \
+  | awk -F '*' '/Red Hat Enterprise Linux/ { sub(/^Boot/, "", $1); print $1; exit }')
+VD_ENTRY=$(efibootmgr -v \
+  | awk -F '*' '/EFI Virtual disk/ { sub(/^Boot/, "", $1); print $1; exit }')
 
-%post --interpreter=/usr/bin/bash --log=/root/ks-post.log
+# 2) Remove the generic “EFI Virtual disk” entry
+[ -n "$VD_ENTRY" ] && efibootmgr -b $VD_ENTRY -B
 
-# make sure efivars is mounted inside the chroot
-mount -t efivarfs efivarfs /sys/firmware/efi/efivars || true
-
-# create a UEFI boot entry on /dev/sda1 (your ESP)
-efibootmgr -c -d /dev/sda -p 1 -L "RHEL" -l '\\EFI\\redhat\\shim.efi'
+# 3) Make sure RHEL is the only and first entry
+efibootmgr -o $DISK_ENTRY
 
 %end
 
