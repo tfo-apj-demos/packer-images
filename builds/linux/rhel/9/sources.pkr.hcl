@@ -89,7 +89,8 @@ source "vsphere-iso" "this" {
 
 
   # Boot order: Ensure it boots from disk first after installation
-  boot_order = "disk,cdrom,ethernet"
+  # djoo remove below line to see whether it is causing the inifinite bluescreen loop.
+  #boot_order = "disk,cdrom,ethernet"
 
   # Boot commands for UEFI or BIOS (choose based on firmware)
   boot_command = var.firmware == "efi" ? local.efi_boot_command : local.bios_boot_command
