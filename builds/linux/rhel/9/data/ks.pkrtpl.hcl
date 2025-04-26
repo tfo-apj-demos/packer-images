@@ -80,7 +80,7 @@ open-vm-tools
 ###############################################################################
 
 %post
-# Enable EPEL repo
+# Ensure EPEL repo is enabled
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 dnf makecache
 
@@ -94,6 +94,13 @@ for conn in /etc/NetworkManager/system-connections/*.connection; do
     echo 'autoconnect-priority=-999' >> "$conn"
 done
 systemctl restart NetworkManager
+
+# Force the EFI boot entry to boot from the disk (after installation)
+# Check if the EFI boot entry exists for the disk
+efibootmgr -v | grep "BootOrder"
+# If EFI entry exists, modify it to prioritize disk
+efibootmgr -o 0000,0001,0002 # (assuming 0000 is the EFI Virtual Disk boot entry)
+
 %end
 
 reboot --eject
