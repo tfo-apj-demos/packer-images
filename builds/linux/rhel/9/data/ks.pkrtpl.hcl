@@ -100,7 +100,7 @@ systemctl restart NetworkManager
 # Check if the EFI boot entry exists for the disk
 efibootmgr -v | grep "BootOrder"
 # If EFI entry exists, modify it to prioritize disk
-efibootmgr -o 0005,0000,0001,0002 # (assuming 0000 is the EFI Virtual Disk boot entry)
+efibootmgr -o 0005,0006,0000,0001,0002 # (assuming 0000 is the EFI Virtual Disk boot entry)
 
 %end
 
