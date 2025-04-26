@@ -104,9 +104,13 @@ efibootmgr -o 0000,0001,0002 # (assuming 0000 is the EFI Virtual Disk boot entry
 
 %end
 
-%post --interpreter=/usr/bin/bash --chroot
+%post --interpreter=/usr/bin/bash --log=/root/ks-post.log
+
+# make sure efivars is mounted inside the chroot
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars || true
+
 # create a UEFI boot entry on /dev/sda1 (your ESP)
-efibootmgr -c -d /dev/sda -p 1 -L "RHEL" -l \\EFI\\redhat\\shim.efi
+efibootmgr -c -d /dev/sda -p 1 -L "RHEL" -l '\\EFI\\redhat\\shim.efi'
 
 %end
 
