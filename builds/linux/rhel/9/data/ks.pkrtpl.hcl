@@ -33,7 +33,7 @@ zerombr
 clearpart --all --initlabel --drives=sda
 
 # EFI System Partition (FAT32, ~600 MiB)
-part /boot/efi   --fstype=vfat  --size=600   --label=EFI-SYSTEM --fsoptions="umask=0077,shortname=winnt"
+part /boot/efi   --fstype=efi  --size=600   --label=EFI-SYSTEM --fsoptions="umask=0077,shortname=winnt"
 
 # Standard /boot partition (ext4, 1 GiB)
 part /boot       --fstype=ext4  --size=1024  --label=BOOT
