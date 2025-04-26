@@ -3,13 +3,14 @@
   ansible.builtin.include_tasks:
     file: install_base_rhel.yaml
 
-- name: Include CIS RHEL9 tasks
-  ansible.builtin.include_tasks:
-    file: cis_RHEL9.yml
-######### For Essential 8 Demo #########
-#- name: Include Essential 8 tasks
-#  ansible.builtin.include_tasks: E8_RHEL9.yaml
-
-- name: Include OpenSCAP report tasks
-  ansible.builtin.include_tasks:
-    file: oscap_report.yml
+#### this is parked till we fix the issue with vTPM 
+##- name: Include CIS RHEL9 tasks
+##  ansible.builtin.include_tasks:
+##    file: cis_RHEL9.yml
+########### For Essential 8 Demo #########
+###- name: Include Essential 8 tasks
+###  ansible.builtin.include_tasks: E8_RHEL9.yaml
+##
+##- name: Include OpenSCAP report tasks
+##  ansible.builtin.include_tasks:
+##    file: oscap_report.yml
