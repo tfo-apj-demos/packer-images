@@ -70,7 +70,8 @@ open-vm-tools
 ###############################################################################
 # Post-install: EPEL, sudo, NM tweaks, then fix UEFI entries
 ###############################################################################
-%post --log=/var/log/kickstart_post.log --interpreter=/bin/bash -x
+%post --log=/var/log/kickstart_post.log 
+set -x
 # EPEL
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 dnf makecache
@@ -101,7 +102,7 @@ done
 
 # leave only Boot0005 as the boot order
 efibootmgr -o $DISK_ENTRY
-
+set +x 
 %end
 
 # reboot and eject installer media
