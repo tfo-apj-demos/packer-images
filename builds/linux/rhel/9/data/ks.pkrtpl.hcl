@@ -58,6 +58,7 @@ services --enabled=NetworkManager,sshd
 
 %packages --ignoremissing --excludedocs
 @core
+efibootmgr
 -iwl*firmware
 perl
 open-vm-tools
@@ -83,17 +84,20 @@ done
 systemctl restart NetworkManager
 
 # ---- UEFI NVRAM cleanup ----
-# find boot numbers
-DISK_ENTRY=$(efibootmgr -v \
-  | awk -F '*' '/Red Hat Enterprise Linux/ { sub(/^Boot/, "", $1); print $1; exit }')
-VD_ENTRY=$(efibootmgr -v \
-  | awk -F '*' '/EFI Virtual disk/     { sub(/^Boot/, "", $1); print $1; exit }')
+# Mount the EFI variable filesystem
+mkdir -p /sys/firmware/efi/efivars
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 
-# remove stray "EFI Virtual disk" entry
-[ -n "$VD_ENTRY" ] && efibootmgr -b $VD_ENTRY -B
+# detect the RHEL entry (Boot0005)
+DISK_ENTRY=$(efibootmgr -v   | awk -F '*' '/[Rr]ed[[:space:]]?Hat/ { sub(/^Boot/, "", $1); print $1; exit }')
 
-# set only your RHEL entry first
-[ -n "$DISK_ENTRY" ] && efibootmgr -o $DISK_ENTRY
+# prune everything except Boot0005
+for id in $(efibootmgr | sed -n 's/Boot\([0-9A-F]\{4\}\).*/\1/p'); do
+  [ "$id" != "$DISK_ENTRY" ] && efibootmgr -b $id -B
+done
+
+# leave only Boot0005 as the boot order
+efibootmgr -o $DISK_ENTRY
 
 %end
 
