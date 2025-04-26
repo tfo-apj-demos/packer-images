@@ -60,7 +60,7 @@ logvol /var/log/audit --fstype=xfs --name=lv_audit --vgname=sysvg --size=4096 --
 # Correct bootloader configuration for UEFI
 # This will install GRUB2 to the EFI partition (/boot/efi)
 #bootloader --timeout=5 --append="crashkernel=auto" --location=mbr --driveorder=sda
-bootloader --timeout=5 --bootloader-id=RHEL --target=x86_64-efi --append="crashkernel=auto"
+bootloader --timeout=5 --append="crashkernel=auto" --boot-drive=sda
 
 ###############################################################################
 # Services & packages
