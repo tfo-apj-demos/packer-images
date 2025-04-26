@@ -88,9 +88,10 @@ source "vsphere-iso" "this" {
   cdrom_type = local.cdrom_type
 
 
-  boot_order = "cdrom,disk,ethernet"
-  // Updated boot_command
-  #boot_command = ["<up><wait><tab><wait> inst.text inst.ks=cdrom:/ks.cfg <enter><wait>"]
+  # Boot order: Ensure it boots from disk first after installation
+  boot_order = "disk,cdrom,ethernet"
+
+  # Boot commands for UEFI or BIOS (choose based on firmware)
   boot_command = var.firmware == "efi" ? local.efi_boot_command : local.bios_boot_command
 
   // Serve Kickstart file via HTTP
