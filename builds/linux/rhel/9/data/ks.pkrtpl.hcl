@@ -57,9 +57,9 @@ logvol /var/log/audit --fstype=xfs --name=lv_audit --vgname=sysvg --size=4096 --
 # Bootloader
 ###############################################################################
 
-# UEFI/GPT mode – installer auto-installs into the ESP
-# No --location=mbr; default UEFI install will use /boot/efi
-bootloader --timeout=5 --append="crashkernel=auto" --location=efi --efi-directory=/boot/efi
+# Correct bootloader configuration for UEFI
+# This will install GRUB2 to the EFI partition (/boot/efi)
+bootloader --timeout=5 --append="crashkernel=auto" --location=mbr --driveorder=sda
 
 ###############################################################################
 # Services & packages
