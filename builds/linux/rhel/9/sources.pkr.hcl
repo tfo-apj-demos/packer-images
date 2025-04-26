@@ -91,15 +91,8 @@ source "vsphere-iso" "this" {
   # Boot order: Ensure it boots from disk first after installation
   # djoo remove below line to see whether it is causing the inifinite bluescreen loop.
   #boot_order = "disk,cdrom,ethernet"
-  configuration_parameters = {
-    "boot0000.present" = "FALSE"     // Disable EFI Virtual disk
-    "boot0006.present" = "FALSE"     // Disable "redhat" duplicate entry
-    "boot0001.devicetype" = "cdrom"  // Make sure CDROM is identified as such
-    "boot0002.devicetype" = "cdrom"  // Make sure CDROM is identified as such
-    "bios.bootDelay" = "5000"        // Give the boot menu time to appear (5 sec)
-    "firmware.effectiveBootOrder" = "disk,cdrom,ethernet"  // Force disk first
-    "bootOrder" = "disk,cdrom,ethernet" // Double emphasis on boot order
-  }
+  nvram_directory  = "./nvram"                  # host-path to hold NVRAM
+  nvram_filename   = "base-rhel9-template.nvram"
 
   # Boot commands for UEFI or BIOS (choose based on firmware)
   boot_command = var.firmware == "efi" ? local.efi_boot_command : local.bios_boot_command
