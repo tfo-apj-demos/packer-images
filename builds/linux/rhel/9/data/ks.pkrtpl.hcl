@@ -104,4 +104,10 @@ efibootmgr -o 0000,0001,0002 # (assuming 0000 is the EFI Virtual Disk boot entry
 
 %end
 
+%post --interpreter=/usr/bin/bash --chroot
+# create a UEFI boot entry on /dev/sda1 (your ESP)
+efibootmgr -c -d /dev/sda -p 1 -L "RHEL" -l \\EFI\\redhat\\shim.efi
+
+%end
+
 reboot --eject
