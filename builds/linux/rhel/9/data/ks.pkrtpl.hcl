@@ -102,6 +102,8 @@ done
 
 # leave only Boot0005 as the boot order
 efibootmgr -o $DISK_ENTRY
+efibootmgr -n $DISK_ENTRY 
+
 set +x 
 %end
 
