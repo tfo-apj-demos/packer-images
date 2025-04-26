@@ -96,4 +96,4 @@ done
 systemctl restart NetworkManager
 %end
 
-reboot
+reboot --eject
