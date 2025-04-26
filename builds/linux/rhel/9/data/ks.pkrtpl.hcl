@@ -1,10 +1,9 @@
 #version=RHEL9
-# RHEL 9 UEFI/GPT Kickstart for vSphere with vTPM
+# RHEL9 UEFI/GPT Kickstart for vSphere with vTPM
 
 ###############################################################################
 # Basic setup
 ###############################################################################
-
 cdrom
 text
 eula --agreed
@@ -21,53 +20,41 @@ user --name=${build_username} --iscrypted --password="${build_password_encrypted
 firewall --enabled --ssh
 authselect select sssd
 selinux --enforcing
-
 skipx
 
 ###############################################################################
 # Disk partitioning (UEFI/GPT)
 ###############################################################################
-
-# Wipe any existing partition tables, use GPT
 zerombr
 clearpart --all --initlabel --drives=sda
 
 # EFI System Partition (FAT32, ~600 MiB)
-part /boot/efi   --fstype=efi  --size=600   --label=EFI-SYSTEM --fsoptions="umask=0077,shortname=winnt"
+part /boot/efi --fstype=vfat --size=600 --label=EFI-SYSTEM --fsoptions="umask=0077,shortname=winnt"
 
-# Standard /boot partition (ext4, 1 GiB)
-part /boot       --fstype=ext4  --size=1024  --label=BOOT
+# /boot partition (ext4, 1 GiB)
+part /boot     --fstype=ext4 --size=1024 --label=BOOT
 
-# LVM physical volume for everything else
-part pv.01       --size=1      --grow
-
+# LVM for the rest
+part pv.01     --size=1 --grow
 volgroup sysvg --pesize=4096 pv.01
 
-# Logical volumes
-logvol swap        --fstype=swap --name=lv_swap   --vgname=sysvg --size=1024   --label=SWAPFS
-logvol /           --fstype=xfs  --name=lv_root   --vgname=sysvg --size=12288  --label=ROOTFS
-logvol /home       --fstype=xfs  --name=lv_home   --vgname=sysvg --size=4096   --label=HOMEFS   --fsoptions="nodev,nosuid"
-logvol /opt        --fstype=xfs  --name=lv_opt    --vgname=sysvg --size=2048   --label=OPTFS    --fsoptions="nodev"
-logvol /tmp        --fstype=xfs  --name=lv_tmp    --vgname=sysvg --size=4096   --label=TMPFS    --fsoptions="nodev,noexec,nosuid"
-logvol /var        --fstype=xfs  --name=lv_var    --vgname=sysvg --size=4096   --label=VARFS    --fsoptions="nodev"
-logvol /var/log    --fstype=xfs  --name=lv_log    --vgname=sysvg --size=4096   --label=LOGFS    --fsoptions="nodev,noexec,nosuid"
-logvol /var/log/audit --fstype=xfs --name=lv_audit --vgname=sysvg --size=4096 --label=AUDITFS --fsoptions="nodev,noexec,nosuid"
+logvol swap   --fstype=swap --vgname=sysvg --size=1024   --name=lv_swap   --label=SWAPFS
+logvol /      --fstype=xfs  --vgname=sysvg --size=12288  --name=lv_root   --label=ROOTFS
+logvol /home  --fstype=xfs  --vgname=sysvg --size=4096   --name=lv_home   --label=HOMEFS   --fsoptions="nodev,nosuid"
+logvol /opt   --fstype=xfs  --vgname=sysvg --size=2048   --name=lv_opt    --label=OPTFS    --fsoptions="nodev"
+logvol /tmp   --fstype=xfs  --vgname=sysvg --size=4096   --name=lv_tmp    --label=TMPFS    --fsoptions="nodev,noexec,nosuid"
+logvol /var   --fstype=xfs  --vgname=sysvg --size=4096   --name=lv_var    --label=VARFS    --fsoptions="nodev"
+logvol /var/log       --fstype=xfs --vgname=sysvg --size=4096   --name=lv_log    --label=LOGFS    --fsoptions="nodev,noexec,nosuid"
+logvol /var/log/audit --fstype=xfs --vgname=sysvg --size=4096   --name=lv_audit  --label=AUDITFS --fsoptions="nodev,noexec,nosuid"
 
 ###############################################################################
-# Bootloader
+# Bootloader (UEFI / GRUB2)
 ###############################################################################
-
-# Correct bootloader configuration for UEFI
-# This will install GRUB2 to the EFI partition (/boot/efi)
+# --location=mbr here triggers the installer to register UEFI entry
+# and copy bootloader into /boot/efi automatically.
 bootloader --timeout=5 --append="crashkernel=auto" --location=mbr --driveorder=sda
-#bootloader --timeout=5 --append="crashkernel=auto" --boot-drive=sda
-
-###############################################################################
-# Services & packages
-###############################################################################
 
 services --enabled=NetworkManager,sshd
-skipx
 
 %packages --ignoremissing --excludedocs
 @core
@@ -77,43 +64,38 @@ open-vm-tools
 %end
 
 ###############################################################################
-# Post-install configuration
+# Post-install: EPEL, sudo, NM tweaks, then fix UEFI entries
 ###############################################################################
-
-%post --log=/root/ks-post.log
-# Ensure EPEL repo is enabled
+%post
+# EPEL
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 dnf makecache
 
-# Passwordless sudo for build user
+# Passwordless sudo
 echo "${build_username} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${build_username}
 sed -i 's/^.*requiretty/# Defaults requiretty/' /etc/sudoers
 
-# NetworkManager autoconnect workaround
+# NM autoconnect priority
 for conn in /etc/NetworkManager/system-connections/*.connection; do
   grep -q '^\[connection\]' "$conn" && \
     echo 'autoconnect-priority=-999' >> "$conn"
 done
 systemctl restart NetworkManager
 
-# Force the EFI boot entry to boot from the disk (after installation)
-# Check if the EFI boot entry exists for the disk
-efibootmgr -v | grep "BootOrder"
-# If EFI entry exists, modify it to prioritize disk
-#efibootmgr -o 0005,0006,0000,0001,0002 # (assuming 0000 is the EFI Virtual Disk boot entry)
-
-# 1) Find the boot numbers
+# ---- UEFI NVRAM cleanup ----
+# find boot numbers
 DISK_ENTRY=$(efibootmgr -v \
   | awk -F '*' '/Red Hat Enterprise Linux/ { sub(/^Boot/, "", $1); print $1; exit }')
 VD_ENTRY=$(efibootmgr -v \
-  | awk -F '*' '/EFI Virtual disk/ { sub(/^Boot/, "", $1); print $1; exit }')
+  | awk -F '*' '/EFI Virtual disk/     { sub(/^Boot/, "", $1); print $1; exit }')
 
-# 2) Remove the generic “EFI Virtual disk” entry
+# remove stray "EFI Virtual disk" entry
 [ -n "$VD_ENTRY" ] && efibootmgr -b $VD_ENTRY -B
 
-# 3) Make sure RHEL is the only and first entry
-efibootmgr -o $DISK_ENTRY
+# set only your RHEL entry first
+[ -n "$DISK_ENTRY" ] && efibootmgr -o $DISK_ENTRY
 
 %end
 
+# reboot and eject installer media
 reboot --eject
