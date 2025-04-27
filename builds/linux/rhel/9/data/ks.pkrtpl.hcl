@@ -112,5 +112,4 @@ set +x
 %end
 
 # reboot and eject installer media
-eject -m 
-shutdown -r now
+reboot --eject
