@@ -100,22 +100,22 @@ source "vsphere-iso" "this" {
   ssh_handshake_attempts = 1000
 }
 
-source "vsphere-clone" "this" {
-	vcenter_server      = var.vcenter_server
-	username            = var.vcenter_username
-	password            = var.vcenter_password
-  insecure_connection = var.vcenter_insecure_connection
+# source "vsphere-clone" "this" {
+# 	vcenter_server      = var.vcenter_server
+# 	username            = var.vcenter_username
+# 	password            = var.vcenter_password
+#   insecure_connection = var.vcenter_insecure_connection
 
-  convert_to_template = true
+#   convert_to_template = true
 
-	template  = data.hcp-packer-image.vsphere.id
-	cluster   = var.cluster
-	datastore = var.datastore
-  folder     = var.folder
+# 	template  = data.hcp-packer-image.vsphere.id
+# 	cluster   = var.cluster
+# 	datastore = var.datastore
+#   folder     = var.folder
 
-	vm_name      = local.name
-	ssh_username = var.os_username
-	ssh_password = var.os_password
-  temporary_key_pair_type = "ed25519"
+# 	vm_name      = local.name
+# 	ssh_username = var.os_username
+# 	ssh_password = var.os_password
+#   temporary_key_pair_type = "ed25519"
 
-}
+# }
