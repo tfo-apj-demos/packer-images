@@ -5,9 +5,9 @@
 //   region = lookup(var.region, "aws", "us-west-2")
 // }
 
-# data "hcp-packer-image" "vsphere" {
-#   bucket_name = "base-ubuntu-2404"
-# 	channel = "latest"
-#   cloud_provider = "vsphere"
-#   region = lookup(var.region, "vsphere", "Datacenter")
-# }
+data "hcp-packer-image" "vsphere" {
+  bucket_name = "base-ubuntu-2404"
+	channel = "latest"
+  cloud_provider = "vsphere"
+  region = lookup(var.region, "vsphere", "Datacenter")
+}
