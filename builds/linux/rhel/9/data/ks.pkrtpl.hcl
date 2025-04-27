@@ -71,51 +71,76 @@ open-vm-tools
 # Post-install: EPEL, sudo, NM tweaks, then fix UEFI entries
 ###############################################################################
 %post --log=/var/log/kickstart_post.log 
-set -x
-# EPEL
+# EPEL installation and cache update
+echo "Installing EPEL repository"
 dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 dnf makecache
+echo "EPEL repository installed and cache updated"
 
-# Passwordless sudo
+# Passwordless sudo setup for build user
+echo "Setting up passwordless sudo for user ${build_username}"
 echo "${build_username} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${build_username}
 sed -i 's/^.*requiretty/# Defaults requiretty/' /etc/sudoers
+echo "Passwordless sudo set up for ${build_username}"
 
-# NM autoconnect priority
+# NetworkManager autoconnect priority tweak
+echo "Configuring NetworkManager autoconnect priority"
 for conn in /etc/NetworkManager/system-connections/*.connection; do
   grep -q '^\[connection\]' "$conn" && \
     echo 'autoconnect-priority=-999' >> "$conn"
 done
 systemctl restart NetworkManager
+echo "NetworkManager autoconnect priority configured"
 
-# ---- UEFI NVRAM cleanup ----
-# Mount the EFI variable filesystem
-mkdir -p /sys/firmware/efi/efivars
-mount -t efivarfs efivarfs /sys/firmware/efi/efivars
-
-# detect the RHEL entry (Boot0005)
-DISK_ENTRY=$(efibootmgr -v   | awk -F '*' '/[Rr]ed[[:space:]]?Hat/ { sub(/^Boot/, "", $1); print $1; exit }')
-
-# prune everything except Boot0005
-for id in $(efibootmgr | sed -n 's/Boot\([0-9A-F]\{4\}\).*/\1/p'); do
-  [ "$id" != "$DISK_ENTRY" ] && efibootmgr -b $id -B
-done
-
-# to even go further, remove 0000 entry
-
-efibootmgr -A -b 0000
-
-# leave only Boot0005 as the boot order
-efibootmgr -o $DISK_ENTRY
-efibootmgr -n $DISK_ENTRY 
-
-sync
-sleep 5
-sync
-echo "EFI NVRAM entries:"
+# Debug: Show current EFI boot entries before making changes
+echo "Checking current EFI boot entries:"
 efibootmgr -v
 
+# ---- UEFI NVRAM cleanup ----
+# find boot numbers
+DISK_ENTRY=$(efibootmgr -v | awk -F '*' '/[Rr]ed[[:space:]]?Hat/ { sub(/^Boot/,"",$1); print $1; exit }')
+echo "Found Red Hat boot entry: $DISK_ENTRY"
 
-set +x 
+# find EFI Virtual Disk entry
+VD_ENTRY=$(efibootmgr -v | awk -F '*' '/EFI Virtual disk/ { sub(/^Boot/,"",$1); print $1; exit }')
+echo "Found EFI Virtual Disk entry: $VD_ENTRY"
+
+# remove stray "EFI Virtual disk" entry if it exists
+if [ -n "$VD_ENTRY" ]; then
+  echo "Removing EFI Virtual Disk entry: $VD_ENTRY"
+  efibootmgr -b $VD_ENTRY -B
+fi
+
+# set only your Red Hat entry first
+if [ -n "$DISK_ENTRY" ]; then
+  echo "Setting boot order to Red Hat entry: $DISK_ENTRY"
+  efibootmgr -o $DISK_ENTRY
+else
+  echo "Red Hat boot entry not found"
+fi
+
+# ---- Clean up other boot entries ----
+echo "Cleaning up all other boot entries except Red Hat"
+for id in $(efibootmgr -v | grep -o 'Boot[0-9A-F]\{4\}' | sed 's/Boot//'); do
+  if [ "$id" != "$DISK_ENTRY" ]; then
+    echo "Removing boot entry: $id"
+    efibootmgr -b $id -B
+  fi
+done
+
+# Verify changes: Show current boot order after cleanup
+echo "Final boot order after cleanup:"
+efibootmgr -v
+
+# Rebuild GRUB configuration (if necessary)
+echo "Rebuilding GRUB configuration"
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# Ensure GRUB is installed to EFI
+echo "Installing GRUB to EFI"
+grub2-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=redhat
+
+echo "Post-install tasks completed."
 %end
 
 # reboot and eject installer media
