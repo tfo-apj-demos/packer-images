@@ -100,6 +100,10 @@ for id in $(efibootmgr | sed -n 's/Boot\([0-9A-F]\{4\}\).*/\1/p'); do
   [ "$id" != "$DISK_ENTRY" ] && efibootmgr -b $id -B
 done
 
+# to even go further, remove 0000 entry
+
+efibootmgr -A -b 0000
+
 # leave only Boot0005 as the boot order
 efibootmgr -o $DISK_ENTRY
 efibootmgr -n $DISK_ENTRY 
@@ -107,6 +111,9 @@ efibootmgr -n $DISK_ENTRY
 sync
 sleep 5
 sync
+echo "EFI NVRAM entries:"
+efibootmgr -v
+
 
 set +x 
 %end
