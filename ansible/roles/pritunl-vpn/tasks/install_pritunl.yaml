@@ -1,29 +1,75 @@
 ---
-- name: Update apt repository and install required packages
+- name: Install gnupg package
+  apt:
+    name: gnupg
+    state: present
+
+- name: Add MongoDB repository
+  copy:
+    dest: /etc/apt/sources.list.d/mongodb-org.list
+    content: |
+      deb [signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse
+    mode: '0644'
+
+- name: Add OpenVPN repository
+  copy:
+    dest: /etc/apt/sources.list.d/openvpn.list
+    content: |
+      deb [signed-by=/usr/share/keyrings/openvpn-repo.gpg] https://build.openvpn.net/debian/openvpn/stable noble main
+    mode: '0644'
+
+- name: Add Pritunl repository
+  copy:
+    dest: /etc/apt/sources.list.d/pritunl.list
+    content: |
+      deb [signed-by=/usr/share/keyrings/pritunl.gpg] https://repo.pritunl.com/stable/apt noble main
+    mode: '0644'
+
+- name: Download and add MongoDB GPG key
+  ansible.builtin.get_url:
+    url: https://www.mongodb.org/static/pgp/server-8.0.asc
+    dest: /tmp/mongodb-server-8.0.asc
+
+- name: Import MongoDB GPG key
+  ansible.builtin.command:
+    cmd: gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor --yes /tmp/mongodb-server-8.0.asc
+
+- name: Download and add OpenVPN GPG key
+  ansible.builtin.get_url:
+    url: https://swupdate.openvpn.net/repos/repo-public.gpg
+    dest: /tmp/openvpn-repo.gpg
+
+- name: Import OpenVPN GPG key
+  ansible.builtin.command:
+    cmd: gpg -o /usr/share/keyrings/openvpn-repo.gpg --dearmor --yes /tmp/openvpn-repo.gpg
+
+- name: Download and add Pritunl GPG key
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/pritunl/pgp/master/pritunl_repo_pub.asc
+    dest: /tmp/pritunl-repo.asc
+
+- name: Import Pritunl GPG key
+  ansible.builtin.command:
+    cmd: gpg -o /usr/share/keyrings/pritunl.gpg --dearmor --yes /tmp/pritunl-repo.asc
+
+- name: Update apt cache
   apt:
     update_cache: yes
+
+- name: Install required packages
+  apt:
     name:
-      - gnupg
-      - curl
+      - pritunl
+      - openvpn
+      - mongodb-org
+      - wireguard
+      - wireguard-tools
     state: present
+    force: yes
 
-- name: Add Pritunl repository GPG key
-  command: curl -fsSL https://repo.pritunl.com/pritunl.repo | tee /etc/apt/sources.list.d/pritunl.list
-
-- name: Install Pritunl repository
-  apt_repository:
-    repo: 'deb https://repo.pritunl.com/stable/apt focal main'
-    state: present
-
-- name: Install Pritunl
-  apt:
-    name: pritunl
-    state: present
-
-- name: Install MongoDB
-  apt:
-    name: mongodb-org
-    state: present
+- name: Disable UFW
+  ufw:
+    state: disabled
 
 - name: Start and enable Pritunl service
   systemd:
@@ -36,20 +82,3 @@
     name: mongod
     state: started
     enabled: yes
-
-- name: Ensure firewall allows necessary ports (optional)
-  ufw:
-    rule: allow
-    name: 'OpenSSH'
-
-- name: Open Pritunl Web UI port (443)
-  ufw:
-    rule: allow
-    port: 443
-    proto: tcp
-
-- name: Open MongoDB port (27017)
-  ufw:
-    rule: allow
-    port: 27017
-    proto: tcp
