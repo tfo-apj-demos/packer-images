@@ -85,7 +85,7 @@ variable "guest_os_type" {
 
 variable "iso_paths" {
   type    = list(string)
-  default = ["[vsanDatastore] ISO/ubuntu-22.04.1-live-server-amd64.iso"]
+  default = ["[vsanDatastore] ISO/ubuntu-24.04.2-live-server-amd64.iso"]
 }
 
 variable "os_timezone" {
