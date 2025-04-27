@@ -104,8 +104,13 @@ done
 efibootmgr -o $DISK_ENTRY
 efibootmgr -n $DISK_ENTRY 
 
+sync
+sleep 5
+sync
+
 set +x 
 %end
 
 # reboot and eject installer media
-reboot --eject
+eject -m 
+shutdown -r now
