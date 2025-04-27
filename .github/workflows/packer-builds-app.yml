@@ -19,7 +19,7 @@ on:
           - windows_2022_iis
           - ubuntu_2204_splunk
           - ubuntu_2204_aap
-          - ubuntu_2204_pritunl_vpn
+          - ubuntu_2404_pritunl_vpn
           
   schedule:
    - cron:  '0 11 * * SUN' # UTC TIME
