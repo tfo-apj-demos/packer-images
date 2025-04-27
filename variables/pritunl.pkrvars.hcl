@@ -1,5 +1,5 @@
 # General variables
-role        = "printunl-vpn"
+role        = "pritunl-vpn"
 owner = "Cloud Platform Team"
 project_id  = "TFO"
 
