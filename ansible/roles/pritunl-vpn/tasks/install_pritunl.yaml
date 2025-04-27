@@ -1,4 +1,12 @@
 ---
+# apt upgrade
+- name: Update apt cache
+  apt:
+    update_cache: yes
+- name: Upgrade all packages
+  apt:
+    upgrade: dist
+    update_cache: yes
 - name: Install gnupg package
   apt:
     name: gnupg
