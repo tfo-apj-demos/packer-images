@@ -62,3 +62,7 @@ ubuntu_2204_nomad:
 ubuntu_2204_aap:
 	packer init -var-file variables/aap.pkrvars.hcl builds/linux/ubuntu/2204
 	packer build -var-file variables/aap.pkrvars.hcl builds/linux/ubuntu/2204
+
+ubuntu_2204_pritunl_vpn:
+	packer init -var-file variables/pritunl.pkrvars.hcl builds/linux/ubuntu/2204
+	packer build -var-file variables/pritunl.pkrvars.hcl builds/linux/ubuntu/2204
