@@ -80,7 +80,7 @@ variable "folder" {
 
 variable "guest_os_type" {
   type    = string
-  default = "rhel9_64Guest"
+  default = "rhel8_64Guest"
 }
 
 variable "iso_paths" {
