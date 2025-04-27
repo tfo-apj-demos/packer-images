@@ -59,7 +59,7 @@ build {
   	}
 
   	build_labels = {
-  		"ubuntu-version" = "jammy 24.04"
+  		"ubuntu-version" = "noble 24.04"
   		"build-time" = timestamp()
 			"owner" = var.owner
   	}
