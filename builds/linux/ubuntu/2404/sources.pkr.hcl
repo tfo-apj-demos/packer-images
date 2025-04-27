@@ -4,30 +4,30 @@ locals {
   base = var.role == "base"
 }
 
-source "amazon-ebs" "this" {
-  region = lookup(var.region, "aws", "us-west-2")
+# source "amazon-ebs" "this" {
+#   region = lookup(var.region, "aws", "us-west-2")
 
-  dynamic "source_ami_filter" {
-		filters = {
-				virtualization-type = "hvm"
-				name                = "ubuntu/images/*ubuntu-jammy-24.04-amd64-server-*"
-				root-device-type    = "ebs"
-			}
-			owners      = ["099720109477"] # Canonical
-			most_recent = true
-		}
+#   dynamic "source_ami_filter" {
+# 		filters = {
+# 				virtualization-type = "hvm"
+# 				name                = "ubuntu/images/*ubuntu-noble-24.04-amd64-server-*"
+# 				root-device-type    = "ebs"
+# 			}
+# 			owners      = ["099720109477"] # Canonical
+# 			most_recent = true
+# 		}
 
-	source_ami = local.base ? null : data.hcp-packer-image.aws.cloud_image_id
+# 	source_ami = local.base ? null : data.hcp-packer-image.aws.cloud_image_id
 
-  instance_type = "t3.medium"
-  ssh_username  = "ubuntu"
-  ami_name      = local.name
-  tags = {
-    owner         = var.owner
-    project       = var.project_id
-    Base_AMI_Name = "{{ .SourceAMIName }}"
-  }
-}
+#   instance_type = "t3.medium"
+#   ssh_username  = "ubuntu"
+#   ami_name      = local.name
+#   tags = {
+#     owner         = var.owner
+#     project       = var.project_id
+#     Base_AMI_Name = "{{ .SourceAMIName }}"
+#   }
+# }
 
 source "vsphere-iso" "this" {
   // Connection details
@@ -100,22 +100,22 @@ source "vsphere-iso" "this" {
   ssh_handshake_attempts = 1000
 }
 
-# source "vsphere-clone" "this" {
-# 	vcenter_server      = var.vcenter_server
-# 	username            = var.vcenter_username
-# 	password            = var.vcenter_password
-#   insecure_connection = var.vcenter_insecure_connection
+source "vsphere-clone" "this" {
+	vcenter_server      = var.vcenter_server
+	username            = var.vcenter_username
+	password            = var.vcenter_password
+  insecure_connection = var.vcenter_insecure_connection
 
-#   convert_to_template = true
+  convert_to_template = true
 
-# 	template  = data.hcp-packer-image.vsphere.id
-# 	cluster   = var.cluster
-# 	datastore = var.datastore
-#   folder     = var.folder
+	template  = data.hcp-packer-image.vsphere.id
+	cluster   = var.cluster
+	datastore = var.datastore
+  folder     = var.folder
 
-# 	vm_name      = local.name
-# 	ssh_username = var.os_username
-# 	ssh_password = var.os_password
-#   temporary_key_pair_type = "ed25519"
+	vm_name      = local.name
+	ssh_username = var.os_username
+	ssh_password = var.os_password
+  temporary_key_pair_type = "ed25519"
 
-# }
+}
