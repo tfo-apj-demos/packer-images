@@ -22,7 +22,7 @@
   copy:
     dest: /etc/apt/sources.list.d/pritunl.list
     content: |
-      deb [signed-by=/usr/share/keyrings/pritunl.gpg] https://repo.pritunl.com/stable/apt noble main
+      deb [signed-by=/usr/share/keyrings/pritunl.gpg] https://repo.pritunl.com/stable/apt jammy main
     mode: '0644'
 
 - name: Download and add MongoDB GPG key
@@ -51,6 +51,7 @@
 - name: Import Pritunl GPG key
   ansible.builtin.command:
     cmd: gpg -o /usr/share/keyrings/pritunl.gpg --dearmor --yes /tmp/pritunl-repo.asc
+    
 
 - name: Update apt cache
   apt:
