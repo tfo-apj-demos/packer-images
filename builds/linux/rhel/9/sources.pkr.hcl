@@ -81,6 +81,11 @@ source "vsphere-iso" "this" {
     network_card = "vmxnet3"
   }
 
+  configuration_parameters = {
+    "disk.EnableUUID"  = "TRUE"
+    "efi.quickBoot.enabled"  = "FALSE"
+  }
+
   iso_paths = var.iso_paths
   http_interface = "ens192"
   cd_content = local.data_source_content
