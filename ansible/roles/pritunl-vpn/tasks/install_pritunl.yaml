@@ -1,15 +1,55 @@
 ---
-- name: Install Vault
-  become: true
+- name: Update apt repository and install required packages
   apt:
-    name: vault-enterprise
-    state: present
     update_cache: yes
-
-- name: Allow Vault to restart its systemd job
-  lineinfile:
-    path: /etc/sudoers
+    name:
+      - gnupg
+      - curl
     state: present
-    insertafter: '^# User privilege specification'
-    line: 'vault   ALL=(ALL) NOPASSWD: /bin/systemctl restart vault.service'
-    validate: 'visudo -cf %s'
+
+- name: Add Pritunl repository GPG key
+  command: curl -fsSL https://repo.pritunl.com/pritunl.repo | tee /etc/apt/sources.list.d/pritunl.list
+
+- name: Install Pritunl repository
+  apt_repository:
+    repo: 'deb https://repo.pritunl.com/stable/apt focal main'
+    state: present
+
+- name: Install Pritunl
+  apt:
+    name: pritunl
+    state: present
+
+- name: Install MongoDB
+  apt:
+    name: mongodb-org
+    state: present
+
+- name: Start and enable Pritunl service
+  systemd:
+    name: pritunl
+    state: started
+    enabled: yes
+
+- name: Start and enable MongoDB service
+  systemd:
+    name: mongod
+    state: started
+    enabled: yes
+
+- name: Ensure firewall allows necessary ports (optional)
+  ufw:
+    rule: allow
+    name: 'OpenSSH'
+
+- name: Open Pritunl Web UI port (443)
+  ufw:
+    rule: allow
+    port: 443
+    proto: tcp
+
+- name: Open MongoDB port (27017)
+  ufw:
+    rule: allow
+    port: 27017
+    proto: tcp
