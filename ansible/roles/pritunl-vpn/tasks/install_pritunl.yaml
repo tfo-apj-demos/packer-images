@@ -65,7 +65,6 @@
       - wireguard
       - wireguard-tools
     state: present
-    force: yes
 
 - name: Disable UFW
   ufw:
