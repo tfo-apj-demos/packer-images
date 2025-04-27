@@ -53,7 +53,7 @@ logvol /var/log/audit --fstype=xfs --vgname=sysvg --size=4096   --name=lv_audit 
 # --location=mbr here triggers the installer to register UEFI entry
 # and copy bootloader into /boot/efi automatically.
 #bootloader --timeout=5 --append="crashkernel=auto" --location=mbr --driveorder=sda
-bootloader --timeout=5 --append="crashkernel=auto" --driveorder=sda
+bootloader --timeout=0 --append="crashkernel=auto" --driveorder=sda
 
 services --enabled=NetworkManager,sshd
 
