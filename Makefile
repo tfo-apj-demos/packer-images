@@ -2,6 +2,10 @@ ubuntu_2204_base:
 	packer init -var-file variables/base.pkrvars.hcl builds/linux/ubuntu/2204
 	packer build -var-file variables/base.pkrvars.hcl builds/linux/ubuntu/2204
 
+ubuntu_2404_base:
+	packer init -var-file variables/base.pkrvars.hcl builds/linux/ubuntu/2404
+	packer build -var-file variables/base.pkrvars.hcl builds/linux/ubuntu/2404
+
 ubuntu_2204_base_vtpm:
 	packer init -var-file variables/base_vtpm.pkrvars.hcl builds/linux/ubuntu/2204
 	packer build -var-file variables/base_vtpm.pkrvars.hcl builds/linux/ubuntu/2204
