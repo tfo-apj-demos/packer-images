@@ -132,13 +132,24 @@ done
 echo "Final boot order after cleanup:"
 efibootmgr -v
 
-# Rebuild GRUB configuration (if necessary)
-echo "Rebuilding GRUB configuration"
-grub2-mkconfig -o /boot/grub2/grub.cfg
+# ---- Install GRUB2 for UEFI ----
+echo "Installing GRUB2 for UEFI"
+dnf install -y grub2-efi-x64 grub2-tools
 
-# Ensure GRUB is installed to EFI
+# Create the necessary directories if missing
+mkdir -p /boot/efi/EFI/redhat
+
+# Rebuild the GRUB2 configuration
+echo "Rebuilding GRUB configuration"
+grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
+
+# Install GRUB2 to EFI
 echo "Installing GRUB to EFI"
 grub2-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=redhat
+
+# Final cleanup and verification of boot order
+echo "Final verification of boot order:"
+efibootmgr -v
 
 echo "Post-install tasks completed."
 %end
