@@ -1,0 +1,15 @@
+---
+- name: Install Vault
+  become: true
+  apt:
+    name: vault-enterprise
+    state: present
+    update_cache: yes
+
+- name: Allow Vault to restart its systemd job
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    insertafter: '^# User privilege specification'
+    line: 'vault   ALL=(ALL) NOPASSWD: /bin/systemctl restart vault.service'
+    validate: 'visudo -cf %s'
