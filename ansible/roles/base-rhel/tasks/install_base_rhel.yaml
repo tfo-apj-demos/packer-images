@@ -68,10 +68,11 @@
     dest: /etc/ssh/trusted-user-ca-keys.pem
     mode: "0644"
 
-- name: Copy a "sudoers" file on the remote machine for editing
-  ansible.builtin.copy:
-    src: /etc/ssh/trusted-user-ca-keys.pem
+- name: Copy CA public certificates to ca-trust
+  ansible.builtin.assemble:
+    src: /tmp/ssh_ca.d/
     dest: /etc/pki/ca-trust/source/anchors/trusted-user-ca-keys.pem
+    mode: "0644"
 
 - name: Update ssh config
   ansible.builtin.lineinfile:
