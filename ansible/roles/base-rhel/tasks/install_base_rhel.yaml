@@ -68,6 +68,11 @@
     dest: /etc/ssh/trusted-user-ca-keys.pem
     mode: "0644"
 
+- name: Copy a "sudoers" file on the remote machine for editing
+  ansible.builtin.copy:
+    src: /etc/ssh/trusted-user-ca-keys.pem
+    dest: /etc/pki/ca-trust/source/anchors/trusted-user-ca-keys.pem
+
 - name: Update ssh config
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
@@ -75,9 +80,7 @@
     line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 
 - name: Register HCP Vault CA
-  ansible.builtin.command: update-ca-trust
-  args:
-    creates: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+  ansible.builtin.command: update-ca-trust extract
 
 ####### To install certain packages, the system initially needs to be registered to access.redhat.com
 
