@@ -99,6 +99,11 @@
 - name: Register HCP Vault CA
   ansible.builtin.command: update-ca-trust extract
 
+- name: SELinux in permissive mode
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+
 ####### To install certain packages, the system initially needs to be registered to access.redhat.com
 
 - name: Register the system to access.redhat.com
