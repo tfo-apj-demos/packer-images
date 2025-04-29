@@ -96,6 +96,9 @@
     state: present
     line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 
+- name: ca trust enable
+  ansible.builtin.command: update-ca-trust enable
+  
 - name: Register HCP Vault CA
   ansible.builtin.command: update-ca-trust extract
 
