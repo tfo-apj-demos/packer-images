@@ -1,4 +1,20 @@
 ---
+- name: Ensure the .ssh directory exists for vm_user
+  ansible.builtin.file:
+    path: "/home/vm_user/.ssh"
+    state: directory
+    mode: "0700"
+    owner: vm_user
+    group: vm_user
+
+- name: Create authorized_keys file for vm_user if it doesn't exist
+  ansible.builtin.file:
+    path: "/home/vm_user/.ssh/authorized_keys"
+    state: touch
+    mode: "0600"
+    owner: vm_user
+    group: vm_user
+    
 - name: Create temporary directory for SSH CA storage
   ansible.builtin.file:
     path: /tmp/ssh_ca.d/
