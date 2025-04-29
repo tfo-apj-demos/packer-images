@@ -21,6 +21,12 @@
     state: directory
     mode: '0755'
 
+- name: Create temporary directory for PKI CA storage
+  ansible.builtin.file:
+    path: /tmp/ssh_ca.PKI/
+    state: directory
+    mode: '0755'
+
 - name: Add HashiCorp repo key
   ansible.builtin.get_url:
     url: https://rpm.releases.hashicorp.com/gpg
