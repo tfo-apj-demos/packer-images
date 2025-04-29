@@ -59,6 +59,7 @@ services --enabled=NetworkManager,sshd
 
 %packages --ignoremissing --excludedocs
 @core
+openssh-server
 efibootmgr
 grub2-efi-x64 
 shim-x64
