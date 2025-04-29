@@ -59,23 +59,9 @@
 
 - name: Add GCVE Vault SSH signing public certificate
   ansible.builtin.copy:
-    content: |
-      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yq
-      xpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/ywwcek+ZuFq2Z1yDKGo
-      TTfZF2KLDtfjRnRbNB9bzd/tCzRF9SJxOrjHOONtpUmSAhceySF2FcSU1UkneuCFBHgCQq9f93pASPbXw3RSR3NSZMwM7YbsTUyIw2GED4419+qkAV4RHR
-      HRNVk5CObEBxu5Wvx1TuPsmcDPWMYOXAiZlOSgtyaX1/x14JnWp8Q0YFhIBkNucCHVcXi4Q4/tZ+ftgakWpUUj3GkeLtdWSCtr58DcR5sEwqALSPHy21ii
-      A6qQiJa6/rz3L/Nh3k5UMVMHPhF5358M0vCkN2MuZf66CE1fd4s82g0HfjlOf51H9XPlueECp1NwrbYiWQkpq79VaQCyijlXfvh6S3jKHkkRJArtWrdIt6
-      k1jm6gbQUPWsZn6Yb4mXTPGw+tQneZvMP7SLG97JkpwmsLa9OgENz37OpzK2j01QF5C2rB1N3BKkCdm5mW4fQQjNWDirfnCjOshp4tS/lhGFCcqj6w18zF
-      YllKx1Z0j5etxw==
+    content: >
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yqxpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/yww
     dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
-    mode: "0644"
-
-- name: Download PKI CA certificate
-  ansible.builtin.get_url:
-    url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
-    headers:
-      X-Vault-Namespace: admin/tfo-apj-demos
-    dest: /tmp/ssh_ca.d/hcp-vault-ca.crt
     mode: "0644"
 
 - name: Add CA public certificates
@@ -84,9 +70,17 @@
     dest: /etc/ssh/trusted-user-ca-keys.pem
     mode: "0644"
 
+- name: Download PKI CA certificate
+  ansible.builtin.get_url:
+    url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
+    headers:
+      X-Vault-Namespace: admin/tfo-apj-demos
+    dest: /tmp/ssh_ca.PKI/hcp-vault-ca.crt
+    mode: "0644"
+
 - name: Copy CA public certificates to ca-trust
   ansible.builtin.assemble:
-    src: /tmp/ssh_ca.d/
+    src: /tmp/ssh_ca.PKI/
     dest: /etc/pki/ca-trust/source/anchors/trusted-user-ca-keys.pem
     mode: "0644"
 
@@ -96,13 +90,6 @@
     state: present
     line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 
-# sudo restorecon  /etc/ssh/trusted-user-ca-keys.pem
-- name: restorecon ssh ca
-  ansible.builtin.command: restorecon /etc/ssh/trusted-user-ca-keys.pem
-
-- name: ca trust enable
-  ansible.builtin.command: update-ca-trust force-enable
-  
 - name: Register HCP Vault CA
   ansible.builtin.command: update-ca-trust extract
 
