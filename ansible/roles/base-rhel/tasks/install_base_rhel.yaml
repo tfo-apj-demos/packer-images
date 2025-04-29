@@ -64,17 +64,20 @@
     mode: "0644"
 
 - name: Add GCVE Vault SSH signing public certificate
-  ansible.builtin.copy:
-    content: >
-      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yqxpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/yww
+  ansible.builtin.get_url:
+    url: https://vault.hashicorp.local:8200/v1/ssh/public_key
     dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
     mode: "0644"
 
-- name: Add CA public certificates
+- name: Assemble SSH CA public keys into one trust file
   ansible.builtin.assemble:
     src: /tmp/ssh_ca.d/
     dest: /etc/ssh/trusted-user-ca-keys.pem
     mode: "0644"
+
+- name: Restore SELinux context on SSH trust file
+  ansible.builtin.command:
+    cmd: restorecon -v /etc/ssh/trusted-user-ca-keys.pem
 
 - name: Download PKI CA certificate
   ansible.builtin.get_url:
@@ -98,6 +101,11 @@
 
 - name: Register HCP Vault CA
   ansible.builtin.command: update-ca-trust extract
+
+- name: Restart sshd to apply changes
+  ansible.builtin.systemd:
+    name: sshd
+    state: restarted
 
 - name: SELinux in permissive mode
   ansible.posix.selinux:
