@@ -96,6 +96,10 @@
     state: present
     line: TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
 
+# sudo restorecon  /etc/ssh/trusted-user-ca-keys.pem
+- name: restorecon ssh ca
+  ansible.builtin.command: restorecon /etc/ssh/trusted-user-ca-keys.pem
+
 - name: ca trust enable
   ansible.builtin.command: update-ca-trust force-enable
   
