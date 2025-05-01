@@ -52,6 +52,11 @@
     make install
     ldconfig
 
+- name: Install tpm2-tss development headers
+  ansible.builtin.dnf:
+    name: tpm2-tss-devel
+    state: present
+
 - name: Clone tpm2-openssl
   ansible.builtin.git:
     repo: https://github.com/tpm2-software/tpm2-openssl.git
