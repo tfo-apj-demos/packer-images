@@ -1,0 +1,81 @@
+- name: Ensure required repos are enabled
+  ansible.builtin.command: >
+    subscription-manager repos --enable={{ item }}
+  loop:
+    - rhel-9-for-x86_64-appstream-rpms
+    - codeready-builder-for-rhel-9-{{ ansible_architecture }}-rpms
+
+- name: Install TPM2 and build dependencies
+  ansible.builtin.dnf:
+    name:
+      - epel-release
+      - git
+      - cmake
+      - gcc
+      - gcc-c++
+      - m4
+      - autoconf
+      - automake
+      - libtool
+      - autoconf-archive
+      - pkgconf-pkg-config
+      - libcurl-devel
+      - dbus-devel
+      - glib2-devel
+      - openssl-devel
+      - json-c-devel
+      - libuuid-devel
+      - tpm2-tools
+      - tpm2-tss
+      - tpm2-abrmd
+      - tpm2-pkcs11
+      - openssl
+    state: present
+
+- name: Install Development Tools group
+  ansible.builtin.dnf:
+    name: "@Development Tools"
+    state: present
+
+- name: Clone tpm2-tss
+  ansible.builtin.git:
+    repo: https://github.com/tpm2-software/tpm2-tss.git
+    dest: /tmp/tpm2-tss
+    version: 4.0.1
+
+- name: Build and install tpm2-tss
+  ansible.builtin.shell: |
+    cd /tmp/tpm2-tss
+    ./bootstrap
+    ./configure
+    make -j$(nproc)
+    make install
+    ldconfig
+
+- name: Clone tpm2-openssl
+  ansible.builtin.git:
+    repo: https://github.com/tpm2-software/tpm2-openssl.git
+    dest: /tmp/tpm2-openssl
+
+- name: Build and install tpm2-openssl
+  ansible.builtin.shell: |
+    cd /tmp/tpm2-openssl
+    ./bootstrap
+    ./configure --enable-debug
+    make -j$(nproc)
+    make install
+
+- name: Add TPM2 provider config to OpenSSL
+  ansible.builtin.blockinfile:
+    path: /etc/ssl/openssl.cnf
+    block: |
+      [openssl_init]
+      providers = provider_sect
+
+      [provider_sect]
+      default = default_sect
+      tpm2 = tpm2_sect
+
+      [tpm2_sect]
+      module = /usr/lib64/ossl-modules/tpm2.so
+    marker: "# {mark} TPM2 Provider Setup"

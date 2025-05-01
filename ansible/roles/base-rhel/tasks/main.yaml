@@ -3,6 +3,10 @@
   ansible.builtin.include_tasks:
     file: install_base_rhel.yaml
 
+- name: Include TPM2 provider tasks
+  ansible.builtin.include_tasks:
+    file: rhel9-tpm2-provider.yml
+
 #### this is parked till we fix the issue with vTPM 
 ##- name: Include CIS RHEL9 tasks
 ##  ansible.builtin.include_tasks:
