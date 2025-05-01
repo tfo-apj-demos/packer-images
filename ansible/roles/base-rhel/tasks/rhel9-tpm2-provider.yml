@@ -60,6 +60,7 @@
 - name: Build and install tpm2-openssl
   ansible.builtin.shell: |
     cd /tmp/tpm2-openssl
+    chmod +x ./bootstrap
     ./bootstrap
     ./configure --enable-debug
     make -j$(nproc)
