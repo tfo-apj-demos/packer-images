@@ -55,14 +55,14 @@
 - name: Clone tpm2-openssl
   ansible.builtin.git:
     repo: https://github.com/tpm2-software/tpm2-openssl.git
-    dest: /tmp/tpm2-openssl
+    dest: /opt/tpm2-openssl
 
 - name: Make bootstrap script executable
-  ansible.builtin.command: chmod +x /tmp/tpm2-openssl/bootstrap
+  ansible.builtin.command: chmod +x /opt/tpm2-openssl/bootstrap
 
 - name: Build and install tpm2-openssl
   ansible.builtin.shell: |
-    cd /tmp/tpm2-openssl
+    cd /opt/tpm2-openssl
     ./bootstrap
     ./configure --enable-debug
     make -j$(nproc)
