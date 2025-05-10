@@ -82,7 +82,7 @@
 
 - name: Download PKI CA certificate
   ansible.builtin.get_url:
-    url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca/pem
+    url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/pki/ca_chain
     headers:
       X-Vault-Namespace: admin/tfo-apj-demos
     dest: /tmp/ssh_ca.PKI/hcp-vault-ca.crt
