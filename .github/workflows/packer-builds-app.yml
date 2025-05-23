@@ -22,7 +22,7 @@ on:
           - ubuntu_2404_pritunl_vpn
           
   schedule:
-   - cron:  '0 11 * * SUN' # UTC TIME
+  - cron:  '0 11 1 * *' # Run at 11:00 UTC on the 1st day of every month
 
 env:
   DEFAULT_IMAGES: ubuntu_2204_vault, ubuntu_2204_postgres, ubuntu_2204_haproxy, ubuntu_2204_tfefdo, windows_2022_mssql, windows_2022_iis, ubuntu_2204_splunk, ubuntu_2204_nomad

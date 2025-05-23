@@ -18,7 +18,7 @@ on:
   schedule:
 #     # * is a special character in YAML so you have to quote this string
 #     - cron:  '30 5,17 * * *'
-    - cron:  '0 10 * * SUN' # UTC TIME
+    - cron:  '0 10 1 * *' # Run at 10:00 UTC on the 1st day of every month
 
 env:
   DEFAULT_IMAGES: ubuntu_2204_base, windows_2022_base
