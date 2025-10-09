@@ -71,3 +71,4 @@ openscap_profile_map:
   essential_8: xccdf_org.ssgproject.content_profile_au_essential_8
 # Path to the SCAP datastream for RHEL9
 openscap_ds_path: /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
+redhat_activation_key : packer-demo
