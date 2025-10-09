@@ -38,6 +38,18 @@ packer {
 build {
   sources = local.sources
 
+  provisioner "shell-local" {
+    inline = [
+      "echo '=== HCP Debug Info ==='",
+      "echo 'HCP_ORGANIZATION_ID: ${env("HCP_ORGANIZATION_ID")}'",
+      "echo 'HCP_PROJECT_ID: ${env("HCP_PROJECT_ID")}'",
+      "echo 'Bucket: base-ubuntu-2204'",
+      "echo 'Channel: latest'", 
+      "echo 'Expected API Path: /packer/2021-04-30/organizations/${env("HCP_ORGANIZATION_ID")}/projects/${env("HCP_PROJECT_ID")}/images/base-ubuntu-2204/channels/latest'",
+      "echo '===================='",
+    ]
+    order = 1  // Run this first
+
   provisioner "ansible" {
     playbook_file = "${path.cwd}/ansible/playbook.yaml"
     user          = var.os_username
