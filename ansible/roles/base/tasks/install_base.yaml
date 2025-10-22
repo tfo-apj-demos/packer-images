@@ -102,26 +102,34 @@
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
     headers: 
       X-Vault-Namespace: admin/tfo-apj-demos
-    dest: /tmp/ssh_ca.d/hcp-vault-ca-keys.pem
+    dest: /tmp/hcp-vault-ca-key.pem
     mode: 0644
 
 - name: Add GCVE Vault SSH signing public certificate
   copy:
     content: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC74yY7E3CovzzkfCsO1KJ0WFJL32fMDtooeKkRAazIB4u2zWh0Xy7AuWg8NWOO46KaAiQzDqXFHxe7yqxpvfP7XcUlaYtd4znXLVk9PN2VQeBDPrWTn5uIkhFtRafHrbTCIs1JB4aJexKA5+6YKvRv7139mxcQpw4uonQ6+YnVLL+yCarI/ywwcek+ZuFq2Z1yDKGoTTfZF2KLDtfjRnRbNB9bzd/tCzRF9SJxOrjHOONtpUmSAhceySF2FcSU1UkneuCFBHgCQq9f93pASPbXw3RSR3NSZMwM7YbsTUyIw2GED4419+qkAV4RHRHRNVk5CObEBxu5Wvx1TuPsmcDPWMYOXAiZlOSgtyaX1/x14JnWp8Q0YFhIBkNucCHVcXi4Q4/tZ+ftgakWpUUj3GkeLtdWSCtr58DcR5sEwqALSPHy21iiA6qQiJa6/rz3L/Nh3k5UMVMHPhF5358M0vCkN2MuZf66CE1fd4s82g0HfjlOf51H9XPlueECp1NwrbYiWQkpq79VaQCyijlXfvh6S3jKHkkRJArtWrdIt6k1jm6gbQUPWsZn6Yb4mXTPGw+tQneZvMP7SLG97JkpwmsLa9OgENz37OpzK2j01QF5C2rB1N3BKkCdm5mW4fQQjNWDirfnCjOshp4tS/lhGFCcqj6w18zFYllKx1Z0j5etxw==
-    dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
+    dest: /tmp/gcve-vault-ca-key.pem
     mode: 0644
   # get_url:
   #   url: https://vault.hashicorp.local:8200/v1/ssh/public_key
-  #   dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
+  #   dest: /tmp/gcve-vault-ca-key.pem
   #   mode: 0644
   #   validate_certs: false
 
-- name: Add CA public certificates
-  assemble:
-    src: /tmp/ssh_ca.d/
-    dest: /etc/ssh/trusted-user-ca-keys.pem
+- name: Normalize HCP Vault CA key format (ensure single line)
+  shell: |
+    awk '/^ssh-/ {if (key) print key; key=$0; next} /^[A-Za-z0-9+\/=]/ {key=key$0} END {if (key) print key}' /tmp/hcp-vault-ca-key.pem > /tmp/hcp-vault-ca-normalized.pem
+  
+- name: Normalize GCVE Vault CA key format (ensure single line)
+  shell: |
+    awk '/^ssh-/ {if (key) print key; key=$0; next} /^[A-Za-z0-9+\/=]/ {key=key$0} END {if (key) print key}' /tmp/gcve-vault-ca-key.pem > /tmp/gcve-vault-ca-normalized.pem
 
-- name: Update ssh config
+- name: Create properly formatted trusted CA keys file
+  shell: |
+    cat /tmp/hcp-vault-ca-normalized.pem /tmp/gcve-vault-ca-normalized.pem > /etc/ssh/trusted-user-ca-keys.pem
+    chmod 644 /etc/ssh/trusted-user-ca-keys.pem
+
+- name: Update ssh config for TrustedUserCAKeys
   lineinfile:
     path: /etc/ssh/sshd_config
     state: present
