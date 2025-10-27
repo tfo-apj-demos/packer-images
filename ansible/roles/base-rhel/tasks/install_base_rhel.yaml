@@ -60,21 +60,28 @@
     url: https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200/v1/ssh/public_key
     headers:
       X-Vault-Namespace: admin/tfo-apj-demos
-    dest: /tmp/ssh_ca.d/hcp-vault-ca-keys.pem
+    dest: /tmp/hcp-vault-ca-key.pem
     mode: "0644"
 
 - name: Add GCVE Vault SSH signing public certificate
   ansible.builtin.get_url:
     url: https://vault.hashicorp.local:8200/v1/ssh/public_key
-    dest: /tmp/ssh_ca.d/gcve-vault-ca-keys.pem
+    dest: /tmp/gcve-vault-ca-key.pem
     mode: "0644"
     validate_certs: no
 
-- name: Assemble SSH CA public keys into one trust file
-  ansible.builtin.assemble:
-    src: /tmp/ssh_ca.d/
-    dest: /etc/ssh/trusted-user-ca-keys.pem
-    mode: "0644"
+- name: Normalize HCP Vault CA key format (ensure single line)
+  ansible.builtin.shell: |
+    awk '/^ssh-/ {if (key) print key; key=$0; next} /^[A-Za-z0-9+\/=]/ {key=key$0} END {if (key) print key}' /tmp/hcp-vault-ca-key.pem > /tmp/hcp-vault-ca-normalized.pem
+  
+- name: Normalize GCVE Vault CA key format (ensure single line)
+  ansible.builtin.shell: |
+    awk '/^ssh-/ {if (key) print key; key=$0; next} /^[A-Za-z0-9+\/=]/ {key=key$0} END {if (key) print key}' /tmp/gcve-vault-ca-key.pem > /tmp/gcve-vault-ca-normalized.pem
+
+- name: Create properly formatted trusted CA keys file
+  ansible.builtin.shell: |
+    cat /tmp/hcp-vault-ca-normalized.pem /tmp/gcve-vault-ca-normalized.pem > /etc/ssh/trusted-user-ca-keys.pem
+    chmod 644 /etc/ssh/trusted-user-ca-keys.pem
 
 - name: Restore SELinux context on SSH trust file
   ansible.builtin.command:
