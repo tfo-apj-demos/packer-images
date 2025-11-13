@@ -110,6 +110,11 @@ source "vsphere-iso" "this" {
   ssh_pty                = true
   ssh_timeout            = "30m"
   ssh_handshake_attempts = 1000
+
+  // Content Library Configuration
+  content_library_destination {
+    library = "ContentLibrary"
+  }
 }
 
 source "vsphere-clone" "this" {
