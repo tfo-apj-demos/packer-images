@@ -58,7 +58,7 @@ source "vsphere-iso" "this" {
   folder     = var.folder
 
   // Virtual machine configuration
-  convert_to_template = true
+  convert_to_template = false
   vm_name             = local.name
   guest_os_type       = var.guest_os_type
 
@@ -114,6 +114,7 @@ source "vsphere-iso" "this" {
   // Content Library Configuration
   content_library_destination {
     library = "ContentLibrary"
+    destroy = true
   }
 }
 
