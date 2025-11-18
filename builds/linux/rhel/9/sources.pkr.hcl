@@ -114,7 +114,7 @@ source "vsphere-iso" "this" {
   // Content Library Configuration
   content_library_destination {
     library = "ContentLibrary"
-    name    = local.name
+    #name    = local.name
     destroy = true
   }
 }
