@@ -49,7 +49,8 @@ build {
       "echo '===================='",
     ]
     order = 1  // Run this first
-
+  }
+  
   provisioner "ansible" {
     playbook_file = "${path.cwd}/ansible/playbook.yaml"
     user          = var.os_username
