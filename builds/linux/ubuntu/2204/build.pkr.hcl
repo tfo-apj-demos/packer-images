@@ -48,7 +48,6 @@ build {
       "echo 'Expected API Path: /packer/2021-04-30/organizations/${env("HCP_ORGANIZATION_ID")}/projects/${env("HCP_PROJECT_ID")}/images/base-ubuntu-2204/channels/latest'",
       "echo '===================='",
     ]
-    order = 1  // Run this first
   }
   
   provisioner "ansible" {
